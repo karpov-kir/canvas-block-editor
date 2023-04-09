@@ -1,6 +1,6 @@
 export default {
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.tsx?$': 'esbuild-jest',
   },
   testRegex: './src/.*\\.(test|spec)?\\.ts$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
