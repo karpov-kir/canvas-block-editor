@@ -1,6 +1,6 @@
+import { BlockStore } from '../../BlockStore';
 import { AddBlockCommand } from './AddBlockCommand';
 import { AddBlockHandler } from './AddBlockHandler';
-import { BlockStore } from './BlockStore';
 
 describe('AddBlockCommand', () => {
   it('adds a text block', () => {

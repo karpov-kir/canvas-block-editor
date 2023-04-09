@@ -1,4 +1,4 @@
-import { BlockStore } from './BlockStore';
+import { BlockStore } from '../../BlockStore';
 import { InputCommand } from './InputCommand';
 
 export class InputCommandHandler {

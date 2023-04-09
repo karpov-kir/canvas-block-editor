@@ -1,5 +1,5 @@
+import { BlockStore } from '../../BlockStore';
 import { AddBlockCommand } from './AddBlockCommand';
-import { BlockStore } from './BlockStore';
 
 export class AddBlockHandler {
   constructor(private readonly blockStore: BlockStore) {}
