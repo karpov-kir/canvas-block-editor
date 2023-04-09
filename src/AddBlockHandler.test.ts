@@ -15,6 +15,7 @@ describe('AddBlockCommand', () => {
       {
         type: 'text',
         content: '',
+        id: 1,
       },
     ]);
   });
