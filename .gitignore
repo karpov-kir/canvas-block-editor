@@ -1,0 +1,10 @@
+.idea
+build
+tsconfig.tsbuildinfo
+dist
+node_modules
+coverage
+
+*.orig
+*.DS_Store
+npm-debug.log*
