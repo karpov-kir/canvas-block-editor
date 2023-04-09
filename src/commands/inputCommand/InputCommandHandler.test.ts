@@ -9,14 +9,20 @@ describe(InputCommandHandler, () => {
     const command = new InputCommand('Hello world!');
 
     blockStore.add('text');
-    blockStore.activeBlock = blockStore.blocks[0];
+    blockStore.activeBlock = {
+      block: blockStore.blocks[0],
+      carriagePosition: 0,
+    };
 
     handler.handle(command);
 
     expect(blockStore.activeBlock).toEqual({
-      id: 1,
-      type: 'text',
-      content: 'Hello world!',
+      block: {
+        id: 1,
+        type: 'text',
+        content: 'Hello world!',
+      },
+      carriagePosition: 0,
     });
   });
 });

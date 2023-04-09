@@ -6,12 +6,17 @@ interface Block {
   type: string;
 }
 
+interface ActiveBlock {
+  block: Block;
+  carriagePosition: number;
+}
+
 export class BlockStore {
   #blocks: Block[] = [];
 
   private idGenerator = createIdGenerator();
 
-  public activeBlock?: Block;
+  public activeBlock?: ActiveBlock;
 
   public get blocks() {
     return this.#blocks;
