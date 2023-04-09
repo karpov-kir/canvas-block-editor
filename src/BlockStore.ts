@@ -11,6 +11,8 @@ export class BlockStore {
 
   private idGenerator = createIdGenerator();
 
+  public activeBlock?: Block;
+
   public get blocks() {
     return this.#blocks;
   }
