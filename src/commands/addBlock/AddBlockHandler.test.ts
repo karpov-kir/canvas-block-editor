@@ -11,12 +11,17 @@ describe('AddBlockCommand', () => {
 
     handler.handle(command);
 
-    expect(blockStore.blocks).toEqual([
-      {
-        type: 'text',
-        content: '',
-        id: 1,
-      },
-    ]);
+    expect(blockStore.blocks).toEqual(
+      new Map([
+        [
+          1,
+          {
+            type: 'text',
+            content: '',
+            id: 1,
+          },
+        ],
+      ]),
+    );
   });
 });

@@ -1,32 +1,31 @@
 import { createIdGenerator } from './idGenerator';
 
-interface Block {
+export interface Block {
   id: number;
   content: string;
   type: string;
 }
 
-interface ActiveBlock {
+export interface ActiveBlock {
   block: Block;
   carriagePosition: number;
 }
 
 export class BlockStore {
-  #blocks: Block[] = [];
+  public readonly blocks: Map<number, Block> = new Map();
 
   private idGenerator = createIdGenerator();
 
   public activeBlock?: ActiveBlock;
 
-  public get blocks() {
-    return this.#blocks;
-  }
+  public highlightedBlock?: Block;
 
   public add(type: string) {
-    this.#blocks.push({
+    const id = this.idGenerator();
+    this.blocks.set(id, {
       type,
       content: '',
-      id: this.idGenerator(),
+      id,
     });
   }
 }

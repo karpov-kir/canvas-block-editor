@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { Block, BlockStore } from '../../BlockStore';
 import { InputCommand } from './InputCommand';
 import { InputCommandHandler } from './InputCommandHandler';
 
@@ -10,7 +10,7 @@ describe(InputCommandHandler, () => {
 
     blockStore.add('text');
     blockStore.activeBlock = {
-      block: blockStore.blocks[0],
+      block: blockStore.blocks.get(1) as Block,
       carriagePosition: 0,
     };
 
