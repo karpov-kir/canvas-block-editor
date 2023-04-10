@@ -1,16 +1,16 @@
-import { BaseCommand } from './BaseCommand';
+import { Command } from './Command';
 
-type CommandHandler = (command: BaseCommand) => void;
+type CommandHandler = (command: Command) => void;
 
 export class CommandBus {
-  private handlers: Map<BaseCommand, CommandHandler[]> = new Map();
+  private handlers: Map<Command, CommandHandler[]> = new Map();
 
-  public registerHandler(command: BaseCommand, handler: CommandHandler) {
+  public registerHandler(command: Command, handler: CommandHandler) {
     const handlers = this.handlers.get(command) || [];
     this.handlers.set(command, [...handlers, handler]);
   }
 
-  public publish(command: BaseCommand) {
+  public publish(command: Command) {
     const handlers = this.handlers.get(command.constructor) || [];
     handlers.forEach((handler) => handler(command));
   }
