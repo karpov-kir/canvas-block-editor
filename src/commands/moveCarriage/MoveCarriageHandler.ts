@@ -1,8 +1,11 @@
 import { BlockStore } from '../../BlockStore';
+import { CommandHandler } from '../../utils/Command';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
 
-export class MoveCarriageHandler {
-  constructor(private readonly blockStore: BlockStore) {}
+export class MoveCarriageHandler extends CommandHandler {
+  constructor(private readonly blockStore: BlockStore) {
+    super();
+  }
 
   execute(command: MoveCarriageCommand) {
     const { activeBlock } = this.blockStore;

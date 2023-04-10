@@ -1,3 +1,7 @@
-export class InputCommand {
-  constructor(public readonly content: string) {}
+import { Command } from '../../utils/Command';
+
+export class InputCommand extends Command {
+  constructor(public readonly content: string) {
+    super();
+  }
 }

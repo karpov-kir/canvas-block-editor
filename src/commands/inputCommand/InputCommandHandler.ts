@@ -1,8 +1,11 @@
 import { BlockStore } from '../../BlockStore';
+import { CommandHandler } from '../../utils/Command';
 import { InputCommand } from './InputCommand';
 
-export class InputCommandHandler {
-  constructor(private readonly blockStore: BlockStore) {}
+export class InputCommandHandler extends CommandHandler {
+  constructor(private readonly blockStore: BlockStore) {
+    super();
+  }
 
   execute(command: InputCommand) {
     const activeBlock = this.blockStore.activeBlock;

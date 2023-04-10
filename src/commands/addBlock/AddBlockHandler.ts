@@ -1,8 +1,11 @@
 import { BlockStore } from '../../BlockStore';
+import { CommandHandler } from '../../utils/Command';
 import { AddBlockCommand } from './AddBlockCommand';
 
-export class AddBlockHandler {
-  constructor(private readonly blockStore: BlockStore) {}
+export class AddBlockHandler extends CommandHandler {
+  constructor(private readonly blockStore: BlockStore) {
+    super();
+  }
 
   public execute(command: AddBlockCommand) {
     this.blockStore.add(command.type);
