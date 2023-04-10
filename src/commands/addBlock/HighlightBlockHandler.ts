@@ -4,7 +4,7 @@ import { HighlightBlockCommand } from './HighlightBlockCommand';
 export class HighlightBlockHandler {
   constructor(private readonly blockStore: BlockStore) {}
 
-  public handle({ blockId }: HighlightBlockCommand) {
+  public execute({ blockId }: HighlightBlockCommand) {
     const block = this.blockStore.blocks.get(blockId);
 
     if (!block) {

@@ -9,7 +9,7 @@ describe('AddBlockCommand', () => {
     const command = new AddBlockCommand(blockType);
     const handler = new AddBlockHandler(blockStore);
 
-    handler.handle(command);
+    handler.execute(command);
 
     expect(blockStore.blocks).toEqual(
       new Map([

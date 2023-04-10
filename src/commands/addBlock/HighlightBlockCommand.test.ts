@@ -9,7 +9,7 @@ describe(HighlightBlockCommand, () => {
     const handler = new HighlightBlockHandler(blockStore);
 
     blockStore.add('text');
-    handler.handle(command);
+    handler.execute(command);
 
     expect(blockStore.highlightedBlock).toEqual(blockStore.blocks.get(1));
   });

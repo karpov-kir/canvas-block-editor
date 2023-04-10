@@ -14,7 +14,7 @@ describe(InputCommandHandler, () => {
       carriagePosition: 0,
     };
 
-    handler.handle(command);
+    handler.execute(command);
 
     expect(blockStore.activeBlock).toEqual({
       block: {

@@ -4,7 +4,7 @@ import { InputCommand } from './InputCommand';
 export class InputCommandHandler {
   constructor(private readonly blockStore: BlockStore) {}
 
-  handle(command: InputCommand) {
+  execute(command: InputCommand) {
     const activeBlock = this.blockStore.activeBlock;
 
     if (!activeBlock) {
