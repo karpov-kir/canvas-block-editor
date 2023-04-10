@@ -1,5 +1,5 @@
-import { AddBlockCommand } from './commands/addBlock/AddBlockCommand';
-import { CommandBus } from './utils/CommandBus';
+import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
+import { CommandBus } from '../utils/CommandBus';
 
 export class CursorEvent {
   constructor(public readonly type: string) {}

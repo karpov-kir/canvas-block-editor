@@ -1,6 +1,6 @@
-import { InputCommand } from './commands/inputCommand/InputCommand';
+import { InputCommand } from '../commands/inputCommand/InputCommand';
+import { CommandBus } from '../utils/CommandBus';
 import { KeyboardEvent, UserKeyboardInteractionMediator } from './UserKeyboardInteractionMediator';
-import { CommandBus } from './utils/CommandBus';
 
 describe(UserKeyboardInteractionMediator, () => {
   it(`emits the ${InputCommand.name} on a key press`, () => {

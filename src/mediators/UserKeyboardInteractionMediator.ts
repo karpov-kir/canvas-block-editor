@@ -1,5 +1,5 @@
-import { InputCommand } from './commands/inputCommand/InputCommand';
-import { CommandBus } from './utils/CommandBus';
+import { InputCommand } from '../commands/inputCommand/InputCommand';
+import { CommandBus } from '../utils/CommandBus';
 
 export class KeyboardEvent {
   constructor(public readonly type: string, public readonly key: string) {}

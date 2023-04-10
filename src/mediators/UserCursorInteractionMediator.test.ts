@@ -1,6 +1,6 @@
-import { AddBlockCommand } from './commands/addBlock/AddBlockCommand';
+import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
+import { CommandBus } from '../utils/CommandBus';
 import { CursorEvent, UserCursorInteractionMediator } from './UserCursorInteractionMediator';
-import { CommandBus } from './utils/CommandBus';
 
 describe(UserCursorInteractionMediator, () => {
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
