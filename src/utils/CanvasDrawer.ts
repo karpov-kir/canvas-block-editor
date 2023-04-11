@@ -3,6 +3,10 @@ import { Drawer, RenderTextOptions } from '../commands/render/RenderService';
 export class CanvasDrawer implements Drawer {
   constructor(private readonly context: CanvasRenderingContext2D) {}
 
+  /**
+   * @param options @type {RenderTextOptions}
+   * @returns {number} height of the rendered text
+   */
   renderText({ x, y, fontFamily, maxWidth, fontSize, lineHeight, text, padding }: RenderTextOptions): number {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
     const {lines, lineMetrics, box} = fitTextIntoWidth(this.context, {
