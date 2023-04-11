@@ -1,5 +1,6 @@
-import { Block, BlockStore } from '../BlockStore';
+import { BlockStore } from '../BlockStore';
 import { InputCommand } from '../commands/input/InputCommand';
+import { ActiveBlockMother } from '../testUtils/mothers/BlockMother';
 import { CommandBus } from '../utils/CommandBus';
 import { KeyboardEvent, UserKeyboardInteractionMediator } from './UserKeyboardInteractionMediator';
 
@@ -19,10 +20,7 @@ describe(UserKeyboardInteractionMediator, () => {
     const inputCommandHandler = jest.fn();
 
     blockStore.add('text', { x: 0, y: 0 });
-    blockStore.activeBlock = {
-      block: blockStore.blocks.get(0) as Block,
-      carriagePosition: 0,
-    };
+    blockStore.activeBlock = new ActiveBlockMother().createEmpty();
 
     commandBus.registerHandler(InputCommand, inputCommandHandler);
     mediator.notify(keyboardEvent);

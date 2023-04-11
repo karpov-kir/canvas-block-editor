@@ -1,4 +1,5 @@
 import { BlockStore } from '../../BlockStore';
+import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { AddBlockCommand } from './AddBlockCommand';
 import { AddBlockHandler } from './AddBlockHandler';
 
@@ -8,21 +9,10 @@ describe('AddBlockCommand', () => {
     const blockStore = new BlockStore();
     const command = new AddBlockCommand(blockType);
     const handler = new AddBlockHandler(blockStore);
+    const expectedBlock = new BlockMother().createEmpty();
 
     handler.execute(command);
 
-    expect(blockStore.blocks).toEqual(
-      new Map([
-        [
-          1,
-          {
-            type: 'text',
-            content: '',
-            id: 1,
-            position: { x: 0, y: 0 },
-          },
-        ],
-      ]),
-    );
+    expect(blockStore.blocks).toEqual(new Map([[1, expectedBlock]]));
   });
 });

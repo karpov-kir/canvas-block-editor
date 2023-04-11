@@ -1,18 +1,16 @@
-import { Block, BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../BlockStore';
+import { ActiveBlockMother } from '../../testUtils/mothers/BlockMother';
 import { InputCommand } from './InputCommand';
 import { InputCommandHandler } from './InputCommandHandler';
 
 describe(InputCommandHandler, () => {
-  it('adds a character to the currently active block', () => {
+  it('adds some input to the currently active block', () => {
     const blockStore = new BlockStore();
     const handler = new InputCommandHandler(blockStore);
     const command = new InputCommand('Hello world!');
 
     blockStore.add('text', { x: 0, y: 0 });
-    blockStore.activeBlock = {
-      block: blockStore.blocks.get(1) as Block,
-      carriagePosition: 0,
-    };
+    blockStore.activeBlock = new ActiveBlockMother().createEmpty();
 
     handler.execute(command);
 

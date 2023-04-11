@@ -1,3 +1,4 @@
+import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { RenderService } from './RenderService';
 
@@ -5,13 +6,14 @@ describe(RenderService, () => {
   it('renders blocks', () => {
     const drawer = new StubDrawer();
     const renderService = new RenderService(drawer);
+    const blockMother = new BlockMother();
 
     jest.spyOn(drawer, 'renderText');
 
     renderService.render(
       new Map([
-        [1, { id: 1, type: 'text', content: 'Hello'.repeat(10), position: { x: 0, y: 0 } }],
-        [2, { id: 2, type: 'text', content: 'Hello', position: { x: 0, y: 0 } }],
+        [blockMother.createWithContent().id, blockMother.getLast()],
+        [blockMother.createWithLongContent().id, blockMother.getLast()],
       ]),
     );
 
