@@ -1,5 +1,5 @@
 import { BlockStore } from '../BlockStore';
-import { InputCommand } from '../commands/inputCommand/InputCommand';
+import { InputCommand } from '../commands/input/InputCommand';
 import { CommandBus } from '../utils/CommandBus';
 import { Mediator } from '../utils/Mediator';
 
