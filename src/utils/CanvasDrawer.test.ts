@@ -11,8 +11,8 @@ describe(CanvasDrawer, () => {
     const drawer = new CanvasDrawer(canvasContext);
 
     drawer.renderText({
-      x: 0,
-      y: 0,
+      x: 100,
+      y: 100,
       maxWidth: 100,
       fontFamily: 'Arial',
       fontSize: 16,

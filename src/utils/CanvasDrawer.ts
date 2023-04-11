@@ -27,7 +27,7 @@ export class CanvasDrawer implements Drawer {
     lines.forEach((line, index) => {
       const currentLineMetrics = lineMetrics[index];
 
-      this.context.fillText(line, x + horizontalPadding, currentLineMetrics.topOffset);
+      this.context.fillText(line, x + horizontalPadding, y + currentLineMetrics.topOffset);
     });
 
     return box.heightWithPaddings;
