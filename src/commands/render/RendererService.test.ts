@@ -17,6 +17,6 @@ describe(RenderService, () => {
 
     expect(drawer.renderText).toBeCalledTimes(2);
     expect(drawer.renderText).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 25 }));
+    expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 30 }));
   });
 });

@@ -6,6 +6,6 @@ export class DummyDrawer implements Drawer {
    * @returns {number} height of the rendered text
    */
   renderText({ lineHeight, padding: [verticalPadding] }: RenderTextOptions): number {
-    return verticalPadding + lineHeight;
+    return verticalPadding * 2 + lineHeight;
   }
 }
