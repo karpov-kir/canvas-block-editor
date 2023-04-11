@@ -8,6 +8,7 @@ export interface RenderTextOptions {
   fontSize: number;
   lineHeight: number;
   text: string;
+  padding: [vertical: number, horizontal: number];
 }
 
 export interface Drawer {
@@ -21,7 +22,7 @@ export class RenderService {
     let lastTopPosition = 0;
     const fontFamily = 'Arial';
     const fontSize = 16;
-    const lineHeight = 1.5;
+    const lineHeight = 20;
     const blockWidth = 100;
 
     blocks.forEach((block) => {
@@ -33,6 +34,7 @@ export class RenderService {
         fontSize,
         lineHeight,
         text: block.content,
+        padding: [5, 5],
       });
 
       lastTopPosition += blockHeight;

@@ -1,4 +1,4 @@
-import { BlockStore } from '../BlockStore';
+import { Block, BlockStore } from '../BlockStore';
 import { InputCommand } from '../commands/inputCommand/InputCommand';
 import { CommandBus } from '../utils/CommandBus';
 import { KeyboardEvent, UserKeyboardInteractionMediator } from './UserKeyboardInteractionMediator';
@@ -20,7 +20,7 @@ describe(UserKeyboardInteractionMediator, () => {
 
     blockStore.add('text');
     blockStore.activeBlock = {
-      block: blockStore.blocks[0],
+      block: blockStore.blocks.get(0) as Block,
       carriagePosition: 0,
     };
 
