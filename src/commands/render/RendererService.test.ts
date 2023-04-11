@@ -1,10 +1,9 @@
-import { CanvasDrawer } from '../../utils/CanvasDrawer';
+import { DummyDrawer } from '../../testUtils/DummyDrawer';
 import { RenderService } from './RenderService';
 
 describe(RenderService, () => {
   it('renders blocks', () => {
-    const canvas = document.createElement('canvas');
-    const drawer = new CanvasDrawer(canvas.getContext('2d') as CanvasRenderingContext2D);
+    const drawer = new DummyDrawer();
     const renderService = new RenderService(drawer);
 
     jest.spyOn(drawer, 'renderText');
@@ -18,6 +17,6 @@ describe(RenderService, () => {
 
     expect(drawer.renderText).toBeCalledTimes(2);
     expect(drawer.renderText).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 110 }));
+    expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 25 }));
   });
 });
