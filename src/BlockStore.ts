@@ -1,9 +1,15 @@
 import { createIdGenerator } from './idGenerator';
 
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export interface Block {
   id: number;
   content: string;
   type: string;
+  position: Position;
 }
 
 export interface ActiveBlock {
@@ -20,12 +26,13 @@ export class BlockStore {
 
   public highlightedBlock?: Block;
 
-  public add(type: string) {
+  public add(type: string, position: Position) {
     const id = this.idGenerator();
     this.blocks.set(id, {
       type,
       content: '',
       id,
+      position,
     });
   }
 }

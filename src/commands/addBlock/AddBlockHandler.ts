@@ -8,6 +8,6 @@ export class AddBlockHandler extends CommandHandler {
   }
 
   public execute(command: AddBlockCommand) {
-    this.blockStore.add(command.type);
+    this.blockStore.add(command.type, { x: 0, y: 0 });
   }
 }

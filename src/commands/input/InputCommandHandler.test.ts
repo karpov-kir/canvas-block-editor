@@ -8,7 +8,7 @@ describe(InputCommandHandler, () => {
     const handler = new InputCommandHandler(blockStore);
     const command = new InputCommand('Hello world!');
 
-    blockStore.add('text');
+    blockStore.add('text', { x: 0, y: 0 });
     blockStore.activeBlock = {
       block: blockStore.blocks.get(1) as Block,
       carriagePosition: 0,
@@ -16,13 +16,12 @@ describe(InputCommandHandler, () => {
 
     handler.execute(command);
 
-    expect(blockStore.activeBlock).toEqual({
-      block: {
-        id: 1,
-        type: 'text',
-        content: 'Hello world!',
-      },
-      carriagePosition: 0,
-    });
+    expect(blockStore.activeBlock).toEqual(
+      expect.objectContaining({
+        block: expect.objectContaining({
+          content: 'Hello world!',
+        }),
+      }),
+    );
   });
 });

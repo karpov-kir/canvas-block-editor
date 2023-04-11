@@ -10,8 +10,8 @@ describe(RenderService, () => {
 
     renderService.render(
       new Map([
-        [1, { id: 1, type: 'text', content: 'Hello'.repeat(10) }],
-        [2, { id: 2, type: 'text', content: 'Hello' }],
+        [1, { id: 1, type: 'text', content: 'Hello'.repeat(10), position: { x: 0, y: 0 } }],
+        [2, { id: 2, type: 'text', content: 'Hello', position: { x: 0, y: 0 } }],
       ]),
     );
 

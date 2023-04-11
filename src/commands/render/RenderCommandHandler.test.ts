@@ -13,7 +13,7 @@ describe(RenderCommandHandler, () => {
 
     jest.spyOn(renderService, 'render');
 
-    blockStore.add('text');
+    blockStore.add('text', { x: 0, y: 0 });
     handler.execute(command);
 
     expect(renderService.render).toBeCalledWith(blockStore.blocks);

@@ -18,7 +18,7 @@ describe(UserKeyboardInteractionMediator, () => {
     const keyboardEvent = new KeyboardEvent('key-press', 'T');
     const inputCommandHandler = jest.fn();
 
-    blockStore.add('text');
+    blockStore.add('text', { x: 0, y: 0 });
     blockStore.activeBlock = {
       block: blockStore.blocks.get(0) as Block,
       carriagePosition: 0,

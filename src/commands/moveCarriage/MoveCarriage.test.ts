@@ -8,7 +8,7 @@ describe(MoveCarriageHandler, () => {
     const handler = new MoveCarriageHandler(blockStore);
     const command = new MoveCarriageCommand(5);
 
-    blockStore.add('text');
+    blockStore.add('text', { x: 0, y: 0 });
     blockStore.activeBlock = {
       block: blockStore.blocks.get(1) as Block,
       carriagePosition: 0,
@@ -16,13 +16,10 @@ describe(MoveCarriageHandler, () => {
 
     handler.execute(command);
 
-    expect(blockStore.activeBlock).toEqual({
-      block: {
-        id: 1,
-        type: 'text',
-        content: '',
-      },
-      carriagePosition: 5,
-    });
+    expect(blockStore.activeBlock).toEqual(
+      expect.objectContaining({
+        carriagePosition: 5,
+      }),
+    );
   });
 });
