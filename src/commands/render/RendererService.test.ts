@@ -1,9 +1,9 @@
-import { DummyDrawer } from '../../testUtils/DummyDrawer';
+import { StubDrawer } from '../../testUtils/StubDrawer';
 import { RenderService } from './RenderService';
 
 describe(RenderService, () => {
   it('renders blocks', () => {
-    const drawer = new DummyDrawer();
+    const drawer = new StubDrawer();
     const renderService = new RenderService(drawer);
 
     jest.spyOn(drawer, 'renderText');

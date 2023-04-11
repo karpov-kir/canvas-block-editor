@@ -1,6 +1,6 @@
 import { Drawer, RenderTextOptions } from '../commands/render/RenderService';
 
-export class DummyDrawer implements Drawer {
+export class StubDrawer implements Drawer {
   /**
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text

@@ -9,14 +9,14 @@ export class CanvasDrawer implements Drawer {
    */
   renderText({ x, y, fontFamily, maxWidth, fontSize, lineHeight, text, padding }: RenderTextOptions): number {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
-    const {lines, lineMetrics, box} = fitTextIntoWidth(this.context, {
+    const { lines, lineMetrics, box } = fitTextIntoWidth(this.context, {
       width: maxWidth,
       text,
       fontSize,
       lineHeight,
       fontFamily,
-      padding
-    })
+      padding,
+    });
     const [horizontalPadding] = padding;
 
     this.context.fillStyle = 'black';
@@ -25,18 +25,18 @@ export class CanvasDrawer implements Drawer {
     this.context.textBaseline = 'top';
 
     lines.forEach((line, index) => {
-      const currentLineMetrics = lineMetrics[index]
+      const currentLineMetrics = lineMetrics[index];
 
       this.context.fillText(line, x + horizontalPadding, currentLineMetrics.topOffset);
-    })
+    });
 
-    return box.heightWithPaddings
+    return box.heightWithPaddings;
   }
 }
 
 interface FitTextIntoWidthOptions {
   text: string;
-  width: number
+  width: number;
 
   fontFamily: string;
   lineHeight: number;
@@ -67,13 +67,20 @@ export const fitTextIntoWidth = (
   canvasContext: CanvasRenderingContext2D,
   options: FitTextIntoWidthOptions,
 ): FitTextResult => {
-  const { fontFamily, fontSize, padding: [verticalPadding, horizontalPadding], lineHeight, text, width } = options;
+  const {
+    fontFamily,
+    fontSize,
+    padding: [verticalPadding, horizontalPadding],
+    lineHeight,
+    text,
+    width,
+  } = options;
 
   canvasContext.font = `${fontSize}px ${fontFamily}`;
   canvasContext.textAlign = 'left';
   canvasContext.textBaseline = 'top';
 
-  const widthToFitText = width - (horizontalPadding * 2);
+  const widthToFitText = width - horizontalPadding * 2;
   const lines: string[] = [];
   const lineMetrics: LineMetrics[] = [];
   const characterCount = text.length;
@@ -82,7 +89,7 @@ export const fitTextIntoWidth = (
   let currentLineBuffer = '';
   let lastLineMetrics = {
     width: 0,
-    topOffset: verticalPadding
+    topOffset: verticalPadding,
   };
 
   // Create an empty line if the text is empty
@@ -106,8 +113,8 @@ export const fitTextIntoWidth = (
       currentLineBuffer = '';
       lastLineMetrics = {
         width: 0,
-        topOffset: lines.length * lineHeight + verticalPadding
-      }
+        topOffset: lines.length * lineHeight + verticalPadding,
+      };
 
       // If the last character is the new line character it means,
       // that there won't be iterations anymore and we need to store
@@ -116,14 +123,14 @@ export const fitTextIntoWidth = (
         lines.push(currentLineBuffer);
         lineMetrics.push(lastLineMetrics);
       }
-    } 
+    }
     // Measure line and store line if it's too long
     else {
       // TODO measure only words to reduce performance impact
       const currentLineBufferMetrics = {
         width: canvasContext.measureText(currentLineBuffer).width,
-        topOffset: lines.length * lineHeight + verticalPadding
-      }
+        topOffset: lines.length * lineHeight + verticalPadding,
+      };
 
       if (currentLineBufferMetrics.width > widthToFitText) {
         if (currentLineBuffer.length === 1) {
@@ -139,7 +146,7 @@ export const fitTextIntoWidth = (
         biggestWidth = Math.max(biggestWidth, lineMetrics[lineMetrics.length - 1].width);
         lastLineMetrics = {
           width: 0,
-          topOffset: lines.length * lineHeight + verticalPadding
+          topOffset: lines.length * lineHeight + verticalPadding,
         };
       } else {
         lastLineMetrics = currentLineBufferMetrics;
@@ -151,7 +158,7 @@ export const fitTextIntoWidth = (
     lines.push(currentLineBuffer);
     lineMetrics.push({
       width: canvasContext.measureText(currentLineBuffer).width,
-      topOffset: lines.length * lineHeight + verticalPadding
+      topOffset: lines.length * lineHeight + verticalPadding,
     });
   }
 
