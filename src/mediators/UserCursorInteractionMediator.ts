@@ -1,3 +1,4 @@
+import { BlockRectStore } from '../BlockRectStore';
 import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
@@ -14,14 +15,19 @@ export class CursorEvent {
 }
 
 export class UserCursorInteractionMediator implements Mediator<CursorEvent> {
-  constructor(private readonly commandBus: CommandBus, private readonly blockStore: BlockStore) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly blockStore: BlockStore,
+    private readonly blockRectStore: BlockRectStore,
+  ) {}
 
   notify({ type, data }: CursorEvent) {
     if (type === 'double-click') {
       this.commandBus.publish(new AddBlockCommand('text'));
     } else if (type === 'move') {
       for (const block of this.blockStore.blocks.values()) {
-        if (data.x >= block.position.x && data.y >= block.position.y) {
+        const blockReact = this.blockRectStore.blockRects.get(block.id);
+        if (blockReact && data.x >= blockReact.position.x && data.y >= blockReact.position.y) {
           this.commandBus.publish(new HighlightBlockCommand(block.id));
           break;
         }

@@ -9,7 +9,7 @@ describe(InputCommandHandler, () => {
     const handler = new InputCommandHandler(blockStore);
     const command = new InputCommand('Hello world!');
 
-    blockStore.add('text', { x: 0, y: 0 });
+    blockStore.add('text');
     blockStore.activeBlock = new ActiveBlockMother().createEmpty();
 
     handler.execute(command);

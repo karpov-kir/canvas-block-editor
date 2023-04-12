@@ -1,3 +1,4 @@
+import { BlockRectStore } from '../../BlockRectStore';
 import { Block } from '../../BlockStore';
 
 export interface RenderTextOptions {
@@ -16,7 +17,7 @@ export interface Drawer {
 }
 
 export class RenderService {
-  constructor(private readonly drawer: Drawer) {}
+  constructor(private readonly drawer: Drawer, private readonly blockReactStore: BlockRectStore) {}
 
   render(blocks: Map<number, Block>) {
     let lastTopPosition = 0;
@@ -34,6 +35,17 @@ export class RenderService {
         fontSize,
         lineHeight,
         text: block.content,
+        padding: [5, 5],
+      });
+
+      this.blockReactStore.attach(block.id, {
+        blockId: block.id,
+        position: {
+          x: 0,
+          y: lastTopPosition,
+        },
+        width: blockWidth,
+        height: blockHeight,
         padding: [5, 5],
       });
 

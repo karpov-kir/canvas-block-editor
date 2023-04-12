@@ -1,3 +1,4 @@
+import { BlockRectStore } from '../../BlockRectStore';
 import { BlockStore } from '../../BlockStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { RenderCommand } from './RenderCommand';
@@ -7,13 +8,13 @@ import { RenderService } from './RenderService';
 describe(RenderCommandHandler, () => {
   it('renders blocks', () => {
     const blockStore = new BlockStore();
-    const renderService = new RenderService(new StubDrawer());
+    const renderService = new RenderService(new StubDrawer(), new BlockRectStore());
     const handler = new RenderCommandHandler(blockStore, renderService);
     const command = new RenderCommand();
 
     jest.spyOn(renderService, 'render');
 
-    blockStore.add('text', { x: 0, y: 0 });
+    blockStore.add('text');
     handler.execute(command);
 
     expect(renderService.render).toBeCalledWith(blockStore.blocks);

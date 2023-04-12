@@ -10,15 +10,11 @@ class BlockBuilder {
     this.#block = this.createEmpty();
   }
 
-  private createEmpty() {
+  private createEmpty(): Block {
     return {
       id: this.idGenerator(),
       content: '',
       type: 'text',
-      position: {
-        x: 0,
-        y: 0,
-      },
     };
   }
 

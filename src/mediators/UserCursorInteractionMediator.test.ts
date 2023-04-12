@@ -1,3 +1,4 @@
+import { BlockRectStore } from '../BlockRectStore';
 import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
@@ -8,11 +9,13 @@ describe(UserCursorInteractionMediator, () => {
   let commandBus: CommandBus;
   let mediator: UserCursorInteractionMediator;
   let blockStore: BlockStore;
+  let blockRectStore: BlockRectStore;
 
   beforeEach(() => {
     commandBus = new CommandBus();
     blockStore = new BlockStore();
-    mediator = new UserCursorInteractionMediator(commandBus, blockStore);
+    blockRectStore = new BlockRectStore();
+    mediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
   });
 
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
@@ -29,7 +32,14 @@ describe(UserCursorInteractionMediator, () => {
     const cursorEvent = new CursorEvent('move', { x: 10, y: 10 });
     const highlightBlockHandler = jest.fn();
 
-    blockStore.add('text', { x: 0, y: 0 });
+    blockStore.add('text');
+    blockRectStore.attach(1, {
+      blockId: 1,
+      position: { x: 0, y: 0 },
+      width: 100,
+      height: 100,
+      padding: [0, 0],
+    });
     commandBus.registerHandler(HighlightBlockCommand, highlightBlockHandler);
     mediator.notify(cursorEvent);
 
