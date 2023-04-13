@@ -1,16 +1,14 @@
-import { ActiveBlock, Block } from '../../BlockStore';
+import { Block } from '../../BlockStore';
 import { createIdGenerator } from '../../idGenerator';
+import { Builder } from './Builder';
+import { ObjectMother } from './ObjectMother';
 
-class BlockBuilder {
-  #block: Block;
-
+class BlockBuilder extends Builder<Block> {
   private idGenerator = createIdGenerator();
 
-  constructor() {
-    this.#block = this.createEmpty();
-  }
+  public instance = this.createEmpty();
 
-  private createEmpty(): Block {
+  public createEmpty() {
     return {
       id: this.idGenerator(),
       content: '',
@@ -19,17 +17,8 @@ class BlockBuilder {
   }
 
   public setContent(content: string) {
-    this.#block.content = content;
-
+    this.instance.content = content;
     return this;
-  }
-
-  public getAndReset() {
-    const block = this.#block;
-
-    this.#block = this.createEmpty();
-
-    return block;
   }
 }
 
@@ -38,55 +27,22 @@ class BlockBuilder {
 //   construct
 // }
 
-class ObjectMother<T> {
-  protected history: T[] = [];
-
-  protected addToHistory(object: T) {
-    this.history.push(object);
-  }
-
-  public getLast() {
-    return this.history[this.history.length - 1];
-  }
-}
-
-export class BlockMother extends ObjectMother<Block> {
+export class BlockMother extends ObjectMother<BlockBuilder> {
   public readonly builder = new BlockBuilder();
 
-  public createEmpty() {
-    this.addToHistory(this.builder.getAndReset());
-    return this.getLast();
+  public withContent() {
+    this.builder.setContent('Hello world!');
+    return this;
   }
 
-  public createWithContent() {
-    this.addToHistory(this.builder.setContent('Hello world!').getAndReset());
-    return this.getLast();
-  }
-
-  public createWithLongContent() {
-    this.addToHistory(
-      this.builder
-        .setContent(
-          "Hello world! But I'm not just a hello world, I'm also a long content that is repeated!"
-            .repeat(2)
-            .split('!')
-            .join('! '),
-        )
-        .getAndReset(),
+  public withLongContent() {
+    this.builder.setContent(
+      "Hello world! But I'm not just a hello world, I'm also a long content that is repeated!"
+        .repeat(2)
+        .split('!')
+        .join('! '),
     );
-    return this.getLast();
-  }
-}
 
-export class ActiveBlockMother extends ObjectMother<ActiveBlock> {
-  public readonly blockMother = new BlockMother();
-
-  public createEmpty() {
-    this.addToHistory({
-      block: this.blockMother.createEmpty(),
-      carriagePosition: 0,
-    });
-
-    return this.getLast();
+    return this;
   }
 }

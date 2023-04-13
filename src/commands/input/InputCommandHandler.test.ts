@@ -1,5 +1,5 @@
 import { BlockStore } from '../../BlockStore';
-import { ActiveBlockMother } from '../../testUtils/mothers/BlockMother';
+import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { InputCommand } from './InputCommand';
 import { InputCommandHandler } from './InputCommandHandler';
 
@@ -10,7 +10,7 @@ describe(InputCommandHandler, () => {
     const command = new InputCommand('Hello world!');
 
     blockStore.add('text');
-    blockStore.activeBlock = new ActiveBlockMother().createEmpty();
+    blockStore.activeBlock = new ActiveBlockMother().build();
 
     handler.execute(command);
 

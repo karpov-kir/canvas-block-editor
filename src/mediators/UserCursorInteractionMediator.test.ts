@@ -1,7 +1,9 @@
-import { BlockRectStore } from '../BlockRectStore';
+import { BlockRect, BlockRectStore, Padding } from '../BlockRectStore';
 import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
+import { Dimensions } from '../math/Dimensions';
+import { Vector } from '../math/Vector';
 import { CommandBus } from '../utils/CommandBus';
 import { CursorEvent, UserCursorInteractionMediator } from './UserCursorInteractionMediator';
 
@@ -19,7 +21,7 @@ describe(UserCursorInteractionMediator, () => {
   });
 
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
-    const cursorEvent = new CursorEvent('double-click', { x: 0, y: 0 });
+    const cursorEvent = new CursorEvent('double-click', { position: new Vector() });
     const addBlockHandler = jest.fn();
 
     commandBus.registerHandler(AddBlockCommand, addBlockHandler);
@@ -29,17 +31,13 @@ describe(UserCursorInteractionMediator, () => {
   });
 
   it(`emits the ${HighlightBlockCommand.name} on mouse hover`, () => {
-    const cursorEvent = new CursorEvent('move', { x: 10, y: 10 });
+    const cursorEvent = new CursorEvent('move', {
+      position: new Vector(10, 10),
+    });
     const highlightBlockHandler = jest.fn();
 
     blockStore.add('text');
-    blockRectStore.attach(1, {
-      blockId: 1,
-      position: { x: 0, y: 0 },
-      width: 100,
-      height: 100,
-      padding: [0, 0],
-    });
+    blockRectStore.attach(1, new BlockRect(1, new Padding(), new Vector(), new Dimensions(100, 100)));
     commandBus.registerHandler(HighlightBlockCommand, highlightBlockHandler);
     mediator.notify(cursorEvent);
 

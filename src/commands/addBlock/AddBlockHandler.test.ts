@@ -9,7 +9,7 @@ describe('AddBlockCommand', () => {
     const blockStore = new BlockStore();
     const command = new AddBlockCommand(blockType);
     const handler = new AddBlockHandler(blockStore);
-    const expectedBlock = new BlockMother().createEmpty();
+    const expectedBlock = new BlockMother().build();
 
     handler.execute(command);
 
