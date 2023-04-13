@@ -3,7 +3,6 @@ import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
 import { FocusBlockCommand } from '../commands/focusBlock/FocusBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
-import { isPointInside } from '../math/isPointInside';
 import { Vector } from '../math/Vector';
 import { CommandBus } from '../utils/CommandBus';
 import { Mediator } from '../utils/Mediator';
@@ -27,24 +26,16 @@ export class UserCursorInteractionMediator implements Mediator<CursorEvent> {
     if (type === 'double-click') {
       this.commandBus.publish(new AddBlockCommand('text'));
     } else if (type === 'move') {
-      for (const block of this.blockStore.blocks.values()) {
-        const blockRect = this.blockRectStore.blockRects.get(block.id);
-        if (blockRect && isPointInside(data.position, blockRect)) {
-          if (this.blockStore.highlightedBlock?.id !== blockRect.blockId) {
-            this.commandBus.publish(new HighlightBlockCommand(block.id));
-          }
-          break;
-        }
+      const blockRect = this.blockRectStore.findByPosition(data.position);
+
+      if (blockRect && this.blockStore.highlightedBlock?.id !== blockRect.blockId) {
+        this.commandBus.publish(new HighlightBlockCommand(blockRect.blockId));
       }
     } else if (type === 'click') {
-      for (const block of this.blockStore.blocks.values()) {
-        const blockRect = this.blockRectStore.blockRects.get(block.id);
-        if (blockRect && isPointInside(data.position, blockRect)) {
-          if (this.blockStore.activeBlock?.block.id !== blockRect.blockId) {
-            this.commandBus.publish(new FocusBlockCommand(block.id));
-          }
-          break;
-        }
+      const blockRect = this.blockRectStore.findByPosition(data.position);
+
+      if (blockRect && this.blockStore.activeBlock?.block.id !== blockRect.blockId) {
+        this.commandBus.publish(new FocusBlockCommand(blockRect.blockId));
       }
     }
   }

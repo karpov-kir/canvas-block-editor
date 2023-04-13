@@ -1,4 +1,5 @@
 import { Dimensions } from './math/Dimensions';
+import { isPointInside } from './math/isPointInside';
 import { Rectangle } from './math/Rectangle';
 import { Vector } from './math/Vector';
 
@@ -26,5 +27,13 @@ export class BlockRectStore {
 
   public detach(blockId: number) {
     this.blockRects.delete(blockId);
+  }
+
+  public findByPosition(position: Vector) {
+    for (const blockRect of this.blockRects.values()) {
+      if (isPointInside(position, blockRect)) {
+        return blockRect;
+      }
+    }
   }
 }
