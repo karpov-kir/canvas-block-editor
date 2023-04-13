@@ -1,4 +1,4 @@
-import { createIdGenerator } from '../idGenerator';
+import { createIdGenerator } from '../utils/idGenerator';
 
 export interface Block {
   id: number;

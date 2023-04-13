@@ -1,6 +1,6 @@
-import { createIdGenerator } from '../../idGenerator';
 import { Dimensions } from '../../math/Dimensions';
 import { BlockRect, Padding } from '../../stores/BlockRectStore';
+import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 

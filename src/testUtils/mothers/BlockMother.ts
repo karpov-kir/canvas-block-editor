@@ -1,5 +1,5 @@
-import { createIdGenerator } from '../../idGenerator';
 import { Block } from '../../stores/BlockStore';
+import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 
