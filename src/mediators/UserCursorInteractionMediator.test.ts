@@ -1,10 +1,12 @@
 import { BlockRectStore } from '../BlockRectStore';
 import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
+import { FocusBlockCommand } from '../commands/focusBlock/FocusBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
 import { Vector } from '../math/Vector';
 import { BlockRectMother } from '../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../utils/CommandBus';
+import { ActiveBlockMother } from './../testUtils/mothers/ActiveBlockMother';
 import { CursorEvent, UserCursorInteractionMediator } from './UserCursorInteractionMediator';
 
 describe(UserCursorInteractionMediator, () => {
@@ -13,6 +15,7 @@ describe(UserCursorInteractionMediator, () => {
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
   let blockRectMother: BlockRectMother;
+  let activeBlockMother: ActiveBlockMother;
 
   beforeEach(() => {
     commandBus = new CommandBus();
@@ -20,6 +23,7 @@ describe(UserCursorInteractionMediator, () => {
     blockRectStore = new BlockRectStore();
     mediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
     blockRectMother = new BlockRectMother();
+    activeBlockMother = new ActiveBlockMother();
 
     blockStore.add('text');
     blockStore.add('text');
@@ -75,5 +79,37 @@ describe(UserCursorInteractionMediator, () => {
     mediator.notify(cursorEvent);
 
     expect(highlightBlockHandler).toBeCalledTimes(1);
+  });
+
+  it(`emits the ${FocusBlockCommand.name} on a click`, () => {
+    const cursorEvent = new CursorEvent('click', {
+      position: new Vector(10, 10),
+    });
+    const focusedBlockHandler = jest.fn();
+
+    commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
+    mediator.notify(cursorEvent);
+
+    blockStore.activeBlock = activeBlockMother.build();
+
+    mediator.notify(cursorEvent);
+
+    expect(focusedBlockHandler).toBeCalledTimes(1);
+  });
+
+  it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
+    const cursorEvent = new CursorEvent('click', {
+      position: new Vector(10, 10),
+    });
+    const focusedBlockHandler = jest.fn();
+
+    commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
+    mediator.notify(cursorEvent);
+
+    blockStore.activeBlock = activeBlockMother.build();
+
+    mediator.notify(cursorEvent);
+
+    expect(focusedBlockHandler).toBeCalledTimes(1);
   });
 });
