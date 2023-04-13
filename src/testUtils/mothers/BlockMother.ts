@@ -22,11 +22,6 @@ class BlockBuilder extends Builder<Block> {
   }
 }
 
-// TODO complex scenarios
-// class BlockDirector {
-//   construct
-// }
-
 export class BlockMother extends ObjectMother<BlockBuilder> {
   public readonly builder = new BlockBuilder();
 
