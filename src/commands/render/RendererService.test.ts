@@ -1,4 +1,4 @@
-import { BlockRectStore } from '../../BlockRectStore';
+import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';

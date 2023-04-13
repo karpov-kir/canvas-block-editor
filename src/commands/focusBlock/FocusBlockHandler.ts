@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { CommandHandler } from '../../utils/Command';
 import { FocusBlockCommand } from './FocusBlockCommand';
 

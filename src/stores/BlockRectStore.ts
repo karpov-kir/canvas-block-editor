@@ -1,7 +1,7 @@
-import { Dimensions } from './math/Dimensions';
-import { isPointInside } from './math/isPointInside';
-import { Rectangle } from './math/Rectangle';
-import { Vector } from './math/Vector';
+import { Dimensions } from '../math/Dimensions';
+import { isPointInside } from '../math/isPointInside';
+import { Rectangle } from '../math/Rectangle';
+import { Vector } from '../math/Vector';
 
 export class Padding {
   constructor(public vertical: number = 0, public horizontal: number = 0) {}

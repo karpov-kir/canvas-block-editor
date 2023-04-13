@@ -1,7 +1,7 @@
-import { BlockRectStore } from '../../../BlockRectStore';
-import { BlockStore } from '../../../BlockStore';
 import { HighlightBlockCommand } from '../../../commands/highlightBlock/HighlightBlockCommand';
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
+import { BlockRectStore } from '../../../stores/BlockRectStore';
+import { BlockStore } from '../../../stores/BlockStore';
 import { CommandBus } from '../../../utils/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 

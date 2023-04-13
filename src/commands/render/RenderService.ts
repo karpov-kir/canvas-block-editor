@@ -1,7 +1,7 @@
-import { BlockRect, BlockRectStore, Padding } from '../../BlockRectStore';
-import { Block } from '../../BlockStore';
 import { Dimensions } from '../../math/Dimensions';
 import { Vector } from '../../math/Vector';
+import { BlockRect, BlockRectStore, Padding } from '../../stores/BlockRectStore';
+import { Block } from '../../stores/BlockStore';
 
 export interface RenderTextOptions {
   x: number;

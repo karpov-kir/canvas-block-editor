@@ -1,5 +1,5 @@
-import { BlockStore } from '../../../BlockStore';
 import { InputCommand } from '../../../commands/input/InputCommand';
+import { BlockStore } from '../../../stores/BlockStore';
 import { CommandBus } from '../../../utils/CommandBus';
 import { KeyboardEvent } from '../UserKeyboardInteractionMediator';
 

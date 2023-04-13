@@ -1,6 +1,6 @@
-import { BlockRect, Padding } from '../../BlockRectStore';
 import { createIdGenerator } from '../../idGenerator';
 import { Dimensions } from '../../math/Dimensions';
+import { BlockRect, Padding } from '../../stores/BlockRectStore';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 

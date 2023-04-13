@@ -1,4 +1,4 @@
-import { ActiveBlock } from '../../BlockStore';
+import { ActiveBlock } from '../../stores/BlockStore';
 import { BlockMother } from './BlockMother';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';

@@ -1,7 +1,7 @@
-import { BlockRectStore } from '../../../BlockRectStore';
-import { BlockStore } from '../../../BlockStore';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
 import { Vector } from '../../../math/Vector';
+import { BlockRectStore } from '../../../stores/BlockRectStore';
+import { BlockStore } from '../../../stores/BlockStore';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/CommandBus';

@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { Command } from '../../utils/Command';
 import { RenderCommand } from './RenderCommand';
 import { RenderService } from './RenderService';

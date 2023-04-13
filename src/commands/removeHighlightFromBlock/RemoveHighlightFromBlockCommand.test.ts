@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { RemoveHighlightFromBlockCommand } from './RemoveHighlightFromBlockCommand';
 import { RemoveHighlightFromBlockHandler } from './RemoveHighlightFromBlockHandler';
 

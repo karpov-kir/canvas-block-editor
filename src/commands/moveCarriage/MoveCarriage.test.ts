@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
 import { MoveCarriageHandler } from './MoveCarriageHandler';

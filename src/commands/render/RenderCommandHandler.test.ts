@@ -1,5 +1,5 @@
-import { BlockRectStore } from '../../BlockRectStore';
-import { BlockStore } from '../../BlockStore';
+import { BlockRectStore } from '../../stores/BlockRectStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { RenderCommand } from './RenderCommand';
 import { RenderCommandHandler } from './RenderCommandHandler';

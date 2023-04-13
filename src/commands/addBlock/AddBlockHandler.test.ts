@@ -1,4 +1,4 @@
-import { BlockStore } from '../../BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { AddBlockCommand } from './AddBlockCommand';
 import { AddBlockHandler } from './AddBlockHandler';

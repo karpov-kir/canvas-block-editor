@@ -1,6 +1,6 @@
-import { BlockRectStore } from '../../../BlockRectStore';
-import { BlockStore } from '../../../BlockStore';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
+import { BlockRectStore } from '../../../stores/BlockRectStore';
+import { BlockStore } from '../../../stores/BlockStore';
 import { CommandBus } from '../../../utils/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 
