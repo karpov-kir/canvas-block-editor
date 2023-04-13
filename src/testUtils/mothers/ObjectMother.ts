@@ -3,7 +3,7 @@ import { Builder } from './Builder';
 type GetBuilderInstanceType<T extends Builder<any>> = T extends Builder<infer U> ? U : never;
 
 export abstract class ObjectMother<T extends Builder<any>> {
-  protected history: GetBuilderInstanceType<T>[] = [];
+  protected readonly history: GetBuilderInstanceType<T>[] = [];
 
   public abstract readonly builder: T;
 
