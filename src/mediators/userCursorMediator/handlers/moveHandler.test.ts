@@ -1,6 +1,7 @@
 import { BlockRectStore } from '../../../BlockRectStore';
 import { BlockStore } from '../../../BlockStore';
 import { HighlightBlockCommand } from '../../../commands/highlightBlock/HighlightBlockCommand';
+import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { Vector } from '../../../math/Vector';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/CommandBus';
@@ -63,5 +64,31 @@ describe(moveHandler, () => {
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(highlightBlockHandler).toBeCalledTimes(1);
+  });
+
+  it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse hover outside of the highlighted block`, () => {
+    const cursorEvent = new CursorEvent('move', {
+      position: new Vector(-100, -100),
+    });
+    const removeHighlightFromBlockHandler = jest.fn();
+
+    blockStore.highlightedBlock = blockStore.blocks.get(1);
+
+    commandBus.registerHandler(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+
+    expect(removeHighlightFromBlockHandler).toBeCalledTimes(1);
+  });
+
+  it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse hover outside of blocks if there is no a highlighted block`, () => {
+    const cursorEvent = new CursorEvent('move', {
+      position: new Vector(-100, -100),
+    });
+    const removeHighlightFromBlockHandler = jest.fn();
+
+    commandBus.registerHandler(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+
+    expect(removeHighlightFromBlockHandler).not.toBeCalled();
   });
 });
