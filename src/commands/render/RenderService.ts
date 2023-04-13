@@ -22,7 +22,7 @@ export class RenderService {
   constructor(private readonly drawer: Drawer, private readonly blockReactStore: BlockRectStore) {}
 
   render(blocks: Map<number, Block>) {
-    let lastTopPosition = 0;
+    let nextY = 0;
     const fontFamily = 'Arial';
     const fontSize = 16;
     const lineHeight = 20;
@@ -31,7 +31,7 @@ export class RenderService {
     blocks.forEach((block) => {
       const blockHeight = this.drawer.renderText({
         x: 0,
-        y: lastTopPosition,
+        y: nextY,
         maxWidth: blockWidth,
         fontFamily,
         fontSize,
@@ -42,15 +42,10 @@ export class RenderService {
 
       this.blockReactStore.attach(
         block.id,
-        new BlockRect(
-          block.id,
-          new Padding(5, 5),
-          new Vector(0, lastTopPosition),
-          new Dimensions(blockWidth, blockHeight),
-        ),
+        new BlockRect(block.id, new Padding(5, 5), new Vector(0, nextY), new Dimensions(blockWidth, blockHeight)),
       );
 
-      lastTopPosition += blockHeight;
+      nextY += blockHeight + 1;
     });
   }
 }

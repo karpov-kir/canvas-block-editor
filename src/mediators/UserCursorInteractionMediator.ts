@@ -29,7 +29,9 @@ export class UserCursorInteractionMediator implements Mediator<CursorEvent> {
       for (const block of this.blockStore.blocks.values()) {
         const blockRect = this.blockRectStore.blockRects.get(block.id);
         if (blockRect && isPointInside(data.position, blockRect)) {
-          this.commandBus.publish(new HighlightBlockCommand(block.id));
+          if (this.blockStore.highlightedBlock?.id !== blockRect.blockId) {
+            this.commandBus.publish(new HighlightBlockCommand(block.id));
+          }
           break;
         }
       }

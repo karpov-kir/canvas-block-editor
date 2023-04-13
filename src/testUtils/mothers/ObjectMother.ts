@@ -7,7 +7,7 @@ export abstract class ObjectMother<T extends Builder<any>> {
 
   public abstract readonly builder: T;
 
-  public last(): GetBuilderInstanceType<T> {
+  public get last(): GetBuilderInstanceType<T> {
     return this.history[this.history.length - 1];
   }
 
@@ -18,6 +18,6 @@ export abstract class ObjectMother<T extends Builder<any>> {
 
   public build() {
     this.history.push(this.builder.buildAndReset());
-    return this.last();
+    return this.last;
   }
 }

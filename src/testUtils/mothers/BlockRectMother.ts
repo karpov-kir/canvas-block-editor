@@ -51,4 +51,10 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
     this.builder.setDimensions(new Dimensions(100, 30)).setPadding(new Padding(5, 5));
     return this;
   }
+
+  public underLast() {
+    const last = this.last;
+    this.builder.setY(last.position.y + last.dimensions.height + 1);
+    return this;
+  }
 }
