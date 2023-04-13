@@ -50,7 +50,7 @@ interface LineMetrics {
   topOffset: number;
 }
 
-interface FitTextResult {
+interface FitTextResultIntoWidthResult {
   box: {
     width: number;
     widthWithPaddings: number;
@@ -66,7 +66,7 @@ interface FitTextResult {
 export const fitTextIntoWidth = (
   canvasContext: CanvasRenderingContext2D,
   options: FitTextIntoWidthOptions,
-): FitTextResult => {
+): FitTextResultIntoWidthResult => {
   const {
     fontFamily,
     fontSize,
