@@ -1,18 +1,17 @@
-import { BlockStore } from '../BlockStore';
-import { InputCommand } from '../commands/input/InputCommand';
-import { ActiveBlockMother } from '../testUtils/mothers/ActiveBlockMother';
-import { CommandBus } from '../utils/CommandBus';
-import { KeyboardEvent, UserKeyboardInteractionMediator } from './UserKeyboardInteractionMediator';
+import { BlockStore } from '../../../BlockStore';
+import { InputCommand } from '../../../commands/input/InputCommand';
+import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
+import { CommandBus } from '../../../utils/CommandBus';
+import { KeyboardEvent } from '../UserKeyboardInteractionMediator';
+import { keyPressHandler } from './keyPressHandler';
 
-describe(UserKeyboardInteractionMediator, () => {
+describe(keyPressHandler, () => {
   let commandBus: CommandBus;
   let blockStore: BlockStore;
-  let mediator: UserKeyboardInteractionMediator;
 
   beforeEach(() => {
     commandBus = new CommandBus();
     blockStore = new BlockStore();
-    mediator = new UserKeyboardInteractionMediator(commandBus, blockStore);
   });
 
   it(`emits the ${InputCommand.name} on a key press`, () => {
@@ -23,7 +22,7 @@ describe(UserKeyboardInteractionMediator, () => {
     blockStore.activeBlock = new ActiveBlockMother().build();
 
     commandBus.registerHandler(InputCommand, inputCommandHandler);
-    mediator.notify(keyboardEvent);
+    keyPressHandler(keyboardEvent, blockStore, commandBus);
 
     expect(inputCommandHandler).toBeCalledWith(expect.any(InputCommand));
   });
@@ -33,7 +32,7 @@ describe(UserKeyboardInteractionMediator, () => {
     const inputCommandHandler = jest.fn();
 
     commandBus.registerHandler(InputCommand, inputCommandHandler);
-    mediator.notify(keyboardEvent);
+    keyPressHandler(keyboardEvent, blockStore, commandBus);
 
     expect(inputCommandHandler).not.toBeCalled();
   });

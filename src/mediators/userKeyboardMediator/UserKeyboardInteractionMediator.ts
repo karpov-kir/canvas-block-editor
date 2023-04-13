@@ -1,7 +1,7 @@
-import { BlockStore } from '../BlockStore';
-import { InputCommand } from '../commands/input/InputCommand';
-import { CommandBus } from '../utils/CommandBus';
-import { Mediator } from '../utils/Mediator';
+import { BlockStore } from '../../BlockStore';
+import { InputCommand } from '../../commands/input/InputCommand';
+import { CommandBus } from '../../utils/CommandBus';
+import { Mediator } from '../../utils/Mediator';
 
 export class KeyboardEvent {
   constructor(public readonly type: string, public readonly key: string) {}
