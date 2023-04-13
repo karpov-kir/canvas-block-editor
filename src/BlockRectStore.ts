@@ -1,14 +1,20 @@
-interface Position {
-  x: number;
-  y: number;
+import { Dimensions } from './math/Dimensions';
+import { Rectangle } from './math/Rectangle';
+import { Vector } from './math/Vector';
+
+export class Padding {
+  constructor(public vertical: number = 0, public horizontal: number = 0) {}
 }
 
-interface BlockRect {
-  blockId: number;
-  position: Position;
-  padding: [vertical: number, horizontal: number];
-  width: number;
-  height: number;
+export class BlockRect extends Rectangle {
+  constructor(
+    public blockId: number,
+    public padding = new Padding(),
+    position = new Vector(),
+    dimensions = new Dimensions(),
+  ) {
+    super(position, dimensions);
+  }
 }
 
 export class BlockRectStore {

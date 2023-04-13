@@ -1,5 +1,7 @@
-import { BlockRectStore } from '../../BlockRectStore';
+import { BlockRect, BlockRectStore, Padding } from '../../BlockRectStore';
 import { Block } from '../../BlockStore';
+import { Dimensions } from '../../math/Dimensions';
+import { Vector } from '../../math/Vector';
 
 export interface RenderTextOptions {
   x: number;
@@ -38,16 +40,15 @@ export class RenderService {
         padding: [5, 5],
       });
 
-      this.blockReactStore.attach(block.id, {
-        blockId: block.id,
-        position: {
-          x: 0,
-          y: lastTopPosition,
-        },
-        width: blockWidth,
-        height: blockHeight,
-        padding: [5, 5],
-      });
+      this.blockReactStore.attach(
+        block.id,
+        new BlockRect(
+          block.id,
+          new Padding(5, 5),
+          new Vector(0, lastTopPosition),
+          new Dimensions(blockWidth, blockHeight),
+        ),
+      );
 
       lastTopPosition += blockHeight;
     });

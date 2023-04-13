@@ -2,12 +2,13 @@ import { BlockRectStore } from '../BlockRectStore';
 import { BlockStore } from '../BlockStore';
 import { AddBlockCommand } from '../commands/addBlock/AddBlockCommand';
 import { HighlightBlockCommand } from '../commands/highlightBlock/HighlightBlockCommand';
+import { isPointInside } from '../math/isPointInside';
+import { Vector } from '../math/Vector';
 import { CommandBus } from '../utils/CommandBus';
 import { Mediator } from '../utils/Mediator';
 
 interface CursorEventData {
-  x: number;
-  y: number;
+  position: Vector;
 }
 
 export class CursorEvent {
@@ -26,8 +27,8 @@ export class UserCursorInteractionMediator implements Mediator<CursorEvent> {
       this.commandBus.publish(new AddBlockCommand('text'));
     } else if (type === 'move') {
       for (const block of this.blockStore.blocks.values()) {
-        const blockReact = this.blockRectStore.blockRects.get(block.id);
-        if (blockReact && data.x >= blockReact.position.x && data.y >= blockReact.position.y) {
+        const blockRect = this.blockRectStore.blockRects.get(block.id);
+        if (blockRect && isPointInside(data.position, blockRect)) {
           this.commandBus.publish(new HighlightBlockCommand(block.id));
           break;
         }
