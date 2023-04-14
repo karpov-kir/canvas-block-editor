@@ -1,14 +1,18 @@
 import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
+import { EventBus } from '../../utils/pubSub/EventBus';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
-import { MoveCarriageHandler } from './MoveCarriageHandler';
+import { CarriageMovedEvent, MoveCarriageHandler } from './MoveCarriageHandler';
 
 describe(MoveCarriageHandler, () => {
-  it('moves the carriage to a position', () => {
+  it(`moves the carriage to a position and emits the ${CarriageMovedEvent}`, () => {
     const blockStore = new BlockStore();
-    const handler = new MoveCarriageHandler(blockStore);
+    const eventBus = new EventBus();
+    const handler = new MoveCarriageHandler(blockStore, eventBus);
     const command = new MoveCarriageCommand(5);
+    const carriageMovedHandler = jest.fn();
 
+    eventBus.subscribe(CarriageMovedEvent, carriageMovedHandler);
     blockStore.add(BlockType.Text);
     blockStore.activeBlock = new ActiveBlockMother().create();
 
@@ -19,5 +23,6 @@ describe(MoveCarriageHandler, () => {
         carriagePosition: 5,
       }),
     );
+    expect(carriageMovedHandler).toBeCalledWith(new CarriageMovedEvent(blockStore.activeBlock.block, 5));
   });
 });
