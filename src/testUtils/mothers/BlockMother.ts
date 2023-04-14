@@ -20,10 +20,20 @@ class BlockBuilder extends Builder<Block> {
     this.instance.content = content;
     return this;
   }
+
+  public setType(type: BlockType) {
+    this.instance.type = type;
+    return this;
+  }
 }
 
 export class BlockMother extends ObjectMother<BlockBuilder> {
   public readonly builder = new BlockBuilder();
+
+  public withH2Type() {
+    this.builder.setType(BlockType.H2);
+    return this;
+  }
 
   public withContent() {
     this.builder.setContent('Hello world!');
