@@ -1,4 +1,4 @@
-import { Command } from '../../utils/Command';
+import { Command } from '../../utils/pubSub/Command';
 
 export class HighlightBlockCommand extends Command {
   constructor(public readonly blockId: number) {

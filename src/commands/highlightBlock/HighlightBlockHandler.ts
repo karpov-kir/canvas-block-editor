@@ -1,9 +1,17 @@
-import { BlockStore } from '../../stores/BlockStore';
-import { CommandHandler } from '../../utils/Command';
+import { Block, BlockStore } from '../../stores/BlockStore';
+import { CommandHandler } from '../../utils/pubSub/Command';
+import { Event } from '../../utils/pubSub/Event';
+import { EventBus } from '../../utils/pubSub/EventBus';
 import { HighlightBlockCommand } from './HighlightBlockCommand';
 
+export class BlockHighlightedEvent extends Event {
+  constructor(public readonly block: Block) {
+    super();
+  }
+}
+
 export class HighlightBlockHandler extends CommandHandler {
-  constructor(private readonly blockStore: BlockStore) {
+  constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
@@ -15,5 +23,7 @@ export class HighlightBlockHandler extends CommandHandler {
     }
 
     this.blockStore.highlightedBlock = block;
+
+    this.eventBus.publish(new BlockHighlightedEvent(this.blockStore.highlightedBlock));
   }
 }
