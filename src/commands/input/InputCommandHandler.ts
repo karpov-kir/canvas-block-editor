@@ -1,9 +1,17 @@
-import { BlockStore } from '../../stores/BlockStore';
-import { CommandHandler } from '../../utils/Command';
+import { Block, BlockStore } from '../../stores/BlockStore';
+import { CommandHandler } from '../../utils/pubSub/Command';
+import { Event } from '../../utils/pubSub/Event';
+import { EventBus } from '../../utils/pubSub/EventBus';
 import { InputCommand } from './InputCommand';
 
+export class InputReceivedEvent extends Event {
+  constructor(public readonly block: Block, public readonly content: string) {
+    super();
+  }
+}
+
 export class InputCommandHandler extends CommandHandler {
-  constructor(private readonly blockStore: BlockStore) {
+  constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
@@ -15,5 +23,7 @@ export class InputCommandHandler extends CommandHandler {
     }
 
     activeBlock.block.content += command.content;
+
+    this.eventBus.publish(new InputReceivedEvent(activeBlock.block, command.content));
   }
 }
