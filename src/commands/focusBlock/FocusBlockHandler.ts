@@ -1,9 +1,17 @@
-import { BlockStore } from '../../stores/BlockStore';
-import { CommandHandler } from '../../utils/Command';
+import { Block, BlockStore } from '../../stores/BlockStore';
+import { CommandHandler } from '../../utils/pubSub/Command';
+import { Event } from '../../utils/pubSub/Event';
+import { EventBus } from '../../utils/pubSub/EventBus';
 import { FocusBlockCommand } from './FocusBlockCommand';
 
+export class BlockFocusedEvent extends Event {
+  constructor(public readonly block: Block) {
+    super();
+  }
+}
+
 export class FocusBlockHandler extends CommandHandler {
-  constructor(private readonly blockStore: BlockStore) {
+  constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
@@ -18,5 +26,7 @@ export class FocusBlockHandler extends CommandHandler {
       block: block,
       carriagePosition: 0,
     };
+
+    this.eventBus.publish(new BlockFocusedEvent(this.blockStore.activeBlock.block));
   }
 }

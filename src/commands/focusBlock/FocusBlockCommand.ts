@@ -1,4 +1,4 @@
-import { Command } from '../../utils/Command';
+import { Command } from '../../utils/pubSub/Command';
 
 export class FocusBlockCommand extends Command {
   constructor(public readonly blockId: number) {
