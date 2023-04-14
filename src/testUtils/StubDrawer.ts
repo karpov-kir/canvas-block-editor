@@ -5,7 +5,7 @@ export class StubDrawer implements Drawer {
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text
    */
-  renderText({ lineHeight, padding: [verticalPadding] }: RenderTextOptions): number {
-    return verticalPadding * 2 + lineHeight;
+  renderText({ lineHeight, padding }: RenderTextOptions): number {
+    return padding.vertical * 2 + lineHeight;
   }
 }

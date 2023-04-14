@@ -1,5 +1,6 @@
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
+import { Padding } from '../stores/BlockRectStore';
 import { createCanvas } from '../testUtils/createCanvas';
 import { CanvasDrawer } from './CanvasDrawer';
 
@@ -13,12 +14,12 @@ describe(CanvasDrawer, () => {
     drawer.renderText({
       x: 100,
       y: 100,
-      maxWidth: 100,
+      width: 100,
       fontFamily: 'Arial',
       fontSize: 16,
       lineHeight: 20,
       text: 'A'.repeat(15),
-      padding: [5, 5],
+      padding: new Padding(5, 5),
     });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
