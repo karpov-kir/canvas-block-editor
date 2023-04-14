@@ -1,7 +1,7 @@
 import { Dimensions } from '../../math/Dimensions';
 import { Vector } from '../../math/Vector';
 import { BlockRect, BlockRectStore, Padding } from '../../stores/BlockRectStore';
-import { Block } from '../../stores/BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
 
 export interface RenderTextOptions {
   x: number;
@@ -16,6 +16,7 @@ export interface RenderTextOptions {
 
 export interface Drawer {
   renderText(options: RenderTextOptions): number;
+  setViewportSize(dimensions: Dimensions): void;
 }
 
 const defaultStyles = {
@@ -27,12 +28,16 @@ const defaultStyles = {
 };
 
 export class RenderService {
-  constructor(private readonly drawer: Drawer, private readonly blockReactStore: BlockRectStore) {}
+  constructor(
+    private readonly drawer: Drawer,
+    private readonly blockStore: BlockStore,
+    private readonly blockReactStore: BlockRectStore,
+  ) {}
 
-  render(blocks: Map<number, Block>) {
+  render() {
     let nextY = 0;
 
-    blocks.forEach((block) => {
+    this.blockStore.blocks.forEach((block) => {
       const blockHeight = this.drawer.renderText({
         ...defaultStyles,
         x: 0,

@@ -8,8 +8,8 @@ import { RenderService } from './RenderService';
 describe(RenderCommandHandler, () => {
   it('renders blocks', () => {
     const blockStore = new BlockStore();
-    const renderService = new RenderService(new StubDrawer(), new BlockRectStore());
-    const handler = new RenderCommandHandler(blockStore, renderService);
+    const renderService = new RenderService(new StubDrawer(), new BlockStore(), new BlockRectStore());
+    const handler = new RenderCommandHandler(renderService);
     const command = new RenderCommand();
 
     jest.spyOn(renderService, 'render');
@@ -17,6 +17,6 @@ describe(RenderCommandHandler, () => {
     blockStore.add('text');
     handler.execute(command);
 
-    expect(renderService.render).toBeCalledWith(blockStore.blocks);
+    expect(renderService.render).toBeCalled();
   });
 });
