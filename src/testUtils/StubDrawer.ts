@@ -1,4 +1,5 @@
 import { Drawer, RenderTextOptions } from '../commands/render/RenderService';
+import { Dimensions } from '../math/Dimensions';
 
 export class StubDrawer implements Drawer {
   /**
@@ -7,5 +8,9 @@ export class StubDrawer implements Drawer {
    */
   renderText({ lineHeight, padding }: RenderTextOptions): number {
     return padding.vertical * 2 + lineHeight;
+  }
+
+  setViewportSize(_dimensions: Dimensions): void {
+    return undefined;
   }
 }

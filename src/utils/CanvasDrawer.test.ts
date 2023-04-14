@@ -29,4 +29,18 @@ describe(CanvasDrawer, () => {
       failureThresholdType: 'percent',
     });
   });
+
+  it('updates canvas size', () => {
+    const { canvasContext, canvasElement } = createCanvas();
+    const drawer = new CanvasDrawer(canvasContext);
+
+    drawer.setViewportSize({ width: 10, height: 10 });
+
+    const imgBuffer = canvasElement.toBuffer('image/png');
+
+    expect(imgBuffer).toMatchImageSnapshot({
+      failureThreshold: 0.05,
+      failureThresholdType: 'percent',
+    });
+  });
 });

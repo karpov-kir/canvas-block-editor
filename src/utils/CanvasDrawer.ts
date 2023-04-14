@@ -1,4 +1,5 @@
 import { Drawer, RenderTextOptions } from '../commands/render/RenderService';
+import { Dimensions } from '../math/Dimensions';
 import { Padding } from '../stores/BlockRectStore';
 
 export class CanvasDrawer implements Drawer {
@@ -31,6 +32,11 @@ export class CanvasDrawer implements Drawer {
     });
 
     return box.heightWithPaddings;
+  }
+
+  setViewportSize({ width, height }: Dimensions) {
+    this.context.canvas.width = width;
+    this.context.canvas.height = height;
   }
 }
 
