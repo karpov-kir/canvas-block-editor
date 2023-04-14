@@ -1,9 +1,16 @@
 import { createIdGenerator } from '../utils/idGenerator';
 
+export enum BlockType {
+  Text = 'text',
+  H1 = 'h1',
+  H2 = 'h2',
+  CreateBlock = 'createBlock',
+}
+
 export interface Block {
   id: number;
   content: string;
-  type: string;
+  type: BlockType;
 }
 
 export interface ActiveBlock {
@@ -20,7 +27,7 @@ export class BlockStore {
 
   public highlightedBlock?: Block;
 
-  public add(type: string) {
+  public add(type: BlockType) {
     const id = this.idGenerator();
     this.blocks.set(id, {
       type,

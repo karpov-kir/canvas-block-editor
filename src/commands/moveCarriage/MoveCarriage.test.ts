@@ -1,4 +1,4 @@
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
 import { MoveCarriageHandler } from './MoveCarriageHandler';
@@ -9,7 +9,7 @@ describe(MoveCarriageHandler, () => {
     const handler = new MoveCarriageHandler(blockStore);
     const command = new MoveCarriageCommand(5);
 
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
     blockStore.activeBlock = new ActiveBlockMother().create();
 
     handler.execute(command);

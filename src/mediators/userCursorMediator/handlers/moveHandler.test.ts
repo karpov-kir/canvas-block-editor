@@ -2,7 +2,7 @@ import { HighlightBlockCommand } from '../../../commands/highlightBlock/Highligh
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
-import { BlockStore } from '../../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
@@ -20,8 +20,8 @@ describe(moveHandler, () => {
     blockRectStore = new BlockRectStore();
     blockRectMother = new BlockRectMother();
 
-    blockStore.add('text');
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
+    blockStore.add(BlockType.Text);
     blockRectStore.attach(1, blockRectMother.withSmallSize().create());
     blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().create());
   });

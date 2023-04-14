@@ -1,4 +1,4 @@
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { FocusBlockCommand } from './FocusBlockCommand';
 import { FocusBlockHandler } from './FocusBlockHandler';
@@ -9,7 +9,7 @@ describe(FocusBlockCommand, () => {
     const command = new FocusBlockCommand(1);
     const handler = new FocusBlockHandler(blockStore);
 
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
     handler.execute(command);
 
     expect(blockStore.activeBlock).toEqual(new ActiveBlockMother().create());

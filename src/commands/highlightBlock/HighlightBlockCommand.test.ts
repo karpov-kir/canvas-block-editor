@@ -1,4 +1,4 @@
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { HighlightBlockCommand } from './HighlightBlockCommand';
 import { HighlightBlockHandler } from './HighlightBlockHandler';
 
@@ -8,7 +8,7 @@ describe(HighlightBlockCommand, () => {
     const command = new HighlightBlockCommand(1);
     const handler = new HighlightBlockHandler(blockStore);
 
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
     handler.execute(command);
 
     expect(blockStore.highlightedBlock).toEqual(blockStore.blocks.get(1));

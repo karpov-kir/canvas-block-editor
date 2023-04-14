@@ -1,7 +1,7 @@
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
 import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
-import { BlockStore } from '../../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/CommandBus';
@@ -22,8 +22,8 @@ describe(clickHandler, () => {
     blockRectMother = new BlockRectMother();
     activeBlockMother = new ActiveBlockMother();
 
-    blockStore.add('text');
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
+    blockStore.add(BlockType.Text);
     blockRectStore.attach(1, blockRectMother.withSmallSize().create());
     blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().create());
   });

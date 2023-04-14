@@ -1,4 +1,4 @@
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { RemoveHighlightFromBlockCommand } from './RemoveHighlightFromBlockCommand';
 import { RemoveHighlightFromBlockHandler } from './RemoveHighlightFromBlockHandler';
 
@@ -8,7 +8,7 @@ describe(RemoveHighlightFromBlockHandler, () => {
     const command = new RemoveHighlightFromBlockCommand(1);
     const handler = new RemoveHighlightFromBlockHandler(blockStore);
 
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
     blockStore.highlightedBlock = blockStore.blocks.get(1);
     handler.execute(command);
 

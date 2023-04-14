@@ -1,4 +1,4 @@
-import { Block } from '../../stores/BlockStore';
+import { Block, BlockType } from '../../stores/BlockStore';
 import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
@@ -12,7 +12,7 @@ class BlockBuilder extends Builder<Block> {
     return {
       id: this.idGenerator(),
       content: '',
-      type: 'text',
+      type: BlockType.Text,
     };
   }
 

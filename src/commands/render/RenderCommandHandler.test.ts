@@ -1,5 +1,5 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { RenderCommand } from './RenderCommand';
 import { RenderCommandHandler } from './RenderCommandHandler';
@@ -14,7 +14,7 @@ describe(RenderCommandHandler, () => {
 
     jest.spyOn(renderService, 'render');
 
-    blockStore.add('text');
+    blockStore.add(BlockType.Text);
     handler.execute(command);
 
     expect(renderService.render).toBeCalled();
