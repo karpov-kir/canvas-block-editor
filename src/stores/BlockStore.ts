@@ -29,10 +29,14 @@ export class BlockStore {
 
   public add(type: BlockType) {
     const id = this.idGenerator();
-    this.blocks.set(id, {
+    const block = {
       type,
       content: '',
       id,
-    });
+    };
+
+    this.blocks.set(id, block);
+
+    return block;
   }
 }

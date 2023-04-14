@@ -1,7 +1,7 @@
 import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDocumentCommand';
 import { Dimensions } from '../../../math/Dimensions';
 import { DocumentStore } from '../../../stores/DocumentStore';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { DocumentEvent } from '../ViewportMediator';
 import { resizeHandler } from './resizeHandler';
 
@@ -20,7 +20,7 @@ describe(resizeHandler, () => {
     });
     const resizeCommandHandler = jest.fn();
 
-    commandBus.registerHandler(ResizeDocumentCommand, resizeCommandHandler);
+    commandBus.subscribe(ResizeDocumentCommand, resizeCommandHandler);
     resizeHandler(documentEvent, documentStore, commandBus);
 
     expect(resizeCommandHandler).toBeCalledWith(expect.any(ResizeDocumentCommand));
@@ -34,7 +34,7 @@ describe(resizeHandler, () => {
 
     documentStore.dimensions = new Dimensions(200, 200);
 
-    commandBus.registerHandler(ResizeDocumentCommand, resizeCommandHandler);
+    commandBus.subscribe(ResizeDocumentCommand, resizeCommandHandler);
     resizeHandler(documentEvent, documentStore, commandBus);
 
     expect(resizeCommandHandler).not.toBeCalledWith();

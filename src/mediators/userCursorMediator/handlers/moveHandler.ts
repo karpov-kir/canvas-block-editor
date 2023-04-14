@@ -2,7 +2,7 @@ import { HighlightBlockCommand } from '../../../commands/highlightBlock/Highligh
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore } from '../../../stores/BlockStore';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 
 export function moveHandler(

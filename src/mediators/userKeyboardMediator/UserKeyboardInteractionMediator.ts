@@ -1,10 +1,13 @@
 import { InputCommand } from '../../commands/input/InputCommand';
 import { BlockStore } from '../../stores/BlockStore';
-import { CommandBus } from '../../utils/CommandBus';
+import { ExternalEvent } from '../../utils/ExternalEvent';
 import { Mediator } from '../../utils/Mediator';
+import { CommandBus } from '../../utils/pubSub/CommandBus';
 
-export class KeyboardEvent {
-  constructor(public readonly type: string, public readonly key: string) {}
+export class KeyboardEvent extends ExternalEvent {
+  constructor(public readonly type: string, public readonly key: string) {
+    super();
+  }
 }
 
 export class UserKeyboardInteractionMediator implements Mediator<KeyboardEvent> {

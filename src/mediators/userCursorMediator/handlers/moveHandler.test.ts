@@ -4,7 +4,7 @@ import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 import { moveHandler } from './moveHandler';
 
@@ -32,7 +32,7 @@ describe(moveHandler, () => {
     });
     const highlightBlockHandler = jest.fn();
 
-    commandBus.registerHandler(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(highlightBlockHandler).toBeCalledWith(new HighlightBlockCommand(1));
@@ -44,7 +44,7 @@ describe(moveHandler, () => {
     });
     const highlightBlockHandler = jest.fn();
 
-    commandBus.registerHandler(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(highlightBlockHandler).toBeCalledWith(new HighlightBlockCommand(2));
@@ -56,7 +56,7 @@ describe(moveHandler, () => {
     });
     const highlightBlockHandler = jest.fn();
 
-    commandBus.registerHandler(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.highlightedBlock = blockStore.blocks.get(1);
@@ -74,7 +74,7 @@ describe(moveHandler, () => {
 
     blockStore.highlightedBlock = blockStore.blocks.get(1);
 
-    commandBus.registerHandler(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(removeHighlightFromBlockHandler).toBeCalledTimes(1);
@@ -86,7 +86,7 @@ describe(moveHandler, () => {
     });
     const removeHighlightFromBlockHandler = jest.fn();
 
-    commandBus.registerHandler(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
     moveHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(removeHighlightFromBlockHandler).not.toBeCalled();

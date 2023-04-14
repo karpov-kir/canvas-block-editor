@@ -1,7 +1,7 @@
 import { InputCommand } from '../../../commands/input/InputCommand';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { KeyboardEvent } from '../UserKeyboardInteractionMediator';
 import { keyPressHandler } from './keyPressHandler';
 
@@ -21,7 +21,7 @@ describe(keyPressHandler, () => {
     blockStore.add(BlockType.Text);
     blockStore.activeBlock = new ActiveBlockMother().create();
 
-    commandBus.registerHandler(InputCommand, inputCommandHandler);
+    commandBus.subscribe(InputCommand, inputCommandHandler);
     keyPressHandler(keyboardEvent, blockStore, commandBus);
 
     expect(inputCommandHandler).toBeCalledWith(expect.any(InputCommand));
@@ -31,7 +31,7 @@ describe(keyPressHandler, () => {
     const keyboardEvent = new KeyboardEvent('key-press', 'T');
     const inputCommandHandler = jest.fn();
 
-    commandBus.registerHandler(InputCommand, inputCommandHandler);
+    commandBus.subscribe(InputCommand, inputCommandHandler);
     keyPressHandler(keyboardEvent, blockStore, commandBus);
 
     expect(inputCommandHandler).not.toBeCalled();

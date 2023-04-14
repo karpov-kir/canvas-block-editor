@@ -3,7 +3,7 @@ import { ChangeBlockTypeCommand } from '../../../commands/changeBlockType/Change
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 
 export function clickHandler(

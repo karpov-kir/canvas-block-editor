@@ -6,7 +6,7 @@ import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
-import { CommandBus } from '../../../utils/CommandBus';
+import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorEvent } from '../UserCursorInteractionMediator';
 import { clickHandler } from './clickHandler';
 
@@ -36,7 +36,7 @@ describe(clickHandler, () => {
     });
     const focusedBlockHandler = jest.fn();
 
-    commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
+    commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.activeBlock = activeBlockMother.create();
@@ -52,7 +52,7 @@ describe(clickHandler, () => {
     });
     const focusedBlockHandler = jest.fn();
 
-    commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
+    commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     blockStore.activeBlock = activeBlockMother.create();
 
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
@@ -70,9 +70,9 @@ describe(clickHandler, () => {
 
     blockStore.add(BlockType.CreateBlock);
     blockRectStore.attach(3, blockRectMother.withSmallSize().underLast().create());
-    commandBus.registerHandler(FocusBlockCommand, focusBlockCommandHandler);
-    commandBus.registerHandler(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
-    commandBus.registerHandler(AddBlockCommand, addBlockHandler);
+    commandBus.subscribe(FocusBlockCommand, focusBlockCommandHandler);
+    commandBus.subscribe(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
+    commandBus.subscribe(AddBlockCommand, addBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
     expect(focusBlockCommandHandler).toBeCalledTimes(1);
