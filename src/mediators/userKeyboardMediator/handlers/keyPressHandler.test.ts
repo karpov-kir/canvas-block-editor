@@ -19,7 +19,7 @@ describe(keyPressHandler, () => {
     const inputCommandHandler = jest.fn();
 
     blockStore.add('text');
-    blockStore.activeBlock = new ActiveBlockMother().build();
+    blockStore.activeBlock = new ActiveBlockMother().create();
 
     commandBus.registerHandler(InputCommand, inputCommandHandler);
     keyPressHandler(keyboardEvent, blockStore, commandBus);

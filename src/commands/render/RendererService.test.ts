@@ -16,8 +16,8 @@ describe(RenderService, () => {
 
     renderService.render(
       new Map([
-        [blockMother.withContent().build().id, blockMother.last],
-        [blockMother.withLongContent().build().id, blockMother.last],
+        [blockMother.withContent().create().id, blockMother.last],
+        [blockMother.withLongContent().create().id, blockMother.last],
       ]),
     );
 
@@ -26,7 +26,7 @@ describe(RenderService, () => {
     expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
 
     expect(blockRectStore.blockRects.size).toBe(2);
-    expect(blockRectStore.blockRects.get(1)).toEqual(blockRectMother.withSmallSize().build());
-    expect(blockRectStore.blockRects.get(2)).toEqual(blockRectMother.withSmallSize().underLast().build());
+    expect(blockRectStore.blockRects.get(1)).toEqual(blockRectMother.withSmallSize().create());
+    expect(blockRectStore.blockRects.get(2)).toEqual(blockRectMother.withSmallSize().underLast().create());
   });
 });

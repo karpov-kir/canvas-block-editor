@@ -24,8 +24,8 @@ describe(clickHandler, () => {
 
     blockStore.add('text');
     blockStore.add('text');
-    blockRectStore.attach(1, blockRectMother.withSmallSize().build());
-    blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().build());
+    blockRectStore.attach(1, blockRectMother.withSmallSize().create());
+    blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().create());
   });
 
   it(`emits the ${FocusBlockCommand.name} on a click`, () => {
@@ -37,7 +37,7 @@ describe(clickHandler, () => {
     commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
-    blockStore.activeBlock = activeBlockMother.build();
+    blockStore.activeBlock = activeBlockMother.create();
 
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
@@ -53,7 +53,7 @@ describe(clickHandler, () => {
     commandBus.registerHandler(FocusBlockCommand, focusedBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
-    blockStore.activeBlock = activeBlockMother.build();
+    blockStore.activeBlock = activeBlockMother.create();
 
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 

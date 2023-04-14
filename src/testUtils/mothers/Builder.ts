@@ -9,7 +9,7 @@ export abstract class Builder<T> {
     return this;
   }
 
-  public buildAndReset() {
+  public create() {
     const instance = this.instance;
     this.reset();
     return instance;

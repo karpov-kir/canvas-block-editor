@@ -10,7 +10,7 @@ describe(MoveCarriageHandler, () => {
     const command = new MoveCarriageCommand(5);
 
     blockStore.add('text');
-    blockStore.activeBlock = new ActiveBlockMother().build();
+    blockStore.activeBlock = new ActiveBlockMother().create();
 
     handler.execute(command);
 

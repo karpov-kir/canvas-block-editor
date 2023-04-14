@@ -10,7 +10,7 @@ class ActiveBlockBuilder extends Builder<ActiveBlock> {
 
   public createEmpty(): ActiveBlock {
     return {
-      block: this.blockMother.build(),
+      block: this.blockMother.create(),
       carriagePosition: 0,
     };
   }

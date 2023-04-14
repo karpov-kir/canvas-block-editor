@@ -12,6 +12,6 @@ describe(FocusBlockCommand, () => {
     blockStore.add('text');
     handler.execute(command);
 
-    expect(blockStore.activeBlock).toEqual(new ActiveBlockMother().build());
+    expect(blockStore.activeBlock).toEqual(new ActiveBlockMother().create());
   });
 });

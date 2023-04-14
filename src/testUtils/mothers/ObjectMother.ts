@@ -16,8 +16,8 @@ export abstract class ObjectMother<T extends Builder<any>> {
     return this;
   }
 
-  public build() {
-    this.history.push(this.builder.buildAndReset());
+  public create() {
+    this.history.push(this.builder.create());
     return this.last;
   }
 }
