@@ -37,6 +37,8 @@ export class CanvasDrawer implements Drawer {
   setViewportSize({ width, height }: Dimensions) {
     this.context.canvas.width = width;
     this.context.canvas.height = height;
+    this.context.canvas.style.width = `${width}px`;
+    this.context.canvas.style.height = `${height}px`;
   }
 }
 

@@ -2,11 +2,11 @@ import { BlockAddedEvent } from '../commands/addBlock/AddBlockHandler';
 import { BlockTypeChangedEvent } from '../commands/changeBlockType/ChangeBlockTypeHandler';
 import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockHandler';
 import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockHandler';
-import { InputReceivedEvent } from '../commands/input/InputCommandHandler';
+import { InputReceivedEvent } from '../commands/input/InputHandler';
 import { CarriageMovedEvent } from '../commands/moveCarriage/MoveCarriageHandler';
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockHandler';
 import { RenderCommand } from '../commands/render/RenderCommand';
-import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentCommandHandler';
+import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentHandler';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
 

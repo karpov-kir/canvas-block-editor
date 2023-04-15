@@ -13,7 +13,7 @@ describe(RenderService, () => {
   let blockMother: BlockMother;
   let blockRectMother: BlockRectMother;
 
-  beforeAll(() => {
+  beforeEach(() => {
     drawer = new StubDrawer();
     blockStore = new BlockStore();
     blockRectStore = new BlockRectStore();
@@ -23,6 +23,7 @@ describe(RenderService, () => {
 
     jest.spyOn(drawer, 'renderText');
   });
+
   it('renders blocks', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.blocks.set(blockMother.withLongContent().create().id, blockMother.last);
@@ -43,6 +44,6 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.renderText).toBeCalledWith(1, expect.objectContaining({ content: 'New +' }));
+    expect(drawer.renderText).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
   });
 });
