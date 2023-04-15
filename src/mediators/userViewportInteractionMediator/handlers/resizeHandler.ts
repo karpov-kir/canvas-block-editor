@@ -1,7 +1,7 @@
 import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDocumentCommand';
 import { DocumentStore } from '../../../stores/DocumentStore';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
-import { DocumentEvent } from '../ViewportMediator';
+import { DocumentEvent } from '../UserViewportInteractionMediator';
 
 export function resizeHandler({ data }: DocumentEvent, documentStore: DocumentStore, commandBus: CommandBus) {
   if (

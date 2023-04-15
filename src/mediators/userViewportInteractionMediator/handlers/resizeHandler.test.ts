@@ -2,7 +2,7 @@ import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDo
 import { Dimensions } from '../../../math/Dimensions';
 import { DocumentStore } from '../../../stores/DocumentStore';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
-import { DocumentEvent } from '../ViewportMediator';
+import { DocumentEvent } from '../UserViewportInteractionMediator';
 import { resizeHandler } from './resizeHandler';
 
 describe(resizeHandler, () => {
