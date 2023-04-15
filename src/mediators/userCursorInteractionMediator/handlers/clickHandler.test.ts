@@ -4,6 +4,7 @@ import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockComman
 import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
+import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
@@ -34,7 +35,7 @@ describe(clickHandler, () => {
     const cursorEvent = new CursorEvent('click', {
       position: new Vector(10, 10),
     });
-    const focusedBlockHandler = jest.fn();
+    const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
@@ -43,30 +44,30 @@ describe(clickHandler, () => {
 
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
-    expect(focusedBlockHandler).toBeCalledTimes(1);
+    expect(focusedBlockHandler.execute).toBeCalledTimes(1);
   });
 
   it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
     const cursorEvent = new CursorEvent('click', {
       position: new Vector(10, 10),
     });
-    const focusedBlockHandler = jest.fn();
+    const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     blockStore.activeBlock = activeBlockMother.create();
 
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
-    expect(focusedBlockHandler).not.toBeCalled();
+    expect(focusedBlockHandler.execute).not.toBeCalled();
   });
 
   it(`changes the block type on a click on a ${BlockType.CreateBlock} block, focuses the block, and adds a new ${BlockType.CreateBlock} block at the end`, () => {
     const cursorEvent = new CursorEvent('click', {
       position: new Vector(10, 70),
     });
-    const focusBlockCommandHandler = jest.fn();
-    const changeBlockTypeCommandHandler = jest.fn();
-    const addBlockHandler = jest.fn();
+    const focusBlockCommandHandler = new CommandHandlerStub();
+    const changeBlockTypeCommandHandler = new CommandHandlerStub();
+    const addBlockHandler = new CommandHandlerStub();
 
     blockStore.add(BlockType.CreateBlock);
     blockRectStore.attach(3, blockRectMother.withSmallSize().underLast().create());
@@ -75,9 +76,9 @@ describe(clickHandler, () => {
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
     clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
 
-    expect(focusBlockCommandHandler).toBeCalledTimes(1);
-    expect(changeBlockTypeCommandHandler).toBeCalledTimes(1);
-    expect(addBlockHandler).toBeCalledTimes(1);
-    expect(addBlockHandler).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
+    expect(focusBlockCommandHandler.execute).toBeCalledTimes(1);
+    expect(changeBlockTypeCommandHandler.execute).toBeCalledTimes(1);
+    expect(addBlockHandler.execute).toBeCalledTimes(1);
+    expect(addBlockHandler.execute).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
   });
 });

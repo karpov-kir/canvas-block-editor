@@ -1,4 +1,5 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
+import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { doubleClickHandler } from './doubleClickHandler';
 
@@ -10,11 +11,11 @@ describe(doubleClickHandler, () => {
   });
 
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
-    const addBlockHandler = jest.fn();
+    const addBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
     doubleClickHandler(commandBus);
 
-    expect(addBlockHandler).toBeCalledWith(expect.any(AddBlockCommand));
+    expect(addBlockHandler.execute).toBeCalledWith(expect.any(AddBlockCommand));
   });
 });

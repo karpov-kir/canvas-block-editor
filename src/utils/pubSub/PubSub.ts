@@ -1,30 +1,15 @@
-import { ConstructorOf } from '../types';
+export abstract class PubSub<Channel, Handler, Data> {
+  protected handlers: Map<Channel, Array<Handler>> = new Map();
 
-type Handler<Data> = (data: Data) => void;
+  protected abstract execute(data: Data, handler: Handler): void;
 
-export class PubSub<Channel, Data> {
-  protected handlers: Map<Channel, Array<Handler<Data>>> = new Map();
-
-  public subscribe(channel: Channel, handler: Handler<Data>) {
+  public subscribe(channel: Channel, handler: Handler) {
     const handlers = this.handlers.get(channel) || [];
     this.handlers.set(channel, [...handlers, handler]);
   }
 
   public publish(channel: Channel, data: Data) {
     const handlers = this.handlers.get(channel) || [];
-    handlers.forEach((handler) => handler(data));
-  }
-}
-
-export class ClassBasedPubSub<ClassConstructorChannel extends ConstructorOf<any>, Data> extends PubSub<
-  ClassConstructorChannel,
-  Data
-> {
-  public subscribe(ClassToSubscribe: ClassConstructorChannel, handler: Handler<Data>) {
-    super.subscribe(ClassToSubscribe, handler);
-  }
-
-  public publish(instance: InstanceType<ClassConstructorChannel>) {
-    super.publish(instance.constructor, instance);
+    handlers.forEach((handler) => this.execute(data, handler));
   }
 }

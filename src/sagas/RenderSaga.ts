@@ -12,17 +12,23 @@ import { EventBus } from '../utils/pubSub/EventBus';
 
 export class RenderSaga {
   constructor(private readonly eventBus: EventBus, private readonly commandBus: CommandBus) {
-    this.eventBus.subscribe(BlockAddedEvent, () => this.run());
-    this.eventBus.subscribe(BlockTypeChangedEvent, () => this.run());
-    this.eventBus.subscribe(BlockFocusedEvent, () => this.run());
-    this.eventBus.subscribe(BlockHighlightedEvent, () => this.run());
-    this.eventBus.subscribe(InputReceivedEvent, () => this.run());
-    this.eventBus.subscribe(CarriageMovedEvent, () => this.run());
-    this.eventBus.subscribe(HighlightRemovedFromBlockEvent, () => this.run());
-    this.eventBus.subscribe(DocumentResizedEvent, () => this.run());
+    const runsOn = [
+      BlockAddedEvent,
+      BlockTypeChangedEvent,
+      BlockFocusedEvent,
+      BlockHighlightedEvent,
+      InputReceivedEvent,
+      CarriageMovedEvent,
+      HighlightRemovedFromBlockEvent,
+      DocumentResizedEvent,
+    ];
+
+    runsOn.forEach((event) => {
+      this.eventBus.subscribe(event, this.run);
+    });
   }
 
-  private run() {
+  private run = () => {
     this.commandBus.publish(new RenderCommand());
-  }
+  };
 }

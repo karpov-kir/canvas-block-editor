@@ -10,6 +10,7 @@ import { RenderedEvent } from '../commands/render/RenderCommandHandler';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentHandler';
 import { Dimensions } from '../math/Dimensions';
 import { BlockType } from '../stores/BlockStore';
+import { CommandHandlerStub } from '../testUtils/CommandHandlerStub';
 import { BlockMother } from '../testUtils/mothers/BlockMother';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
@@ -32,7 +33,7 @@ describe(RenderSaga, () => {
       new DocumentResizedEvent(new Dimensions()),
     ];
     const eventsThatShouldNotTriggerRender = [new RenderedEvent()];
-    const renderCommandHandler = jest.fn();
+    const renderCommandHandler = new CommandHandlerStub();
 
     new RenderSaga(eventBus, commandBus);
 
@@ -45,6 +46,6 @@ describe(RenderSaga, () => {
       eventBus.publish(event);
     });
 
-    expect(renderCommandHandler).toBeCalledTimes(eventsThatShouldTriggerRender.length);
+    expect(renderCommandHandler.execute).toBeCalledTimes(eventsThatShouldTriggerRender.length);
   });
 });

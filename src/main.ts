@@ -20,7 +20,10 @@ import { ResizeDocumentHandler } from './commands/resizeDocument/ResizeDocumentH
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
 import { Dimensions } from './math/Dimensions';
 import { Vector } from './math/Vector';
-import { CursorEvent, UserCursorInteractionMediator } from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
+import {
+  CursorEvent,
+  UserCursorInteractionMediator,
+} from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
 import { UserKeyboardInteractionMediator } from './mediators/userKeyboardInteractionMediator/UserKeyboardInteractionMediator';
 import {
   DocumentEvent,
@@ -76,30 +79,15 @@ const canvasDrawer = new CanvasDrawer(canvasContext);
 const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
 
-commandBus.subscribe(AddBlockCommand, (command) => new AddBlockHandler(blockStore, eventBus).execute(command as any));
-commandBus.subscribe(ChangeBlockTypeCommand, (command) =>
-  new ChangeBlockTypeHandler(blockStore, eventBus).execute(command as any),
-);
-commandBus.subscribe(FocusBlockCommand, (command) =>
-  new FocusBlockHandler(blockStore, eventBus).execute(command as any),
-);
-commandBus.subscribe(HighlightBlockCommand, (command) =>
-  new HighlightBlockHandler(blockStore, eventBus).execute(command as any),
-);
-commandBus.subscribe(InputCommand, (command) => new InputHandler(blockStore, eventBus).execute(command as any));
-commandBus.subscribe(MoveCarriageCommand, (command) =>
-  new MoveCarriageHandler(blockStore, eventBus).execute(command as any),
-);
-commandBus.subscribe(RemoveHighlightFromBlockCommand, (command) =>
-  new RemoveHighlightFromBlockHandler(blockStore, eventBus).execute(command as any),
-);
-commandBus.subscribe(
-  RenderCommand,
-  (command) => new RenderCommandHandler(renderService, eventBus).execute(command) as any,
-);
-commandBus.subscribe(ResizeDocumentCommand, (command) =>
-  new ResizeDocumentHandler(resizeDocumentService, eventBus).execute(command as any),
-);
+commandBus.subscribe(AddBlockCommand, new AddBlockHandler(blockStore, eventBus));
+commandBus.subscribe(ChangeBlockTypeCommand, new ChangeBlockTypeHandler(blockStore, eventBus));
+commandBus.subscribe(FocusBlockCommand, new FocusBlockHandler(blockStore, eventBus));
+commandBus.subscribe(HighlightBlockCommand, new HighlightBlockHandler(blockStore, eventBus));
+commandBus.subscribe(InputCommand, new InputHandler(blockStore, eventBus));
+commandBus.subscribe(MoveCarriageCommand, new MoveCarriageHandler(blockStore, eventBus));
+commandBus.subscribe(RemoveHighlightFromBlockCommand, new RemoveHighlightFromBlockHandler(blockStore, eventBus));
+commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
+commandBus.subscribe(ResizeDocumentCommand, new ResizeDocumentHandler(resizeDocumentService, eventBus));
 
 const userCursorMediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
 new UserKeyboardInteractionMediator(commandBus, blockStore);
