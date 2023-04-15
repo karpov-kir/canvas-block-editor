@@ -3,15 +3,15 @@ import { DocumentStore } from '../../stores/DocumentStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { ResizeDocumentCommand } from './ResizeDocumentCommand';
-import { DocumentResizedEvent, ResizeDocumentCommandHandler } from './ResizeDocumentCommandHandler';
+import { DocumentResizedEvent, ResizeDocumentHandler } from './ResizeDocumentHandler';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
-describe(ResizeDocumentCommandHandler, () => {
+describe(ResizeDocumentHandler, () => {
   it(`resizes document and emits the ${DocumentResizedEvent}`, () => {
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(new StubDrawer(), documentStore);
     const eventBus = new EventBus();
-    const handler = new ResizeDocumentCommandHandler(resizeDocumentService, eventBus);
+    const handler = new ResizeDocumentHandler(resizeDocumentService, eventBus);
     const command = new ResizeDocumentCommand(new Dimensions(100, 100));
     const documentResizedHandler = jest.fn();
 

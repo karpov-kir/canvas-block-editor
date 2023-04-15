@@ -11,7 +11,7 @@ export class DocumentResizedEvent extends Event {
   }
 }
 
-export class ResizeDocumentCommandHandler extends Command {
+export class ResizeDocumentHandler extends Command {
   constructor(private readonly resizeDocumentService: ResizeDocumentService, private readonly eventBus: EventBus) {
     super();
   }
