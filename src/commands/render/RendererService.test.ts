@@ -1,5 +1,6 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
+import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';
@@ -11,6 +12,7 @@ describe(RenderService, () => {
   let blockRectStore: BlockRectStore;
   let renderService: RenderService;
   let blockMother: BlockMother;
+  let activeBlockMother: ActiveBlockMother;
   let blockRectMother: BlockRectMother;
 
   beforeEach(() => {
@@ -20,6 +22,7 @@ describe(RenderService, () => {
     renderService = new RenderService(drawer, blockStore, blockRectStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
+    activeBlockMother = new ActiveBlockMother();
   });
 
   it('renders blocks', () => {
@@ -36,6 +39,36 @@ describe(RenderService, () => {
     expect(blockRectStore.blockRects.size).toBe(2);
     expect(blockRectStore.blockRects.get(1)).toEqual(blockRectMother.withSmallSize().create());
     expect(blockRectStore.blockRects.get(2)).toEqual(blockRectMother.withSmallSize().underLast().create());
+  });
+
+  it('strokes the highlighted block in red color', () => {
+    blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
+    blockStore.highlightedBlock = blockMother.last;
+
+    renderService.render();
+
+    expect(drawer.rect).toBeCalledTimes(1);
+    expect(drawer.rect).nthCalledWith(
+      1,
+      expect.objectContaining({
+        strokeStyle: 'red',
+      }),
+    );
+  });
+
+  it('strokes the active block in a green color', () => {
+    blockStore.activeBlock = activeBlockMother.create();
+    blockStore.blocks.set(activeBlockMother.last.block.id, activeBlockMother.last.block);
+
+    renderService.render();
+
+    expect(drawer.rect).toBeCalledTimes(1);
+    expect(drawer.rect).nthCalledWith(
+      1,
+      expect.objectContaining({
+        strokeStyle: 'green',
+      }),
+    );
   });
 
   it(`renders the ${BlockType.CreateBlock} with "New +" as the content`, () => {

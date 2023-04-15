@@ -19,7 +19,7 @@ export interface RenderRectOptions {
   y: number;
   width: number;
   height: number;
-  color: string;
+  strokeStyle: string;
   fill?: boolean;
 }
 
@@ -74,13 +74,27 @@ export class RenderService {
       ? this.blockReactStore.blockRects.get(this.blockStore.highlightedBlock.id)
       : undefined;
 
+    const activeBlockRect = this.blockStore.activeBlock
+      ? this.blockReactStore.blockRects.get(this.blockStore.activeBlock.block.id)
+      : undefined;
+
     if (highlightedBlockRect) {
       this.drawer.rect({
         x: highlightedBlockRect.position.x,
         y: highlightedBlockRect.position.y,
         width: highlightedBlockRect.dimensions.width,
         height: highlightedBlockRect.dimensions.height,
-        color: 'red',
+        strokeStyle: 'red',
+      });
+    }
+
+    if (activeBlockRect) {
+      this.drawer.rect({
+        x: activeBlockRect.position.x,
+        y: activeBlockRect.position.y,
+        width: activeBlockRect.dimensions.width,
+        height: activeBlockRect.dimensions.height,
+        strokeStyle: 'green',
       });
     }
   }

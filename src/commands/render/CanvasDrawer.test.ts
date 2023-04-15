@@ -50,7 +50,7 @@ describe(CanvasDrawer, () => {
   });
 
   it('renders rect', () => {
-    drawer.rect({ x: 100, y: 100, width: 150, height: 250, color: 'red' });
+    drawer.rect({ x: 100, y: 100, width: 150, height: 250, strokeStyle: 'red' });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 
@@ -61,7 +61,7 @@ describe(CanvasDrawer, () => {
   });
 
   it('renders a filled rect', () => {
-    drawer.rect({ x: 100, y: 100, width: 150, height: 250, color: 'red', fill: true });
+    drawer.rect({ x: 100, y: 100, width: 150, height: 250, strokeStyle: 'red', fill: true });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 
@@ -72,7 +72,7 @@ describe(CanvasDrawer, () => {
   });
 
   it('rect stroke does not affect the following up text', () => {
-    drawer.rect({ x: 100, y: 100, width: 10, height: 10, color: 'red' });
+    drawer.rect({ x: 100, y: 100, width: 10, height: 10, strokeStyle: 'red' });
     drawer.text({
       x: 100,
       y: 110,
