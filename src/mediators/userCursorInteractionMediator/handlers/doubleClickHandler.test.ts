@@ -14,7 +14,7 @@ describe(doubleClickHandler, () => {
     const addBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
-    doubleClickHandler(commandBus);
+    doubleClickHandler(new MouseEvent('dbclick'), commandBus);
 
     expect(addBlockHandler.execute).toBeCalledWith(expect.any(AddBlockCommand));
   });

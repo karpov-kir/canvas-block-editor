@@ -19,16 +19,9 @@ import { ResizeDocumentCommand } from './commands/resizeDocument/ResizeDocumentC
 import { ResizeDocumentHandler } from './commands/resizeDocument/ResizeDocumentHandler';
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
 import { Dimensions } from './math/Dimensions';
-import { Vector } from './math/Vector';
-import {
-  CursorEvent,
-  UserCursorInteractionMediator,
-} from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
+import { UserCursorInteractionMediator } from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
 import { UserKeyboardInteractionMediator } from './mediators/userKeyboardInteractionMediator/UserKeyboardInteractionMediator';
-import {
-  DocumentEvent,
-  UserViewportInteractionMediator,
-} from './mediators/userViewportInteractionMediator/UserViewportInteractionMediator';
+import { UserViewportInteractionMediator } from './mediators/userViewportInteractionMediator/UserViewportInteractionMediator';
 import { RenderSaga } from './sagas/RenderSaga';
 import { BlockRectStore } from './stores/BlockRectStore';
 import { BlockStore, BlockType } from './stores/BlockStore';
@@ -89,35 +82,27 @@ commandBus.subscribe(RemoveHighlightFromBlockCommand, new RemoveHighlightFromBlo
 commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
 commandBus.subscribe(ResizeDocumentCommand, new ResizeDocumentHandler(resizeDocumentService, eventBus));
 
-const userCursorMediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
-new UserKeyboardInteractionMediator(commandBus, blockStore);
-const viewportMediator = new UserViewportInteractionMediator(commandBus, documentStore);
+const userCursorInteractionMediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
+const userKeyboardInteractionMediator = new UserKeyboardInteractionMediator(commandBus, blockStore);
+const userViewportInteractionMediator = new UserViewportInteractionMediator(commandBus, documentStore);
 
 new RenderSaga(eventBus, commandBus);
 
 commandBus.publish(new AddBlockCommand(BlockType.CreateBlock));
-commandBus.publish(new ResizeDocumentCommand(new Dimensions(1000, 1000)));
+commandBus.publish(new ResizeDocumentCommand(new Dimensions(window.innerWidth, window.innerHeight)));
 
-window.addEventListener('resize', () => {
-  viewportMediator.notify(
-    new DocumentEvent('resize', {
-      dimensions: new Dimensions(window.innerWidth, window.innerHeight),
-    }),
-  );
+window.addEventListener('resize', (event) => {
+  userViewportInteractionMediator.notify(event);
 });
 
-containerElement.addEventListener('mousemove', (event: MouseEvent) => {
-  userCursorMediator.notify(
-    new CursorEvent('move', {
-      position: new Vector(event.clientX, event.clientY),
-    }),
-  );
+containerElement.addEventListener('mousemove', (event) => {
+  userCursorInteractionMediator.notify(event);
 });
 
-containerElement.addEventListener('click', (event: MouseEvent) => {
-  userCursorMediator.notify(
-    new CursorEvent('click', {
-      position: new Vector(event.clientX, event.clientY),
-    }),
-  );
+containerElement.addEventListener('click', (event) => {
+  userCursorInteractionMediator.notify(event);
+});
+
+window.addEventListener('keypress', (event) => {
+  userKeyboardInteractionMediator.notify(event);
 });

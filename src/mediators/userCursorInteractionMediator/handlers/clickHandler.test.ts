@@ -8,7 +8,6 @@ import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
-import { CursorEvent } from '../UserCursorInteractionMediator';
 import { clickHandler } from './clickHandler';
 
 describe(clickHandler, () => {
@@ -32,39 +31,42 @@ describe(clickHandler, () => {
   });
 
   it(`emits the ${FocusBlockCommand.name} on a click`, () => {
-    const cursorEvent = new CursorEvent('click', {
-      position: new Vector(10, 10),
+    const clickEvent = new MouseEvent('click', {
+      clientX: 10,
+      clientY: 10,
     });
     const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
-    clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.activeBlock = activeBlockMother.create();
 
-    clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
     expect(focusedBlockHandler.execute).toBeCalledTimes(1);
   });
 
   it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
-    const cursorEvent = new CursorEvent('click', {
-      position: new Vector(10, 10),
-    });
     const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     blockStore.activeBlock = activeBlockMother.create();
 
-    clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+    clickHandler(
+      new MouseEvent('click', {
+        clientX: 10,
+        clientY: 10,
+      }),
+      blockStore,
+      blockRectStore,
+      commandBus,
+    );
 
     expect(focusedBlockHandler.execute).not.toBeCalled();
   });
 
   it(`changes the block type on a click on a ${BlockType.CreateBlock} block, focuses the block, and adds a new ${BlockType.CreateBlock} block at the end`, () => {
-    const cursorEvent = new CursorEvent('click', {
-      position: new Vector(10, 70),
-    });
     const focusBlockCommandHandler = new CommandHandlerStub();
     const changeBlockTypeCommandHandler = new CommandHandlerStub();
     const addBlockHandler = new CommandHandlerStub();
@@ -74,7 +76,15 @@ describe(clickHandler, () => {
     commandBus.subscribe(FocusBlockCommand, focusBlockCommandHandler);
     commandBus.subscribe(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
-    clickHandler(cursorEvent, blockStore, blockRectStore, commandBus);
+    clickHandler(
+      new MouseEvent('click', {
+        clientX: 10,
+        clientY: 70,
+      }),
+      blockStore,
+      blockRectStore,
+      commandBus,
+    );
 
     expect(focusBlockCommandHandler.execute).toBeCalledTimes(1);
     expect(changeBlockTypeCommandHandler.execute).toBeCalledTimes(1);

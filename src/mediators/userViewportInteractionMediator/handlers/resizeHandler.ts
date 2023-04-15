@@ -1,13 +1,13 @@
 import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDocumentCommand';
+import { Dimensions } from '../../../math/Dimensions';
 import { DocumentStore } from '../../../stores/DocumentStore';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
-import { DocumentEvent } from '../UserViewportInteractionMediator';
 
-export function resizeHandler({ data }: DocumentEvent, documentStore: DocumentStore, commandBus: CommandBus) {
-  if (
-    data.dimensions.width !== documentStore.dimensions.width ||
-    data.dimensions.height !== documentStore.dimensions.height
-  ) {
-    commandBus.publish(new ResizeDocumentCommand(data.dimensions));
+export function resizeHandler(resizeEvent: UIEvent, documentStore: DocumentStore, commandBus: CommandBus) {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  if (width !== documentStore.dimensions.width || height !== documentStore.dimensions.height) {
+    commandBus.publish(new ResizeDocumentCommand(new Dimensions(width, height)));
   }
 }
