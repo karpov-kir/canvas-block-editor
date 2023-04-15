@@ -72,6 +72,21 @@ const canvasDrawer = new CanvasDrawer(canvasContext);
 const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
 
+(window as any).CBE = {
+  blockStore,
+  blockRectStore,
+  documentStore,
+  commands: {
+    commandBus,
+    AddBlockCommand,
+    ChangeBlockTypeCommand,
+    FocusBlockCommand,
+  },
+  events: {
+    eventBus,
+  },
+};
+
 commandBus.subscribe(AddBlockCommand, new AddBlockHandler(blockStore, eventBus));
 commandBus.subscribe(ChangeBlockTypeCommand, new ChangeBlockTypeHandler(blockStore, eventBus));
 commandBus.subscribe(FocusBlockCommand, new FocusBlockHandler(blockStore, eventBus));

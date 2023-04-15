@@ -3,7 +3,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 import { Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
-import { CanvasDrawer } from './CanvasDrawer';
+import { CanvasDrawer, fitTextIntoWidth } from './CanvasDrawer';
 import { Drawer } from './RenderService';
 
 expect.extend({ toMatchImageSnapshot });
@@ -57,6 +57,42 @@ describe(CanvasDrawer, () => {
     expect(imgBuffer).toMatchImageSnapshot({
       failureThreshold: 0.05,
       failureThresholdType: 'percent',
+    });
+  });
+
+  describe(fitTextIntoWidth, () => {
+    it('fits text into width', () => {
+      const result = fitTextIntoWidth(canvasContext, {
+        text: 'A'.repeat(15),
+        width: 100,
+        fontFamily: 'Arial',
+        lineHeight: 20,
+        fontSize: 15,
+        padding: new Padding(5, 5),
+      });
+
+      expect(result).toEqual({
+        lines: ['A'.repeat(8), 'A'.repeat(7)],
+        box: {
+          height: 40,
+          heightWithPaddings: 50,
+          lastLineTopOffset: 25,
+          lastLineWidth: 70.0341796875,
+          lineHeightOffset: 2.5,
+          width: 0,
+          widthWithPaddings: 10,
+        },
+        lineMetrics: [
+          {
+            topOffset: 5,
+            width: 80.0390625,
+          },
+          {
+            topOffset: 25,
+            width: 70.0341796875,
+          },
+        ],
+      });
     });
   });
 });
