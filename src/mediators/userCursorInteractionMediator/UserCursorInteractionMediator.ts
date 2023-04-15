@@ -17,7 +17,7 @@ export class UserCursorInteractionMediator implements Mediator<MouseEvent> {
   notify(mouseEvent: MouseEvent) {
     if (mouseEvent.type === 'dblclick') {
       doubleClickHandler(mouseEvent, this.commandBus);
-    } else if (mouseEvent.type === 'move') {
+    } else if (mouseEvent.type === 'mousemove') {
       moveHandler(mouseEvent, this.blockStore, this.blockRectStore, this.commandBus);
     } else if (mouseEvent.type === 'click') {
       clickHandler(mouseEvent, this.blockStore, this.blockRectStore, this.commandBus);

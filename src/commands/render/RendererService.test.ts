@@ -29,9 +29,9 @@ describe(RenderService, () => {
     renderService.render();
 
     expect(drawer.clear).toBeCalledTimes(1);
-    expect(drawer.renderText).toBeCalledTimes(2);
-    expect(drawer.renderText).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
+    expect(drawer.text).toBeCalledTimes(2);
+    expect(drawer.text).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
+    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
 
     expect(blockRectStore.blockRects.size).toBe(2);
     expect(blockRectStore.blockRects.get(1)).toEqual(blockRectMother.withSmallSize().create());
@@ -43,6 +43,6 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.renderText).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
+    expect(drawer.text).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
   });
 });

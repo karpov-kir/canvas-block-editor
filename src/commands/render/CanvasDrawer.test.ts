@@ -1,17 +1,25 @@
+import { Canvas } from 'canvas';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 import { Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
 import { CanvasDrawer } from './CanvasDrawer';
+import { Drawer } from './RenderService';
 
 expect.extend({ toMatchImageSnapshot });
 
+let canvasContext: CanvasRenderingContext2D;
+let canvasElement: Canvas;
+let drawer: Drawer;
+
+beforeEach(() => {
+  ({ canvasContext, canvasElement } = createCanvas());
+  drawer = new CanvasDrawer(canvasContext);
+});
+
 describe(CanvasDrawer, () => {
   it('fits text into a max width', () => {
-    const { canvasContext, canvasElement } = createCanvas();
-    const drawer = new CanvasDrawer(canvasContext);
-
-    drawer.renderText({
+    drawer.text({
       x: 100,
       y: 100,
       width: 100,
@@ -31,10 +39,18 @@ describe(CanvasDrawer, () => {
   });
 
   it('updates canvas size', () => {
-    const { canvasContext, canvasElement } = createCanvas();
-    const drawer = new CanvasDrawer(canvasContext);
-
     drawer.setViewportSize({ width: 10, height: 10 });
+
+    const imgBuffer = canvasElement.toBuffer('image/png');
+
+    expect(imgBuffer).toMatchImageSnapshot({
+      failureThreshold: 0.05,
+      failureThresholdType: 'percent',
+    });
+  });
+
+  it('renders a rect', () => {
+    drawer.rect({ x: 100, y: 100, width: 150, height: 250 });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 

@@ -1,6 +1,6 @@
 import { Dimensions } from '../../math/Dimensions';
 import { Padding } from '../../stores/BlockRectStore';
-import { Drawer, RenderTextOptions } from './RenderService';
+import { Drawer, RenderRectOptions, RenderTextOptions } from './RenderService';
 
 export class CanvasDrawer implements Drawer {
   constructor(private readonly context: CanvasRenderingContext2D) {}
@@ -9,7 +9,7 @@ export class CanvasDrawer implements Drawer {
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text
    */
-  renderText({ x, y, fontFamily, width, fontSize, lineHeight, text, padding }: RenderTextOptions): number {
+  text({ x, y, fontFamily, width, fontSize, lineHeight, text, padding }: RenderTextOptions): number {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
     const { lines, lineMetrics, box } = fitTextIntoWidth(this.context, {
       width,
@@ -32,6 +32,15 @@ export class CanvasDrawer implements Drawer {
     });
 
     return box.heightWithPaddings;
+  }
+
+  rect({ x, y, width, height }: RenderRectOptions) {
+    this.context.strokeStyle = 'red';
+    this.context.rect(x, y, width, height);
+    // if (fillRect) {
+    //   ctx.fill();
+    // }
+    this.context.stroke();
   }
 
   setViewportSize({ width, height }: Dimensions) {

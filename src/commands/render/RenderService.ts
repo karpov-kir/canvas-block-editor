@@ -14,8 +14,16 @@ export interface RenderTextOptions {
   padding: Padding;
 }
 
+export interface RenderRectOptions {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export interface Drawer {
-  renderText(options: RenderTextOptions): number;
+  rect(options: RenderRectOptions): void;
+  text(options: RenderTextOptions): number;
   setViewportSize(dimensions: Dimensions): void;
   clear(): void;
 }
@@ -40,7 +48,7 @@ export class RenderService {
 
     let nextY = 0;
     this.blockStore.blocks.forEach((block) => {
-      const blockHeight = this.drawer.renderText({
+      const blockHeight = this.drawer.text({
         ...defaultStyles,
         x: 0,
         y: nextY,
@@ -59,5 +67,18 @@ export class RenderService {
 
       nextY += blockHeight + 1;
     });
+
+    const highlightedBlockRect = this.blockStore.highlightedBlock?.id
+      ? this.blockReactStore.blockRects.get(this.blockStore.highlightedBlock.id)
+      : undefined;
+
+    if (highlightedBlockRect) {
+      this.drawer.rect({
+        x: highlightedBlockRect.position.x,
+        y: highlightedBlockRect.position.y,
+        width: highlightedBlockRect.dimensions.width,
+        height: highlightedBlockRect.dimensions.height,
+      });
+    }
   }
 }
