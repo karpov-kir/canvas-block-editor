@@ -26,7 +26,7 @@ import { RenderSaga } from './sagas/RenderSaga';
 import { BlockRectStore } from './stores/BlockRectStore';
 import { BlockStore, BlockType } from './stores/BlockStore';
 import { DocumentStore } from './stores/DocumentStore';
-import { CanvasDrawer } from './utils/CanvasDrawer';
+import { CanvasDrawer } from './commands/render/CanvasDrawer';
 import { CommandBus } from './utils/pubSub/CommandBus';
 import { EventBus } from './utils/pubSub/EventBus';
 

@@ -1,6 +1,6 @@
-import { Drawer, RenderTextOptions } from '../commands/render/RenderService';
-import { Dimensions } from '../math/Dimensions';
-import { Padding } from '../stores/BlockRectStore';
+import { Dimensions } from '../../math/Dimensions';
+import { Padding } from '../../stores/BlockRectStore';
+import { Drawer, RenderTextOptions } from './RenderService';
 
 export class CanvasDrawer implements Drawer {
   constructor(private readonly context: CanvasRenderingContext2D) {}

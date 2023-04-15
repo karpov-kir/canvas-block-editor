@@ -1,7 +1,7 @@
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
-import { Padding } from '../stores/BlockRectStore';
-import { createCanvas } from '../testUtils/createCanvas';
+import { Padding } from '../../stores/BlockRectStore';
+import { createCanvas } from '../../testUtils/createCanvas';
 import { CanvasDrawer } from './CanvasDrawer';
 
 expect.extend({ toMatchImageSnapshot });
