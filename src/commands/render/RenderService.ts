@@ -17,6 +17,7 @@ export interface RenderTextOptions {
 export interface Drawer {
   renderText(options: RenderTextOptions): number;
   setViewportSize(dimensions: Dimensions): void;
+  clear(): void;
 }
 
 const defaultStyles = {
@@ -35,8 +36,9 @@ export class RenderService {
   ) {}
 
   render() {
-    let nextY = 0;
+    this.drawer.clear();
 
+    let nextY = 0;
     this.blockStore.blocks.forEach((block) => {
       const blockHeight = this.drawer.renderText({
         ...defaultStyles,

@@ -9,8 +9,6 @@ describe(ResizeDocumentService, () => {
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(drawer, documentStore);
 
-    jest.spyOn(drawer, 'setViewportSize');
-
     resizeDocumentService.updateDimensions(new Dimensions(100, 100));
 
     expect(drawer.setViewportSize).toBeCalledWith(new Dimensions(100, 100));

@@ -20,8 +20,6 @@ describe(RenderService, () => {
     renderService = new RenderService(drawer, blockStore, blockRectStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
-
-    jest.spyOn(drawer, 'renderText');
   });
 
   it('renders blocks', () => {
@@ -30,6 +28,7 @@ describe(RenderService, () => {
 
     renderService.render();
 
+    expect(drawer.clear).toBeCalledTimes(1);
     expect(drawer.renderText).toBeCalledTimes(2);
     expect(drawer.renderText).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
     expect(drawer.renderText).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));

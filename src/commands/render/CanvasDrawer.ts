@@ -40,6 +40,13 @@ export class CanvasDrawer implements Drawer {
     this.context.canvas.style.width = `${width}px`;
     this.context.canvas.style.height = `${height}px`;
   }
+
+  clear() {
+    this.context.save();
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+    this.context.restore();
+  }
 }
 
 interface FitTextIntoWidthOptions {
