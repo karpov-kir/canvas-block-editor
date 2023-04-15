@@ -1,7 +1,7 @@
 import { Dimensions } from '../../math/Dimensions';
 import { Vector } from '../../math/Vector';
 import { BlockRect, BlockRectStore, Padding } from '../../stores/BlockRectStore';
-import { BlockStore } from '../../stores/BlockStore';
+import { BlockStore, BlockType } from '../../stores/BlockStore';
 
 export interface RenderTextOptions {
   x: number;
@@ -42,7 +42,7 @@ export class RenderService {
         ...defaultStyles,
         x: 0,
         y: nextY,
-        text: block.content,
+        text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       });
 
       this.blockReactStore.attach(

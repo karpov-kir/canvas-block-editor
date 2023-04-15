@@ -30,8 +30,8 @@ class BlockBuilder extends Builder<Block> {
 export class BlockMother extends ObjectMother<BlockBuilder> {
   public readonly builder = new BlockBuilder();
 
-  public withH2Type() {
-    this.builder.setType(BlockType.H2);
+  public withType(type: BlockType) {
+    this.builder.setType(type);
     return this;
   }
 

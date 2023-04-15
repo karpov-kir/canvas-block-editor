@@ -10,7 +10,7 @@ describe(ChangeBlockTypeHandler, () => {
     const eventBus = new EventBus();
     const command = new ChangeBlockTypeCommand(1, BlockType.H2);
     const handler = new ChangeBlockTypeHandler(blockStore, eventBus);
-    const expectedBlock = new BlockMother().withH2Type().create();
+    const expectedBlock = new BlockMother().withType(BlockType.H2).create();
     const blockTypeChangedHandler = jest.fn();
 
     eventBus.subscribe(BlockTypeChangedEvent, blockTypeChangedHandler);
