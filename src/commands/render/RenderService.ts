@@ -70,7 +70,7 @@ export class RenderService {
       nextY += blockHeight + 1;
     });
 
-    const highlightedBlockRect = this.blockStore.highlightedBlock?.id
+    const highlightedBlockRect = this.blockStore.highlightedBlock
       ? this.blockReactStore.blockRects.get(this.blockStore.highlightedBlock.id)
       : undefined;
 

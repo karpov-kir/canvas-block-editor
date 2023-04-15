@@ -34,6 +34,7 @@ export class CanvasDrawer implements Drawer {
   }
 
   rect({ x, y, width, height, fill }: RenderRectOptions) {
+    this.context.beginPath();
     this.context.strokeStyle = 'red';
     this.context.rect(x, y, width, height);
 
