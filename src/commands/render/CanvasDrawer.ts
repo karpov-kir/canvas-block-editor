@@ -33,12 +33,14 @@ export class CanvasDrawer implements Drawer {
     return box.heightWithPaddings;
   }
 
-  rect({ x, y, width, height }: RenderRectOptions) {
+  rect({ x, y, width, height, fill }: RenderRectOptions) {
     this.context.strokeStyle = 'red';
     this.context.rect(x, y, width, height);
-    // if (fillRect) {
-    //   ctx.fill();
-    // }
+
+    if (fill) {
+      this.context.fill();
+    }
+
     this.context.stroke();
   }
 

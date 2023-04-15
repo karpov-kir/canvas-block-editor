@@ -50,7 +50,18 @@ describe(CanvasDrawer, () => {
   });
 
   it('renders a rect', () => {
-    drawer.rect({ x: 100, y: 100, width: 150, height: 250 });
+    drawer.rect({ x: 100, y: 100, width: 150, height: 250, color: 'red' });
+
+    const imgBuffer = canvasElement.toBuffer('image/png');
+
+    expect(imgBuffer).toMatchImageSnapshot({
+      failureThreshold: 0.05,
+      failureThresholdType: 'percent',
+    });
+  });
+
+  it('renders a filled rect', () => {
+    drawer.rect({ x: 100, y: 100, width: 150, height: 250, color: 'red', fill: true });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 

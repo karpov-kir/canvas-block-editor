@@ -19,6 +19,8 @@ export interface RenderRectOptions {
   y: number;
   width: number;
   height: number;
+  color: string;
+  fill?: boolean;
 }
 
 export interface Drawer {
@@ -78,6 +80,7 @@ export class RenderService {
         y: highlightedBlockRect.position.y,
         width: highlightedBlockRect.dimensions.width,
         height: highlightedBlockRect.dimensions.height,
+        color: 'red',
       });
     }
   }
