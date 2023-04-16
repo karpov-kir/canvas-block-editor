@@ -48,45 +48,45 @@ export class RenderService {
   render() {
     this.drawer.clear();
 
+    const { highlightedBlock, activeBlock, blocks } = this.blockStore;
+    const { blockRects } = this.blockReactStore;
+
     let nextY = 0;
-    this.blockStore.blocks.forEach((block) => {
+    blocks.forEach((block) => {
       const blockHeight = this.drawer.text({
         ...defaultStyles,
         x: 0,
         y: nextY,
         text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       });
-
-      this.blockReactStore.attach(
+      const blockRect = new BlockRect(
         block.id,
-        new BlockRect(
-          block.id,
-          new Padding(5, 5),
-          new Vector(0, nextY),
-          new Dimensions(defaultStyles.width, blockHeight),
-        ),
+        new Padding(5, 5),
+        new Vector(0, nextY),
+        new Dimensions(defaultStyles.width, blockHeight),
       );
+
+      this.blockReactStore.attach(block.id, blockRect);
+
+      if (block.id === highlightedBlock?.id) {
+        debugger;
+      }
+
+      if (block.id !== highlightedBlock?.id && block.id !== activeBlock?.block.id) {
+        this.drawer.rect({
+          x: blockRect.position.x,
+          y: blockRect.position.y,
+          width: blockRect.dimensions.width,
+          height: blockRect.dimensions.height,
+          strokeStyle: 'gray',
+        });
+      }
 
       nextY += blockHeight + 1;
     });
 
-    const highlightedBlockRect = this.blockStore.highlightedBlock
-      ? this.blockReactStore.blockRects.get(this.blockStore.highlightedBlock.id)
-      : undefined;
-
-    const activeBlockRect = this.blockStore.activeBlock
-      ? this.blockReactStore.blockRects.get(this.blockStore.activeBlock.block.id)
-      : undefined;
-
-    if (highlightedBlockRect) {
-      this.drawer.rect({
-        x: highlightedBlockRect.position.x,
-        y: highlightedBlockRect.position.y,
-        width: highlightedBlockRect.dimensions.width,
-        height: highlightedBlockRect.dimensions.height,
-        strokeStyle: 'red',
-      });
-    }
+    const highlightedBlockRect = highlightedBlock ? blockRects.get(highlightedBlock.id) : undefined;
+    const activeBlockRect = activeBlock ? blockRects.get(activeBlock.block.id) : undefined;
 
     if (activeBlockRect) {
       this.drawer.rect({
@@ -95,6 +95,16 @@ export class RenderService {
         width: activeBlockRect.dimensions.width,
         height: activeBlockRect.dimensions.height,
         strokeStyle: 'green',
+      });
+    }
+
+    if (highlightedBlockRect && highlightedBlockRect.blockId !== activeBlockRect?.blockId) {
+      this.drawer.rect({
+        x: highlightedBlockRect.position.x,
+        y: highlightedBlockRect.position.y,
+        width: highlightedBlockRect.dimensions.width,
+        height: highlightedBlockRect.dimensions.height,
+        strokeStyle: 'red',
       });
     }
   }
