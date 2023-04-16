@@ -37,5 +37,8 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
     "vite": "^4.2.1"
+  },
+  "jestSonar": {
+    "reportPath": "./coverage"
   }
 }
