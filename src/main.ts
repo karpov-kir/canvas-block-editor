@@ -75,6 +75,7 @@ const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
 
 documentStore.maxContentWidth = 1000;
+documentStore.minContentWidth = 200;
 
 (window as any).CBE = {
   blockStore,

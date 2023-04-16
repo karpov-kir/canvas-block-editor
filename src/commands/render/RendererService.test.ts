@@ -30,6 +30,7 @@ describe(RenderService, () => {
 
     documentStore.dimensions = new Dimensions(100, 100);
     documentStore.maxContentWidth = 100;
+    documentStore.minContentWidth = 90;
   });
 
   it('clears canvas on every render', () => {
@@ -79,6 +80,28 @@ describe(RenderService, () => {
       }),
     );
   });
+
+  it('renders blocks at least with the minimum content width even if the document width is lesser', () => {
+    documentStore.maxContentWidth = 800;
+    documentStore.minContentWidth = 100;
+    documentStore.dimensions = new Dimensions(
+      // Make it lesser than the min content width
+      50,
+      500,
+    );
+
+    blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
+
+    renderService.render();
+
+    expect(drawer.rect).toBeCalledWith(
+      expect.objectContaining({
+        // 5 comes from margins
+        x: 5,
+        y: 5,
+        width: 90,
+      }),
+    );
   });
 
   it('creates block rects', () => {

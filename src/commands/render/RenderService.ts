@@ -13,6 +13,7 @@ export interface RenderTextOptions {
   lineHeight: number;
   text: string;
   padding: Padding;
+  margin: Margin;
 }
 
 export interface RenderRectOptions {
@@ -30,15 +31,6 @@ export interface Drawer {
   setViewportSize(dimensions: Dimensions): void;
   clear(): void;
 }
-
-const defaultStyles = {
-  fontFamily: 'Arial',
-  fontSize: 16,
-  lineHeight: 20,
-  width: 100,
-  padding: new Padding(5, 5),
-};
-
 export class RenderService {
   constructor(
     private readonly drawer: Drawer,
@@ -49,10 +41,10 @@ export class RenderService {
 
   private renderBlockRect(blockRect: BlockRect, strokeStyle: string) {
     this.drawer.rect({
-      x: blockRect.position.x,
-      y: blockRect.position.y,
-      width: blockRect.dimensions.width,
-      height: blockRect.dimensions.height,
+      x: blockRect.position.x + blockRect.margin.horizontal,
+      y: blockRect.position.y + blockRect.margin.vertical,
+      width: blockRect.dimensions.width - blockRect.margin.horizontal * 2,
+      height: blockRect.dimensions.height - blockRect.margin.vertical * 2,
       strokeStyle,
     });
   }
@@ -122,9 +114,16 @@ export class RenderService {
 
     let nextBlockContentStartY = 0;
     blocks.forEach((block) => {
-      const documentVsMaxContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
+      const documentVsMaxContentWidthDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
       const margin = new Margin(5, 5);
       const padding = new Padding(5, 5);
+      const contentStartX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
+      const contentWidth =
+        this.documentStore.dimensions.width > this.documentStore.maxContentWidth
+          ? this.documentStore.maxContentWidth
+          : this.documentStore.dimensions.width < this.documentStore.minContentWidth
+          ? this.documentStore.minContentWidth
+          : this.documentStore.dimensions.width;
 
       const blockHeight = this.renderBlockContent(
         block,
