@@ -1,8 +1,8 @@
 import { HighlightBlockCommand } from '../../../commands/highlightBlock/HighlightBlockCommand';
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
-import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore } from '../../../stores/BlockStore';
+import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 
 export function moveHandler(

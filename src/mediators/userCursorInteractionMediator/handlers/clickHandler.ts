@@ -1,9 +1,9 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
 import { ChangeBlockTypeCommand } from '../../../commands/changeBlockType/ChangeBlockTypeCommand';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
-import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
+import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 
 export function clickHandler(

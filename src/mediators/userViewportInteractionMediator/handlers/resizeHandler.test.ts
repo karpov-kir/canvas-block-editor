@@ -1,7 +1,7 @@
 import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDocumentCommand';
-import { Dimensions } from '../../../math/Dimensions';
 import { DocumentStore } from '../../../stores/DocumentStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { Dimensions } from '../../../utils/math/Dimensions';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { resizeHandler } from './resizeHandler';
 

@@ -1,5 +1,5 @@
-import { Dimensions } from '../../math/Dimensions';
 import { Padding } from '../../stores/BlockRectStore';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { Drawer, RenderRectOptions, RenderTextOptions } from './RenderService';
 
 export class CanvasDrawer implements Drawer {

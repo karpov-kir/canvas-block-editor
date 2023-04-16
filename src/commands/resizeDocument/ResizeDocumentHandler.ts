@@ -1,4 +1,4 @@
-import { Dimensions } from '../../math/Dimensions';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { Command } from '../../utils/pubSub/Command';
 import { Event } from '../../utils/pubSub/Event';
 import { EventBus } from '../../utils/pubSub/EventBus';

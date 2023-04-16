@@ -8,10 +8,10 @@ import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromB
 import { RenderCommand } from '../commands/render/RenderCommand';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentHandler';
-import { Dimensions } from '../math/Dimensions';
 import { BlockType } from '../stores/BlockStore';
 import { CommandHandlerStub } from '../testUtils/CommandHandlerStub';
 import { BlockMother } from '../testUtils/mothers/BlockMother';
+import { Dimensions } from '../utils/math/Dimensions';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
 import { RenderSaga } from './RenderSaga';

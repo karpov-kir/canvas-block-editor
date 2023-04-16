@@ -1,6 +1,6 @@
-import { Dimensions } from '../../math/Dimensions';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
 describe(ResizeDocumentService, () => {

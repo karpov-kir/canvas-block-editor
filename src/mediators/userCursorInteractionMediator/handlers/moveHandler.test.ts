@@ -1,6 +1,5 @@
 import { HighlightBlockCommand } from '../../../commands/highlightBlock/HighlightBlockCommand';
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
-import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';

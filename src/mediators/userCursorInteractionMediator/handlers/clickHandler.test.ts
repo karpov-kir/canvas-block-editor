@@ -1,7 +1,6 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
 import { ChangeBlockTypeCommand } from '../../../commands/changeBlockType/ChangeBlockTypeCommand';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
-import { Vector } from '../../../math/Vector';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';

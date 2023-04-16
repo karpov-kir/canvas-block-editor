@@ -1,6 +1,6 @@
 import { ResizeDocumentCommand } from '../../../commands/resizeDocument/ResizeDocumentCommand';
-import { Dimensions } from '../../../math/Dimensions';
 import { DocumentStore } from '../../../stores/DocumentStore';
+import { Dimensions } from '../../../utils/math/Dimensions';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 
 export function resizeHandler(resizeEvent: UIEvent, documentStore: DocumentStore, commandBus: CommandBus) {

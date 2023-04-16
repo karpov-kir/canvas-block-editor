@@ -1,6 +1,6 @@
-import { Dimensions } from '../../math/Dimensions';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { StubDrawer } from '../../testUtils/StubDrawer';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { ResizeDocumentCommand } from './ResizeDocumentCommand';
 import { DocumentResizedEvent, ResizeDocumentHandler } from './ResizeDocumentHandler';

@@ -19,7 +19,6 @@ import { RenderService } from './commands/render/RenderService';
 import { ResizeDocumentCommand } from './commands/resizeDocument/ResizeDocumentCommand';
 import { ResizeDocumentHandler } from './commands/resizeDocument/ResizeDocumentHandler';
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
-import { Dimensions } from './math/Dimensions';
 import { UserCursorInteractionMediator } from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
 import { UserKeyboardInteractionMediator } from './mediators/userKeyboardInteractionMediator/UserKeyboardInteractionMediator';
 import { UserViewportInteractionMediator } from './mediators/userViewportInteractionMediator/UserViewportInteractionMediator';
@@ -27,6 +26,7 @@ import { RenderSaga } from './sagas/RenderSaga';
 import { BlockRectStore } from './stores/BlockRectStore';
 import { BlockStore, BlockType } from './stores/BlockStore';
 import { DocumentStore } from './stores/DocumentStore';
+import { Dimensions } from './utils/math/Dimensions';
 import { CommandBus } from './utils/pubSub/CommandBus';
 import { EventBus } from './utils/pubSub/EventBus';
 

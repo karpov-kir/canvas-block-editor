@@ -1,5 +1,5 @@
-import { Dimensions } from '../../math/Dimensions';
 import { DocumentStore } from '../../stores/DocumentStore';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { Drawer } from '../render/RenderService';
 
 export class ResizeDocumentService {

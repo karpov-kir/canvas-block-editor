@@ -1,4 +1,3 @@
-import { Vector } from '../../math/Vector';
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore } from '../../stores/BlockStore';
 import { Mediator } from '../../utils/Mediator';
