@@ -54,7 +54,7 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
 
   public withSmallSize() {
     this.builder
-      .setDimensions(new Dimensions(100, 30))
+      .setDimensions(new Dimensions(100, 40))
       .setPadding(new Padding(5, 5))
       .setMargin(new Margin(5, 5))
       .setX(0)

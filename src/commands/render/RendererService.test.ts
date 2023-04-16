@@ -48,7 +48,7 @@ describe(RenderService, () => {
 
     expect(drawer.text).toBeCalledTimes(2);
     expect(drawer.text).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
+    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 41 }));
   });
 
   it('renders blocks one under another and for the whole available width', () => {
@@ -75,7 +75,7 @@ describe(RenderService, () => {
       expect.objectContaining({
         // 5 comes from margins
         x: 105,
-        y: 36,
+        y: 46,
         width: 790,
       }),
     );
