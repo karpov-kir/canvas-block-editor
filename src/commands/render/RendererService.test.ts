@@ -122,7 +122,7 @@ describe(RenderService, () => {
     );
   });
 
-  it('renders a block is active only if it is active and highlighted at the same time', () => {
+  it('renders a block as active only if it is active and highlighted at the same time', () => {
     blockStore.activeBlock = activeBlockMother.create();
     blockStore.highlightedBlock = blockStore.activeBlock.block;
     blockStore.blocks.set(activeBlockMother.last.block.id, activeBlockMother.last.block);
