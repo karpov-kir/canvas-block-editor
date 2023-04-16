@@ -1,6 +1,7 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
 import { ChangeBlockTypeCommand } from '../../../commands/changeBlockType/ChangeBlockTypeCommand';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
+import { RemoveFocusFromBlockCommand } from '../../../commands/removeFocusFromBlock/RemoveFocusFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { Vector } from '../../../utils/math/Vector';
@@ -12,16 +13,20 @@ export function clickHandler(
   blockRectStore: BlockRectStore,
   commandBus: CommandBus,
 ) {
-  const blockRect = blockRectStore.findByPosition(new Vector(clickEvent.clientX, clickEvent.clientY));
+  const clickedBlockRect = blockRectStore.findByPosition(new Vector(clickEvent.clientX, clickEvent.clientY));
 
-  if (blockRect && blockStore.activeBlock?.block.id !== blockRect.blockId) {
-    const block = blockStore.blocks.get(blockRect.blockId);
+  if (clickedBlockRect && clickedBlockRect.blockId !== blockStore.activeBlock?.block.id) {
+    const clickedBlock = blockStore.blocks.get(clickedBlockRect.blockId);
 
-    commandBus.publish(new FocusBlockCommand(blockRect.blockId));
+    commandBus.publish(new FocusBlockCommand(clickedBlockRect.blockId));
 
-    if (block?.type === BlockType.CreateBlock) {
-      commandBus.publish(new ChangeBlockTypeCommand(blockRect.blockId, BlockType.Text));
+    if (clickedBlock?.type === BlockType.CreateBlock) {
+      commandBus.publish(new ChangeBlockTypeCommand(clickedBlockRect.blockId, BlockType.Text));
       commandBus.publish(new AddBlockCommand(BlockType.CreateBlock));
     }
+  }
+
+  if (!clickedBlockRect && blockStore.activeBlock) {
+    commandBus.publish(new RemoveFocusFromBlockCommand(blockStore.activeBlock.block.id));
   }
 }

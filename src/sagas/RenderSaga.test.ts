@@ -4,6 +4,7 @@ import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockHandler';
 import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockHandler';
 import { InputReceivedEvent } from '../commands/input/InputHandler';
 import { CarriageMovedEvent } from '../commands/moveCarriage/MoveCarriageHandler';
+import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockHandler';
 import { RenderCommand } from '../commands/render/RenderCommand';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
@@ -26,6 +27,7 @@ describe(RenderSaga, () => {
       new BlockAddedEvent(blockMother.create()),
       new BlockTypeChangedEvent(blockMother.create(), BlockType.CreateBlock),
       new BlockFocusedEvent(blockMother.create()),
+      new FocusRemovedFromBlockEvent(blockMother.create()),
       new BlockHighlightedEvent(blockMother.create()),
       new InputReceivedEvent(blockMother.create(), 'Test'),
       new CarriageMovedEvent(blockMother.create(), 5),

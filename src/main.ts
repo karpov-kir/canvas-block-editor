@@ -10,6 +10,8 @@ import { InputCommand } from './commands/input/InputCommand';
 import { InputHandler } from './commands/input/InputHandler';
 import { MoveCarriageCommand } from './commands/moveCarriage/MoveCarriageCommand';
 import { MoveCarriageHandler } from './commands/moveCarriage/MoveCarriageHandler';
+import { RemoveFocusFromBlockCommand } from './commands/removeFocusFromBlock/RemoveFocusFromBlockCommand';
+import { RemoveFocusFromBlockCommandHandler } from './commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
 import { RemoveHighlightFromBlockCommand } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { RemoveHighlightFromBlockHandler } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockHandler';
 import { CanvasDrawer } from './commands/render/CanvasDrawer';
@@ -90,6 +92,7 @@ const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentSt
 commandBus.subscribe(AddBlockCommand, new AddBlockHandler(blockStore, eventBus));
 commandBus.subscribe(ChangeBlockTypeCommand, new ChangeBlockTypeHandler(blockStore, eventBus));
 commandBus.subscribe(FocusBlockCommand, new FocusBlockHandler(blockStore, eventBus));
+commandBus.subscribe(RemoveFocusFromBlockCommand, new RemoveFocusFromBlockCommandHandler(blockStore, eventBus));
 commandBus.subscribe(HighlightBlockCommand, new HighlightBlockHandler(blockStore, eventBus));
 commandBus.subscribe(InputCommand, new InputHandler(blockStore, eventBus));
 commandBus.subscribe(MoveCarriageCommand, new MoveCarriageHandler(blockStore, eventBus));

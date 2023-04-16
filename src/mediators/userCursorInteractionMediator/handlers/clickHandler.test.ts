@@ -1,6 +1,7 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
 import { ChangeBlockTypeCommand } from '../../../commands/changeBlockType/ChangeBlockTypeCommand';
 import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockCommand';
+import { RemoveFocusFromBlockCommand } from '../../../commands/removeFocusFromBlock/RemoveFocusFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
@@ -29,7 +30,7 @@ describe(clickHandler, () => {
     blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().create());
   });
 
-  it(`emits the ${FocusBlockCommand.name} on a click`, () => {
+  it(`emits the ${FocusBlockCommand.name} on a click on a block`, () => {
     const clickEvent = new MouseEvent('click', {
       clientX: 10,
       clientY: 10,
@@ -37,6 +38,7 @@ describe(clickHandler, () => {
     const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
+    // Clicking on a not active block should not emit the command
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.activeBlock = activeBlockMother.create();
@@ -89,5 +91,24 @@ describe(clickHandler, () => {
     expect(changeBlockTypeCommandHandler.execute).toBeCalledTimes(1);
     expect(addBlockHandler.execute).toBeCalledTimes(1);
     expect(addBlockHandler.execute).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
+  });
+
+  it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of the active block`, () => {
+    const clickEvent = new MouseEvent('click', {
+      clientX: -100,
+      clientY: -100,
+    });
+    const removeFocusFromBlockHandler = new CommandHandlerStub();
+
+    blockStore.activeBlock = activeBlockMother.create();
+
+    commandBus.subscribe(RemoveFocusFromBlockCommand, removeFocusFromBlockHandler);
+    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
+
+    blockStore.activeBlock = undefined;
+
+    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
+
+    expect(removeFocusFromBlockHandler.execute).toBeCalledTimes(1);
   });
 });

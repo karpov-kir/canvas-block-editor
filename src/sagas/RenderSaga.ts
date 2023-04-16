@@ -9,6 +9,7 @@ import { RenderCommand } from '../commands/render/RenderCommand';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentHandler';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
+import { FocusRemovedFromBlockEvent } from './../commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
 
 export class RenderSaga {
   constructor(private readonly eventBus: EventBus, private readonly commandBus: CommandBus) {
@@ -16,6 +17,7 @@ export class RenderSaga {
       BlockAddedEvent,
       BlockTypeChangedEvent,
       BlockFocusedEvent,
+      FocusRemovedFromBlockEvent,
       BlockHighlightedEvent,
       InputReceivedEvent,
       CarriageMovedEvent,
