@@ -11,6 +11,14 @@ export abstract class ObjectMother<T extends Builder<any>> {
     return this.history[this.history.length - 1];
   }
 
+  public get lastTwo() {
+    return this.history.slice(-2);
+  }
+
+  public get lastThree() {
+    return this.history.slice(-3);
+  }
+
   public setCustom(setter: (builder: T) => void) {
     setter(this.builder);
     return this;
