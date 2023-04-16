@@ -1,5 +1,6 @@
 import { BlockRect, BlockRectStore, Padding } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
+import { DocumentStore } from '../../stores/DocumentStore';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 
@@ -43,6 +44,7 @@ export class RenderService {
     private readonly drawer: Drawer,
     private readonly blockStore: BlockStore,
     private readonly blockReactStore: BlockRectStore,
+    private readonly documentStore: DocumentStore,
   ) {}
 
   render() {
@@ -53,24 +55,23 @@ export class RenderService {
 
     let nextY = 0;
     blocks.forEach((block) => {
+      const documentVsContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
+      const leftOffset = documentVsContentWithDiff > 0 ? documentVsContentWithDiff / 2 : 0;
       const blockHeight = this.drawer.text({
         ...defaultStyles,
-        x: 0,
+        width: this.documentStore.maxContentWidth,
+        x: leftOffset,
         y: nextY,
         text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       });
       const blockRect = new BlockRect(
         block.id,
         new Padding(5, 5),
-        new Vector(0, nextY),
-        new Dimensions(defaultStyles.width, blockHeight),
+        new Vector(leftOffset, nextY),
+        new Dimensions(this.documentStore.maxContentWidth, blockHeight),
       );
 
       this.blockReactStore.attach(block.id, blockRect);
-
-      if (block.id === highlightedBlock?.id) {
-        debugger;
-      }
 
       if (block.id !== highlightedBlock?.id && block.id !== activeBlock?.block.id) {
         this.drawer.rect({

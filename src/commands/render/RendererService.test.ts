@@ -1,9 +1,11 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
+import { DocumentStore } from '../../stores/DocumentStore';
 import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { RenderService } from './RenderService';
 
 describe(RenderService, () => {
@@ -14,15 +16,20 @@ describe(RenderService, () => {
   let blockMother: BlockMother;
   let activeBlockMother: ActiveBlockMother;
   let blockRectMother: BlockRectMother;
+  let documentStore: DocumentStore;
 
   beforeEach(() => {
     drawer = new StubDrawer();
     blockStore = new BlockStore();
     blockRectStore = new BlockRectStore();
-    renderService = new RenderService(drawer, blockStore, blockRectStore);
+    documentStore = new DocumentStore();
+    renderService = new RenderService(drawer, blockStore, blockRectStore, documentStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
     activeBlockMother = new ActiveBlockMother(blockMother);
+
+    documentStore.dimensions = new Dimensions(100, 100);
+    documentStore.maxContentWidth = 100;
   });
 
   it('clears canvas on every render', () => {
@@ -43,15 +50,18 @@ describe(RenderService, () => {
     expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
   });
 
-  it('renders blocks one under another', () => {
+  it('renders blocks one under another and for the whole available width', () => {
+    documentStore.maxContentWidth = 800;
+    documentStore.dimensions = new Dimensions(1000, 500);
+
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.blocks.set(blockMother.withLongContent().create().id, blockMother.last);
 
     renderService.render();
 
     expect(drawer.rect).toBeCalledTimes(2);
-    expect(drawer.rect).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.rect).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
+    expect(drawer.rect).nthCalledWith(1, expect.objectContaining({ x: 100, y: 0, width: 800 }));
+    expect(drawer.rect).nthCalledWith(2, expect.objectContaining({ x: 100, y: 31, width: 800 }));
   });
 
   it('creates block rects', () => {

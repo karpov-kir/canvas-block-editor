@@ -71,8 +71,10 @@ const blockStore = new BlockStore();
 const blockRectStore = new BlockRectStore();
 const documentStore = new DocumentStore();
 const canvasDrawer = new CanvasDrawer(canvasContext);
-const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore);
+const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore, documentStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
+
+documentStore.maxContentWidth = 1000;
 
 (window as any).CBE = {
   blockStore,
