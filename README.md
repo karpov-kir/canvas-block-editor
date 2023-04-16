@@ -25,7 +25,7 @@ A block based canvas text editor.
 - `npm run start:dev`
 - `npm run test:watch`
 - `npm run checkTypes:watch`
-- Navigate to [http://localhost:5174](http://localhost:5174)
+- Navigate to [http://localhost:5173](http://localhost:5173)
 
 ### Technical stats
 
