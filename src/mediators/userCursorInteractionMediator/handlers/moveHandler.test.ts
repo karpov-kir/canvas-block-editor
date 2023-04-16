@@ -49,7 +49,7 @@ describe(moveHandler, () => {
     moveHandler(
       new MouseEvent('move', {
         clientX: 10,
-        clientY: 35,
+        clientY: 50,
       }),
       blockStore,
       blockRectStore,

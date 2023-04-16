@@ -1,4 +1,4 @@
-import { BlockRect, BlockRectStore, Padding } from '../../stores/BlockRectStore';
+import { BlockRect, BlockRectStore, Margin, Padding } from '../../stores/BlockRectStore';
 import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { Dimensions } from '../../utils/math/Dimensions';
@@ -113,11 +113,15 @@ export class RenderService {
     blocks.forEach((block) => {
       const documentVsContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
       const contentStartX = documentVsContentWithDiff > 0 ? documentVsContentWithDiff / 2 : 0;
+      const margin = new Margin(5, 0);
+
+      nextBlockContentStartY += margin.vertical;
 
       const blockHeight = this.renderBlockContent(block, contentStartX, nextBlockContentStartY);
       const blockRect = new BlockRect(
         block.id,
         new Padding(5, 5),
+        new Margin(5, 0),
         new Vector(contentStartX, nextBlockContentStartY),
         new Dimensions(this.documentStore.maxContentWidth, blockHeight),
       );
@@ -125,7 +129,7 @@ export class RenderService {
       this.blockReactStore.attach(block.id, blockRect);
       this.maybeRenderInactiveBlockRect(block, blockRect);
 
-      nextBlockContentStartY += blockHeight + 1;
+      nextBlockContentStartY += blockHeight + margin.vertical + 1;
     });
 
     this.maybeRenderActiveBlockRect();

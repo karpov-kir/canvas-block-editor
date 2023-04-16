@@ -32,8 +32,8 @@ describe(clickHandler, () => {
 
   it(`emits the ${FocusBlockCommand.name} on a click on a block`, () => {
     const clickEvent = new MouseEvent('click', {
-      clientX: 10,
-      clientY: 10,
+      clientX: blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
+      clientY: blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
     });
     const focusedBlockHandler = new CommandHandlerStub();
 
@@ -56,8 +56,8 @@ describe(clickHandler, () => {
 
     clickHandler(
       new MouseEvent('click', {
-        clientX: 10,
-        clientY: 10,
+        clientX: blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
+        clientY: blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
       }),
       blockStore,
       blockRectStore,
@@ -67,7 +67,7 @@ describe(clickHandler, () => {
     expect(focusedBlockHandler.execute).not.toBeCalled();
   });
 
-  it(`changes the block type on a click on a ${BlockType.CreateBlock} block, focuses the block, and adds a new ${BlockType.CreateBlock} block at the end`, () => {
+  it(`changes the block type on a click on a block with type ${BlockType.CreateBlock}, focuses the block, and adds a new ${BlockType.CreateBlock} block at the end`, () => {
     const focusBlockCommandHandler = new CommandHandlerStub();
     const changeBlockTypeCommandHandler = new CommandHandlerStub();
     const addBlockHandler = new CommandHandlerStub();
@@ -79,8 +79,8 @@ describe(clickHandler, () => {
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
     clickHandler(
       new MouseEvent('click', {
-        clientX: 10,
-        clientY: 70,
+        clientX: blockRectStore.getById(3).position.x + blockRectStore.getById(3).margin.horizontal,
+        clientY: blockRectStore.getById(3).position.y + blockRectStore.getById(3).margin.vertical,
       }),
       blockStore,
       blockRectStore,

@@ -1,4 +1,4 @@
-import { BlockRect, Padding } from '../../stores/BlockRectStore';
+import { BlockRect, Margin, Padding } from '../../stores/BlockRectStore';
 import { createIdGenerator } from '../../utils/idGenerator';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Builder } from './Builder';
@@ -15,6 +15,11 @@ class BlockRectBuilder extends Builder<BlockRect> {
 
   public setPadding(padding: Padding) {
     this.instance.padding = padding;
+    return this;
+  }
+
+  public setMargin(margin: Margin) {
+    this.instance.margin = margin;
     return this;
   }
 
@@ -48,13 +53,17 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
   public readonly builder = new BlockRectBuilder();
 
   public withSmallSize() {
-    this.builder.setDimensions(new Dimensions(100, 30)).setPadding(new Padding(5, 5));
+    this.builder
+      .setDimensions(new Dimensions(100, 30))
+      .setPadding(new Padding(5, 5))
+      .setMargin(new Margin(5, 0))
+      .setY(5);
     return this;
   }
 
   public underLast() {
     const last = this.last;
-    this.builder.setY(last.position.y + last.dimensions.height + 1);
+    this.builder.setY(last.position.y + last.dimensions.height + last.margin.vertical * 2 + 1);
     return this;
   }
 }
