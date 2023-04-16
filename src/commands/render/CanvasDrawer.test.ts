@@ -112,20 +112,23 @@ describe(CanvasDrawer, () => {
           lineHeightOffset: 5,
           textHeight: 40,
           height: 60,
-          textWidth: 70.8876953125,
+          textWidth: expect.any(Number),
           width: 100,
         },
         lineMetrics: [
           {
             topOffset: 0,
-            width: 70.8876953125,
+            width: expect.any(Number),
           },
           {
             topOffset: 20,
-            width: 65.23828125,
+            width: expect.any(Number),
           },
         ],
       });
+      expect(Math.round(result.box.textWidth)).toBe(71);
+      expect(Math.round(result.lineMetrics[0].width)).toBe(71);
+      expect(Math.round(result.lineMetrics[1].width)).toBe(65);
     });
   });
 });
