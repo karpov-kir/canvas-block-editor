@@ -1,4 +1,4 @@
-import { Padding } from '../../stores/BlockRectStore';
+import { Margin, Padding } from '../../stores/BlockRectStore';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Drawer, RenderRectOptions, RenderTextOptions } from './RenderService';
 
@@ -9,7 +9,7 @@ export class CanvasDrawer implements Drawer {
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text
    */
-  text({ x, y, fontFamily, width, fontSize, lineHeight, text, padding }: RenderTextOptions): number {
+  text({ x, y, fontFamily, width, fontSize, lineHeight, text, padding, margin }: RenderTextOptions): number {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
     const { lines, lineMetrics, box } = fitTextIntoWidth(this.context, {
       width,
@@ -18,6 +18,7 @@ export class CanvasDrawer implements Drawer {
       lineHeight,
       fontFamily,
       padding,
+      margin,
     });
 
     this.context.fillStyle = 'black';
@@ -27,10 +28,14 @@ export class CanvasDrawer implements Drawer {
 
     lines.forEach((line, index) => {
       const currentLineMetrics = lineMetrics[index];
-      this.context.fillText(line, x + padding.horizontal, y + currentLineMetrics.topOffset + box.lineHeightOffset);
+      this.context.fillText(
+        line,
+        x + padding.horizontal + margin.horizontal,
+        y + currentLineMetrics.topOffset + box.lineHeightOffset + padding.vertical + margin.vertical,
+      );
     });
 
-    return box.heightWithPaddings;
+    return box.height;
   }
 
   rect({ x, y, width, height, fill, strokeStyle }: RenderRectOptions) {
@@ -68,6 +73,7 @@ interface FitTextIntoWidthOptions {
   lineHeight: number;
   fontSize: number;
   padding: Padding;
+  margin: Margin;
 }
 
 // TODO is built-in `TextMetrics` useful?
@@ -78,12 +84,10 @@ interface LineMetrics {
 
 interface FitTextResultIntoWidthResult {
   box: {
+    textWidth: number;
     width: number;
-    widthWithPaddings: number;
+    textHeight: number;
     height: number;
-    heightWithPaddings: number;
-    lastLineWidth: number;
-    lastLineTopOffset: number;
     lineHeightOffset: number;
   };
   lineMetrics: LineMetrics[];
@@ -94,13 +98,13 @@ export const fitTextIntoWidth = (
   canvasContext: CanvasRenderingContext2D,
   options: FitTextIntoWidthOptions,
 ): FitTextResultIntoWidthResult => {
-  const { fontFamily, fontSize, padding, lineHeight, text, width } = options;
+  const { fontFamily, fontSize, padding, lineHeight, text, width, margin } = options;
 
   canvasContext.font = `${fontSize}px ${fontFamily}`;
   canvasContext.textAlign = 'left';
   canvasContext.textBaseline = 'top';
 
-  const widthToFitText = width - padding.horizontal * 2;
+  const widthToFitText = width - padding.horizontal * 2 - margin.horizontal * 2;
   const lines: string[] = [];
   const lineMetrics: LineMetrics[] = [];
   const characterCount = text.length;
@@ -109,13 +113,18 @@ export const fitTextIntoWidth = (
   let currentLineBuffer = '';
   let lastLineMetrics = {
     width: 0,
-    topOffset: padding.vertical,
+    topOffset: 0,
   };
+
+  function addLineMetrics(newLineMetrics: LineMetrics) {
+    biggestWidth = Math.max(biggestWidth, newLineMetrics.width);
+    lineMetrics.push(newLineMetrics);
+  }
 
   // Create an empty line if the text is empty
   if (text === '') {
     lines.push(currentLineBuffer);
-    lineMetrics.push(lastLineMetrics);
+    addLineMetrics(lastLineMetrics);
   }
 
   for (let i = 0; i < characterCount; i++) {
@@ -125,39 +134,45 @@ export const fitTextIntoWidth = (
 
     currentLineBuffer += character;
 
-    // Store line on new line character
+    // Store the current buffer on a new line character
     if (character === '\n') {
-      lineMetrics.push(lastLineMetrics);
+      addLineMetrics(lastLineMetrics);
       lines.push(currentLineBuffer);
-      biggestWidth = Math.max(biggestWidth, lastLineMetrics.width);
       currentLineBuffer = '';
       lastLineMetrics = {
         width: 0,
-        topOffset: lines.length * lineHeight + padding.vertical,
+        topOffset: lines.length * lineHeight,
       };
 
       // If the last character is the new line character it means,
       // that there won't be iterations anymore and we need to store
       // the last line as empty.
       if (isLastCharacter) {
-        lineMetrics.push(lastLineMetrics);
+        addLineMetrics(lastLineMetrics);
         lines.push(currentLineBuffer);
       }
     }
-    // Measure line and store line if it's too long
+    // Otherwise measure the current buffer and store it right before it gets too long
     else {
-      // TODO measure only words to reduce performance impact
+      // TODO maybe measure only words to reduce performance impact?
       const currentLineBufferMetrics = {
         width: canvasContext.measureText(currentLineBuffer).width,
-        topOffset: lines.length * lineHeight + padding.vertical,
+        topOffset: lines.length * lineHeight,
       };
 
+      // If the current buffer is too long, store the previous buffer
       if (currentLineBufferMetrics.width > widthToFitText) {
+        // If the current buffer contains only one character then
+        // there is no a buffer that less than the current one.
         if (currentLineBuffer.length === 1) {
-          lineMetrics.push(currentLineBufferMetrics);
+          biggestWidth = Math.max(biggestWidth, currentLineBufferMetrics.width);
+          addLineMetrics(currentLineBufferMetrics);
           lines.push(currentLineBuffer);
-        } else {
-          lineMetrics.push(lastLineMetrics);
+        }
+        // Otherwise store the previous buffer to fit into the width
+        else {
+          biggestWidth = Math.max(biggestWidth, lastLineMetrics.width);
+          addLineMetrics(lastLineMetrics);
           lines.push(previousLineBuffer);
           i--;
         }
@@ -165,36 +180,37 @@ export const fitTextIntoWidth = (
         currentLineBuffer = '';
         lastLineMetrics = {
           width: 0,
-          topOffset: lines.length * lineHeight + padding.vertical,
+          topOffset: lines.length * lineHeight,
         };
-      } else {
+      }
+      // Otherwise just add the character to the current buffer
+      else {
         lastLineMetrics = currentLineBufferMetrics;
       }
     }
   }
 
   if (currentLineBuffer) {
-    lineMetrics.push({
+    addLineMetrics({
       width: canvasContext.measureText(currentLineBuffer).width,
-      topOffset: lines.length * lineHeight + padding.vertical,
+      topOffset: lines.length * lineHeight,
     });
     lines.push(currentLineBuffer);
   }
 
-  const height = lines.length * lineHeight;
-  const heightWithPaddings = height + padding.vertical * 2;
+  const textHeight = lines.length * lineHeight;
+  const textWidth = biggestWidth;
+  const height = textHeight + padding.vertical * 2 + margin.vertical * 2;
 
   return {
     lines,
     lineMetrics,
     box: {
-      width: biggestWidth,
-      widthWithPaddings: biggestWidth + padding.horizontal * 2,
+      textWidth,
+      width,
       height,
-      heightWithPaddings,
-      lineHeightOffset: (lineHeight - fontSize) / 2,
-      lastLineWidth: lineMetrics[lineMetrics.length - 1]?.width || 0,
-      lastLineTopOffset: padding.vertical + height - (lines.length ? lineHeight : 0),
+      textHeight,
+      lineHeightOffset: lineHeight - fontSize,
     },
   };
 };

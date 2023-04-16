@@ -92,13 +92,24 @@ export class RenderService {
     }
   }
 
-  private renderBlockContent(block: Block, contentWidth: number, contentStartX: number, blockContentStartY: number) {
+  private renderBlockContent(
+    block: Block,
+    contentWidth: number,
+    contentStartX: number,
+    blockContentStartY: number,
+    padding: Padding,
+    margin: Margin,
+  ) {
     const blockHeight = this.drawer.text({
-      ...defaultStyles,
       width: contentWidth,
       x: contentStartX,
       y: blockContentStartY,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
+      fontFamily: 'Arial',
+      fontSize: 16,
+      lineHeight: 20,
+      padding,
+      margin,
     });
 
     return blockHeight;
@@ -113,16 +124,19 @@ export class RenderService {
     blocks.forEach((block) => {
       const documentVsMaxContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
       const margin = new Margin(5, 5);
-      const contentStartX =
-        margin.horizontal + (documentVsMaxContentWithDiff > 0 ? documentVsMaxContentWithDiff / 2 : 0);
-      const contentWidth = this.documentStore.maxContentWidth - margin.horizontal * 2;
+      const padding = new Padding(5, 5);
 
-      nextBlockContentStartY += margin.vertical;
-
-      const blockHeight = this.renderBlockContent(block, contentWidth, contentStartX, nextBlockContentStartY);
+      const blockHeight = this.renderBlockContent(
+        block,
+        contentWidth,
+        contentStartX,
+        nextBlockContentStartY,
+        padding,
+        margin,
+      );
       const blockRect = new BlockRect(
         block.id,
-        new Padding(5, 5),
+        padding,
         margin,
         new Vector(contentStartX, nextBlockContentStartY),
         new Dimensions(contentWidth, blockHeight),
@@ -131,7 +145,7 @@ export class RenderService {
       this.blockReactStore.attach(block.id, blockRect);
       this.maybeRenderInactiveBlockRect(block, blockRect);
 
-      nextBlockContentStartY += blockHeight + margin.vertical + 1;
+      nextBlockContentStartY += blockHeight + 1;
     });
 
     this.maybeRenderActiveBlockRect();

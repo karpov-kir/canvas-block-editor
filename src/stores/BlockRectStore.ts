@@ -3,10 +3,12 @@ import { isPointInside } from '../utils/math/isPointInside';
 import { Rectangle } from '../utils/math/Rectangle';
 import { Vector } from '../utils/math/Vector';
 
+// Padding is included into width and height
 export class Padding {
   constructor(public vertical: number = 0, public horizontal: number = 0) {}
 }
 
+// Margin is included into width and height
 export class Margin {
   constructor(public vertical: number = 0, public horizontal: number = 0) {}
 }
@@ -20,6 +22,17 @@ export class BlockRect extends Rectangle {
     dimensions = new Dimensions(),
   ) {
     super(position, dimensions);
+
+    const minWidth = padding.horizontal * 2 + margin.horizontal * 2;
+    const minHeight = margin.vertical * 2 + margin.vertical * 2;
+
+    if (dimensions.width < minWidth) {
+      throw new Error('Width cannot be smaller than padding + margin');
+    }
+
+    if (dimensions.height < minHeight) {
+      throw new Error('Height cannot be smaller than padding + margin');
+    }
   }
 }
 

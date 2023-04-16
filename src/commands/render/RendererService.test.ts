@@ -46,8 +46,8 @@ describe(RenderService, () => {
     renderService.render();
 
     expect(drawer.text).toBeCalledTimes(2);
-    expect(drawer.text).nthCalledWith(1, expect.objectContaining({ x: 5, y: 5 }));
-    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 5, y: 46 }));
+    expect(drawer.text).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
+    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 31 }));
   });
 
   it('renders blocks one under another and for the whole available width', () => {
@@ -60,8 +60,25 @@ describe(RenderService, () => {
     renderService.render();
 
     expect(drawer.rect).toBeCalledTimes(2);
-    expect(drawer.rect).nthCalledWith(1, expect.objectContaining({ x: 105, y: 5, width: 790 }));
-    expect(drawer.rect).nthCalledWith(2, expect.objectContaining({ x: 105, y: 46, width: 790 }));
+    expect(drawer.rect).nthCalledWith(
+      1,
+      expect.objectContaining({
+        // 5 comes from margins
+        x: 105,
+        y: 5,
+        width: 790,
+      }),
+    );
+    expect(drawer.rect).nthCalledWith(
+      2,
+      expect.objectContaining({
+        // 5 comes from margins
+        x: 105,
+        y: 36,
+        width: 790,
+      }),
+    );
+  });
   });
 
   it('creates block rects', () => {

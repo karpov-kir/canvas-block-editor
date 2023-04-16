@@ -1,7 +1,7 @@
 import { Canvas } from 'canvas';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
-import { Padding } from '../../stores/BlockRectStore';
+import { Margin, Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
 import { CanvasDrawer, fitTextIntoWidth } from './CanvasDrawer';
 import { Drawer } from './RenderService';
@@ -28,6 +28,7 @@ describe(CanvasDrawer, () => {
       lineHeight: 20,
       text: 'A'.repeat(15),
       padding: new Padding(5, 5),
+      margin: new Margin(5, 5),
     });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
@@ -82,6 +83,7 @@ describe(CanvasDrawer, () => {
       lineHeight: 20,
       text: 'Test',
       padding: new Padding(5, 5),
+      margin: new Margin(5, 5),
     });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
@@ -95,33 +97,32 @@ describe(CanvasDrawer, () => {
   describe(fitTextIntoWidth, () => {
     it('fits text into width', () => {
       const result = fitTextIntoWidth(canvasContext, {
-        text: 'A'.repeat(15),
+        text: '12!-45asdfZXCVB@',
         width: 100,
         fontFamily: 'Arial',
         lineHeight: 20,
         fontSize: 15,
         padding: new Padding(5, 5),
+        margin: new Margin(5, 5),
       });
 
       expect(result).toEqual({
-        lines: ['A'.repeat(8), 'A'.repeat(7)],
+        lines: ['12!-45asdf', 'ZXCVB@'],
         box: {
-          height: 40,
-          heightWithPaddings: 50,
-          lastLineTopOffset: 25,
-          lastLineWidth: 70.0341796875,
-          lineHeightOffset: 2.5,
-          width: 0,
-          widthWithPaddings: 10,
+          lineHeightOffset: 5,
+          textHeight: 40,
+          height: 60,
+          textWidth: 70.8876953125,
+          width: 100,
         },
         lineMetrics: [
           {
-            topOffset: 5,
-            width: 80.0390625,
+            topOffset: 0,
+            width: 70.8876953125,
           },
           {
-            topOffset: 25,
-            width: 70.0341796875,
+            topOffset: 20,
+            width: 65.23828125,
           },
         ],
       });
