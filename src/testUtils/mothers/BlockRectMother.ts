@@ -54,15 +54,17 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
 
   public withSmallSize() {
     this.builder
-      .setDimensions(new Dimensions(100, 30))
+      .setDimensions(new Dimensions(90, 30))
       .setPadding(new Padding(5, 5))
-      .setMargin(new Margin(5, 0))
+      .setMargin(new Margin(5, 5))
+      .setX(5)
       .setY(5);
     return this;
   }
 
   public underLast() {
     const last = this.last;
+    this.builder.setX(last.position.x);
     this.builder.setY(last.position.y + last.dimensions.height + last.margin.vertical * 2 + 1);
     return this;
   }

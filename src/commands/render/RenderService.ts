@@ -92,10 +92,10 @@ export class RenderService {
     }
   }
 
-  private renderBlockContent(block: Block, contentStartX: number, blockContentStartY: number) {
+  private renderBlockContent(block: Block, contentWidth: number, contentStartX: number, blockContentStartY: number) {
     const blockHeight = this.drawer.text({
       ...defaultStyles,
-      width: this.documentStore.maxContentWidth,
+      width: contentWidth,
       x: contentStartX,
       y: blockContentStartY,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
@@ -111,19 +111,21 @@ export class RenderService {
 
     let nextBlockContentStartY = 0;
     blocks.forEach((block) => {
-      const documentVsContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
-      const contentStartX = documentVsContentWithDiff > 0 ? documentVsContentWithDiff / 2 : 0;
-      const margin = new Margin(5, 0);
+      const documentVsMaxContentWithDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
+      const margin = new Margin(5, 5);
+      const contentStartX =
+        margin.horizontal + (documentVsMaxContentWithDiff > 0 ? documentVsMaxContentWithDiff / 2 : 0);
+      const contentWidth = this.documentStore.maxContentWidth - margin.horizontal * 2;
 
       nextBlockContentStartY += margin.vertical;
 
-      const blockHeight = this.renderBlockContent(block, contentStartX, nextBlockContentStartY);
+      const blockHeight = this.renderBlockContent(block, contentWidth, contentStartX, nextBlockContentStartY);
       const blockRect = new BlockRect(
         block.id,
         new Padding(5, 5),
-        new Margin(5, 0),
+        margin,
         new Vector(contentStartX, nextBlockContentStartY),
-        new Dimensions(this.documentStore.maxContentWidth, blockHeight),
+        new Dimensions(contentWidth, blockHeight),
       );
 
       this.blockReactStore.attach(block.id, blockRect);
