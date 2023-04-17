@@ -1,3 +1,4 @@
+import { Selection } from '../commands/select/SelectCommand';
 import { createIdGenerator } from '../utils/idGenerator';
 
 export enum BlockType {
@@ -16,7 +17,7 @@ export interface Block {
 export interface ActiveBlock {
   block: Block;
   carriagePosition: number;
-  selection?: [start: number, end: number];
+  selection?: Selection;
 }
 
 export class BlockStore {

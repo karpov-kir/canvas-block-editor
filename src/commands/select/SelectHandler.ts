@@ -2,10 +2,10 @@ import { Block, BlockStore } from '../../stores/BlockStore';
 import { CommandHandler } from '../../utils/pubSub/Command';
 import { Event } from '../../utils/pubSub/Event';
 import { EventBus } from '../../utils/pubSub/EventBus';
-import { SelectCommand } from './SelectCommand';
+import { SelectCommand, Selection } from './SelectCommand';
 
 export class SelectedEvent extends Event {
-  constructor(public readonly block: Block, public readonly selection: [start: number, end: number]) {
+  constructor(public readonly block: Block, public readonly selection: Selection) {
     super();
   }
 }
@@ -22,7 +22,7 @@ export class SelectHandler extends CommandHandler {
       throw new Error('No active block');
     }
 
-    if (selection[1] >= activeBlock.block.content.length) {
+    if (selection.end >= activeBlock.block.content.length) {
       throw new RangeError('Selection is out of range');
     }
 
