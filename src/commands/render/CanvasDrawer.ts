@@ -116,28 +116,28 @@ export const fitTextIntoWidth = (
     topOffset: 0,
   };
 
-  function addLineMetrics(newLineMetrics: LineMetrics) {
+  function addLineAndMetrics(line: string, newLineMetrics: LineMetrics) {
     biggestWidth = Math.max(biggestWidth, newLineMetrics.width);
     lineMetrics.push(newLineMetrics);
+    lines.push(line);
   }
 
   // Create an empty line if the text is empty
   if (text === '') {
-    lines.push(currentLineBuffer);
-    addLineMetrics(lastLineMetrics);
+    addLineAndMetrics(currentLineBuffer, lastLineMetrics);
   }
 
   for (let i = 0; i < characterCount; i++) {
     const character = text[i];
     const isLastCharacter = i === characterCount - 1;
     const previousLineBuffer = currentLineBuffer;
+    const isNewLineCharacter = character === '\n';
 
     currentLineBuffer += character;
 
     // Store the current buffer on a new line character
-    if (character === '\n') {
-      addLineMetrics(lastLineMetrics);
-      lines.push(currentLineBuffer);
+    if (isNewLineCharacter) {
+      addLineAndMetrics(currentLineBuffer, lastLineMetrics);
       currentLineBuffer = '';
       lastLineMetrics = {
         width: 0,
@@ -145,11 +145,10 @@ export const fitTextIntoWidth = (
       };
 
       // If the last character is the new line character it means,
-      // that there won't be iterations anymore and we need to store
-      // the last line as empty.
+      // that there won't be iterations anymore and so let's store
+      // the last line as empty so it can be rendered.
       if (isLastCharacter) {
-        addLineMetrics(lastLineMetrics);
-        lines.push(currentLineBuffer);
+        addLineAndMetrics(currentLineBuffer, lastLineMetrics);
       }
     }
     // Otherwise measure the current buffer and store it right before it gets too long
@@ -164,16 +163,13 @@ export const fitTextIntoWidth = (
       if (currentLineBufferMetrics.width > widthToFitText) {
         // If the current buffer contains only one character then
         // there is no a buffer that less than the current one.
+        // Let's store it.
         if (currentLineBuffer.length === 1) {
-          biggestWidth = Math.max(biggestWidth, currentLineBufferMetrics.width);
-          addLineMetrics(currentLineBufferMetrics);
-          lines.push(currentLineBuffer);
+          addLineAndMetrics(currentLineBuffer, currentLineBufferMetrics);
         }
         // Otherwise store the previous buffer to fit into the width
         else {
-          biggestWidth = Math.max(biggestWidth, lastLineMetrics.width);
-          addLineMetrics(lastLineMetrics);
-          lines.push(previousLineBuffer);
+          addLineAndMetrics(previousLineBuffer, lastLineMetrics);
           i--;
         }
 
@@ -190,12 +186,12 @@ export const fitTextIntoWidth = (
     }
   }
 
+  // Is there something left after iterations?
   if (currentLineBuffer) {
-    addLineMetrics({
+    addLineAndMetrics(currentLineBuffer, {
       width: canvasContext.measureText(currentLineBuffer).width,
       topOffset: lines.length * lineHeight,
     });
-    lines.push(currentLineBuffer);
   }
 
   const textHeight = lines.length * lineHeight;
