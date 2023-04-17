@@ -16,6 +16,7 @@ export interface Block {
 export interface ActiveBlock {
   block: Block;
   carriagePosition: number;
+  selection?: [start: number, end: number];
 }
 
 export class BlockStore {

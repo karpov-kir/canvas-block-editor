@@ -24,8 +24,24 @@ class ActiveBlockBuilder extends Builder<ActiveBlock> {
 export class ActiveBlockMother extends ObjectMother<ActiveBlockBuilder> {
   public readonly builder: ActiveBlockBuilder;
 
-  constructor(blockMother: BlockMother = new BlockMother()) {
+  constructor(private readonly blockMother: BlockMother = new BlockMother()) {
     super();
     this.builder = new ActiveBlockBuilder(blockMother);
+  }
+
+  public withContent() {
+    this.builder.instance.block = {
+      ...this.blockMother.withContent().create(),
+      id: this.builder.instance.block.id,
+    };
+    return this;
+  }
+
+  public withLongContent() {
+    this.builder.instance.block = {
+      ...this.blockMother.withLongContent().create(),
+      id: this.builder.instance.block.id,
+    };
+    return this;
   }
 }
