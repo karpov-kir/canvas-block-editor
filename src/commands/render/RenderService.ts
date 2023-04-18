@@ -1,12 +1,11 @@
-import { BlockRect, BlockRectStore, Margin, Padding } from '../../stores/BlockRectStore';
+import { BlockRect, BlockRectStore, ContentRect, Margin, Padding } from '../../stores/BlockRectStore';
 import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 
 export interface RenderTextOptions {
-  x: number;
-  y: number;
+  position: Vector;
   width: number;
   fontFamily: string;
   fontSize: number;
@@ -27,7 +26,7 @@ export interface RenderRectOptions {
 
 export interface Drawer {
   rect(options: RenderRectOptions): void;
-  text(options: RenderTextOptions): number;
+  text(options: RenderTextOptions): ContentRect;
   setViewportSize(dimensions: Dimensions): void;
   clear(): void;
 }
@@ -86,16 +85,14 @@ export class RenderService {
 
   private renderBlockContent(
     block: Block,
-    contentWidth: number,
-    contentStartX: number,
-    blockContentStartY: number,
+    blockRectWidth: number,
+    position: Vector,
     padding: Padding,
     margin: Margin,
-  ) {
-    const blockHeight = this.drawer.text({
-      width: contentWidth,
-      x: contentStartX,
-      y: blockContentStartY,
+  ): ContentRect {
+    return this.drawer.text({
+      width: blockRectWidth,
+      position,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       fontFamily: 'Arial',
       fontSize: 16,
@@ -103,8 +100,6 @@ export class RenderService {
       padding,
       margin,
     });
-
-    return blockHeight;
   }
 
   public render() {
@@ -112,39 +107,35 @@ export class RenderService {
 
     const { blocks } = this.blockStore;
 
-    let nextBlockContentStartY = 0;
+    let nextBlockRectStartY = 0;
     blocks.forEach((block) => {
       const documentVsMaxContentWidthDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
       const margin = new Margin(5, 5);
       const padding = new Padding(5, 5);
-      const contentStartX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
-      const contentWidth =
+      const blockRectStartX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
+      const blockRectPosition = new Vector(blockRectStartX, nextBlockRectStartY);
+      const blockRectWidth =
         this.documentStore.dimensions.width > this.documentStore.maxContentWidth
           ? this.documentStore.maxContentWidth
           : this.documentStore.dimensions.width < this.documentStore.minContentWidth
           ? this.documentStore.minContentWidth
           : this.documentStore.dimensions.width;
 
-      const blockHeight = this.renderBlockContent(
-        block,
-        contentWidth,
-        contentStartX,
-        nextBlockContentStartY,
-        padding,
-        margin,
-      );
+      const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin);
+      const contentBoxHeight = contentRect.dimensions.height + margin.horizontal * 2 + padding.horizontal * 2;
       const blockRect = new BlockRect(
         block.id,
         padding,
         margin,
-        new Vector(contentStartX, nextBlockContentStartY),
-        new Dimensions(contentWidth, blockHeight),
+        contentRect,
+        blockRectPosition,
+        new Dimensions(blockRectWidth, contentBoxHeight),
       );
 
       this.blockReactStore.attach(block.id, blockRect);
       this.maybeRenderInactiveBlockRect(block, blockRect);
 
-      nextBlockContentStartY += blockHeight + 1;
+      nextBlockRectStartY += contentBoxHeight + 1;
     });
 
     this.maybeRenderActiveBlockRect();

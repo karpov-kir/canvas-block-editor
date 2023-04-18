@@ -13,11 +13,41 @@ export class Margin {
   constructor(public vertical: number = 0, public horizontal: number = 0) {}
 }
 
+export interface LineMetrics {
+  width: number;
+  topOffset: number;
+}
+
+export class ContentRect extends Rectangle {
+  fontSize: number;
+  fontFamily: string;
+  lineHeight: number;
+
+  lineMetrics: LineMetrics[];
+  lines: string[];
+
+  public get lineHeightOffset() {
+    return this.lineHeight - this.fontSize;
+  }
+
+  constructor(position = new Vector(), dimensions = new Dimensions()) {
+    super(position, dimensions);
+
+    this.fontSize = 16;
+    this.fontFamily = 'Arial';
+    this.lineHeight = 20;
+
+    this.lineMetrics = [];
+    this.lines = [];
+  }
+}
+
 export class BlockRect extends Rectangle {
   constructor(
     public blockId: number,
     public padding = new Padding(),
     public margin = new Margin(),
+    public contentRect = new ContentRect(),
     position = new Vector(),
     dimensions = new Dimensions(),
   ) {

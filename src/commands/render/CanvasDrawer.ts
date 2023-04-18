@@ -1,5 +1,6 @@
-import { Margin, Padding } from '../../stores/BlockRectStore';
+import { ContentRect, LineMetrics, Margin, Padding } from '../../stores/BlockRectStore';
 import { Dimensions } from '../../utils/math/Dimensions';
+import { Vector } from '../../utils/math/Vector';
 import { Drawer, RenderRectOptions, RenderTextOptions } from './RenderService';
 
 export class CanvasDrawer implements Drawer {
@@ -9,9 +10,9 @@ export class CanvasDrawer implements Drawer {
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text
    */
-  text({ x, y, fontFamily, width, fontSize, lineHeight, text, padding, margin }: RenderTextOptions): number {
+  text({ position, fontFamily, width, fontSize, lineHeight, text, padding, margin }: RenderTextOptions): ContentRect {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
-    const { lines, lineMetrics, box } = fitTextIntoWidth(this.context, {
+    const fitTextIntoWidthResult = fitTextIntoWidth(this.context, {
       width,
       text,
       fontSize,
@@ -20,6 +21,17 @@ export class CanvasDrawer implements Drawer {
       padding,
       margin,
     });
+    const contentRect = new ContentRect(
+      new Vector(position.x + padding.vertical + margin.horizontal, position.y + padding.vertical + margin.vertical),
+      fitTextIntoWidthResult.dimensions,
+    );
+    contentRect.fontFamily = fontFamily;
+    contentRect.fontSize = fontSize;
+    contentRect.lineHeight = lineHeight;
+    contentRect.lines = fitTextIntoWidthResult.lines;
+    contentRect.lineMetrics = fitTextIntoWidthResult.lineMetrics;
+
+    const { lines, lineMetrics, lineHeightOffset } = contentRect;
 
     this.context.fillStyle = 'black';
     this.context.font = `${fontSize}px ${fontFamily}`;
@@ -30,12 +42,12 @@ export class CanvasDrawer implements Drawer {
       const currentLineMetrics = lineMetrics[index];
       this.context.fillText(
         line,
-        x + padding.horizontal + margin.horizontal,
-        y + currentLineMetrics.topOffset + box.lineHeightOffset + padding.vertical + margin.vertical,
+        contentRect.position.x,
+        contentRect.position.y + currentLineMetrics.topOffset + lineHeightOffset,
       );
     });
 
-    return box.height;
+    return contentRect;
   }
 
   rect({ x, y, width, height, fill, strokeStyle }: RenderRectOptions) {
@@ -76,28 +88,17 @@ interface FitTextIntoWidthOptions {
   margin: Margin;
 }
 
-// TODO is built-in `TextMetrics` useful?
-interface LineMetrics {
-  width: number;
-  topOffset: number;
-}
-
-interface FitTextResultIntoWidthResult {
-  box: {
-    textWidth: number;
-    width: number;
-    textHeight: number;
-    height: number;
-    lineHeightOffset: number;
-  };
-  lineMetrics: LineMetrics[];
+type FitTextIntoWidthResult = {
   lines: string[];
-}
+  lineMetrics: LineMetrics[];
+  lineHeightOffset: number;
+  dimensions: Dimensions;
+};
 
 export const fitTextIntoWidth = (
   canvasContext: CanvasRenderingContext2D,
   options: FitTextIntoWidthOptions,
-): FitTextResultIntoWidthResult => {
+): FitTextIntoWidthResult => {
   const { fontFamily, fontSize, padding, lineHeight, text, width, margin } = options;
 
   canvasContext.font = `${fontSize}px ${fontFamily}`;
@@ -196,17 +197,11 @@ export const fitTextIntoWidth = (
 
   const textHeight = lines.length * lineHeight;
   const textWidth = biggestWidth;
-  const height = textHeight + padding.vertical * 2 + margin.vertical * 2;
 
   return {
     lines,
     lineMetrics,
-    box: {
-      textWidth,
-      width,
-      height,
-      textHeight,
-      lineHeightOffset: lineHeight - fontSize,
-    },
+    lineHeightOffset: lineHeight - fontSize,
+    dimensions: new Dimensions(textWidth, textHeight),
   };
 };

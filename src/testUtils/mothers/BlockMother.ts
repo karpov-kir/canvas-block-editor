@@ -3,6 +3,13 @@ import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 
+export const content = 'Hello world!';
+
+export const longContent = "Hello world! But I'm not just a hello world, I'm also a long content that is repeated!"
+  .repeat(2)
+  .split('!')
+  .join('! ');
+
 class BlockBuilder extends Builder<Block> {
   private idGenerator = createIdGenerator();
 
@@ -36,17 +43,12 @@ export class BlockMother extends ObjectMother<BlockBuilder> {
   }
 
   public withContent() {
-    this.builder.setContent('Hello world!');
+    this.builder.setContent(content);
     return this;
   }
 
   public withLongContent() {
-    this.builder.setContent(
-      "Hello world! But I'm not just a hello world, I'm also a long content that is repeated!"
-        .repeat(2)
-        .split('!')
-        .join('! '),
-    );
+    this.builder.setContent(longContent);
 
     return this;
   }

@@ -9,7 +9,7 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { RenderService } from './RenderService';
 
 describe(RenderService, () => {
-  let drawer: StubDrawer;
+  let stubDrawer: StubDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
   let renderService: RenderService;
@@ -19,11 +19,11 @@ describe(RenderService, () => {
   let documentStore: DocumentStore;
 
   beforeEach(() => {
-    drawer = new StubDrawer();
+    stubDrawer = new StubDrawer();
     blockStore = new BlockStore();
     blockRectStore = new BlockRectStore();
     documentStore = new DocumentStore();
-    renderService = new RenderService(drawer, blockStore, blockRectStore, documentStore);
+    renderService = new RenderService(stubDrawer, blockStore, blockRectStore, documentStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
     activeBlockMother = new ActiveBlockMother(blockMother);
@@ -37,7 +37,7 @@ describe(RenderService, () => {
     renderService.render();
     renderService.render();
 
-    expect(drawer.clear).toBeCalledTimes(2);
+    expect(stubDrawer.clear).toBeCalledTimes(2);
   });
 
   it('renders text of blocks one under another', () => {
@@ -46,9 +46,9 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.text).toBeCalledTimes(2);
-    expect(drawer.text).nthCalledWith(1, expect.objectContaining({ x: 0, y: 0 }));
-    expect(drawer.text).nthCalledWith(2, expect.objectContaining({ x: 0, y: 41 }));
+    expect(stubDrawer.text).toBeCalledTimes(2);
+    expect(stubDrawer.text).nthCalledWith(1, expect.objectContaining({ position: { x: 0, y: 0 } }));
+    expect(stubDrawer.text).nthCalledWith(2, expect.objectContaining({ position: { x: 0, y: 41 } }));
   });
 
   it('renders blocks one under another and for the whole available width', () => {
@@ -60,8 +60,8 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(2);
-    expect(drawer.rect).nthCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(2);
+    expect(stubDrawer.rect).nthCalledWith(
       1,
       expect.objectContaining({
         // 5 comes from margins
@@ -70,7 +70,7 @@ describe(RenderService, () => {
         width: 790,
       }),
     );
-    expect(drawer.rect).nthCalledWith(
+    expect(stubDrawer.rect).nthCalledWith(
       2,
       expect.objectContaining({
         // 5 comes from margins
@@ -94,7 +94,7 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         // 5 comes from margins
         x: 5,
@@ -112,11 +112,11 @@ describe(RenderService, () => {
 
     expect(blockRectStore.blockRects.size).toBe(2);
     expect(blockRectStore.blockRects.get(blockMother.lastTwo[0].id)).toEqual({
-      ...blockRectMother.withSmallSize().create(),
+      ...blockRectMother.withSmallSize().withContent().create(),
       blockId: blockMother.lastTwo[0].id,
     });
     expect(blockRectStore.blockRects.get(blockMother.lastTwo[1].id)).toEqual({
-      ...blockRectMother.withSmallSize().underLast().create(),
+      ...blockRectMother.withSmallSize().underLast().withLongContent().create(),
       blockId: blockMother.lastTwo[1].id,
     });
   });
@@ -126,8 +126,8 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(1);
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(1);
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'gray',
       }),
@@ -140,8 +140,8 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(1);
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(1);
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'red',
       }),
@@ -154,8 +154,8 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(1);
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(1);
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
@@ -169,8 +169,8 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(1);
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(1);
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
@@ -185,13 +185,13 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.rect).toBeCalledTimes(2);
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledTimes(2);
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
     );
-    expect(drawer.rect).toBeCalledWith(
+    expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'red',
       }),
@@ -203,6 +203,6 @@ describe(RenderService, () => {
 
     renderService.render();
 
-    expect(drawer.text).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
+    expect(stubDrawer.text).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
   });
 });

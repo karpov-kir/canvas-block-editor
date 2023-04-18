@@ -3,6 +3,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 import { Margin, Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
+import { Vector } from '../../utils/math/Vector';
 import { CanvasDrawer, fitTextIntoWidth } from './CanvasDrawer';
 import { Drawer } from './RenderService';
 
@@ -20,8 +21,7 @@ beforeEach(() => {
 describe(CanvasDrawer, () => {
   it('fits text into a max width', () => {
     drawer.text({
-      x: 100,
-      y: 100,
+      position: new Vector(100, 100),
       width: 100,
       fontFamily: 'Arial',
       fontSize: 16,
@@ -75,8 +75,7 @@ describe(CanvasDrawer, () => {
   it('rect stroke does not affect the following up text', () => {
     drawer.rect({ x: 100, y: 100, width: 10, height: 10, strokeStyle: 'red' });
     drawer.text({
-      x: 100,
-      y: 110,
+      position: new Vector(100, 110),
       width: 100,
       fontFamily: 'Arial',
       fontSize: 16,
@@ -108,13 +107,11 @@ describe(CanvasDrawer, () => {
 
       expect(result).toEqual({
         lines: ['12!-45asdf', 'ZXCVB@'],
-        box: {
-          lineHeightOffset: 5,
-          textHeight: 40,
-          height: 60,
-          textWidth: expect.any(Number),
-          width: 100,
+        dimensions: {
+          width: expect.any(Number),
+          height: 40,
         },
+        lineHeightOffset: 5,
         lineMetrics: [
           {
             topOffset: 0,
@@ -126,7 +123,7 @@ describe(CanvasDrawer, () => {
           },
         ],
       });
-      expect(Math.round(result.box.textWidth)).toBe(71);
+      expect(Math.round(result.dimensions.width)).toBe(71);
       expect(Math.round(result.lineMetrics[0].width)).toBe(71);
       expect(Math.round(result.lineMetrics[1].width)).toBe(65);
     });
