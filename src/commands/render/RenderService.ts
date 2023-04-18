@@ -1,4 +1,11 @@
-import { BlockRect, BlockRectStore, ContentRect, Margin, Padding } from '../../stores/BlockRectStore';
+import {
+  BlockRect,
+  BlockRectStore,
+  ContentRect,
+  DEFAULT_FONT_STYLES,
+  Margin,
+  Padding,
+} from '../../stores/BlockRectStore';
 import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { Dimensions } from '../../utils/math/Dimensions';
@@ -91,12 +98,10 @@ export class RenderService {
     margin: Margin,
   ): ContentRect {
     return this.drawer.text({
+      ...DEFAULT_FONT_STYLES,
       width: blockRectWidth,
       position,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
-      fontFamily: 'Arial',
-      fontSize: 16,
-      lineHeight: 20,
       padding,
       margin,
     });

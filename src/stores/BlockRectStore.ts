@@ -3,6 +3,12 @@ import { isPointInside } from '../utils/math/isPointInside';
 import { Rectangle } from '../utils/math/Rectangle';
 import { Vector } from '../utils/math/Vector';
 
+export const DEFAULT_FONT_STYLES = {
+  fontSize: 16,
+  fontFamily: 'Arial',
+  lineHeight: 20,
+};
+
 // Padding is included into width and height
 export class Padding {
   constructor(public vertical: number = 0, public horizontal: number = 0) {}
@@ -33,9 +39,9 @@ export class ContentRect extends Rectangle {
   constructor(position = new Vector(), dimensions = new Dimensions()) {
     super(position, dimensions);
 
-    this.fontSize = 16;
-    this.fontFamily = 'Arial';
-    this.lineHeight = 20;
+    this.fontSize = DEFAULT_FONT_STYLES.fontSize;
+    this.fontFamily = DEFAULT_FONT_STYLES.fontFamily;
+    this.lineHeight = DEFAULT_FONT_STYLES.lineHeight;
 
     this.lineMetrics = [];
     this.lines = [];

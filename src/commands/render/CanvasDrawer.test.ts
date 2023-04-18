@@ -1,7 +1,7 @@
 import { Canvas } from 'canvas';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
-import { Margin, Padding } from '../../stores/BlockRectStore';
+import { DEFAULT_FONT_STYLES, Margin, Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
 import { Vector } from '../../utils/math/Vector';
 import { CanvasDrawer, fitTextIntoWidth } from './CanvasDrawer';
@@ -21,11 +21,9 @@ beforeEach(() => {
 describe(CanvasDrawer, () => {
   it('fits text into a max width', () => {
     drawer.text({
+      ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 100),
       width: 100,
-      fontFamily: 'Arial',
-      fontSize: 16,
-      lineHeight: 20,
       text: 'A'.repeat(15),
       padding: new Padding(5, 5),
       margin: new Margin(5, 5),
@@ -75,11 +73,9 @@ describe(CanvasDrawer, () => {
   it('rect stroke does not affect the following up text', () => {
     drawer.rect({ x: 100, y: 100, width: 10, height: 10, strokeStyle: 'red' });
     drawer.text({
+      ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 110),
       width: 100,
-      fontFamily: 'Arial',
-      fontSize: 16,
-      lineHeight: 20,
       text: 'Test',
       padding: new Padding(5, 5),
       margin: new Margin(5, 5),
@@ -96,11 +92,9 @@ describe(CanvasDrawer, () => {
   describe(fitTextIntoWidth, () => {
     it('fits text into width', () => {
       const result = fitTextIntoWidth(canvasContext, {
+        ...DEFAULT_FONT_STYLES,
         text: '12!-45asdfZXCVB@',
         width: 100,
-        fontFamily: 'Arial',
-        lineHeight: 20,
-        fontSize: 15,
         padding: new Padding(5, 5),
         margin: new Margin(5, 5),
       });
@@ -111,7 +105,7 @@ describe(CanvasDrawer, () => {
           width: expect.any(Number),
           height: 40,
         },
-        lineHeightOffset: 5,
+        lineHeightOffset: 4,
         lineMetrics: [
           {
             topOffset: 0,
@@ -123,9 +117,9 @@ describe(CanvasDrawer, () => {
           },
         ],
       });
-      expect(Math.round(result.dimensions.width)).toBe(71);
-      expect(Math.round(result.lineMetrics[0].width)).toBe(71);
-      expect(Math.round(result.lineMetrics[1].width)).toBe(65);
+      expect(Math.round(result.dimensions.width)).toBe(76);
+      expect(Math.round(result.lineMetrics[0].width)).toBe(76);
+      expect(Math.round(result.lineMetrics[1].width)).toBe(70);
     });
   });
 });
