@@ -14,7 +14,7 @@ describe(selectHandler, () => {
     commandBus = new CommandBus();
   });
 
-  it(`emits the ${SelectCommand.name} on a double click`, () => {
+  it(`emits the ${SelectCommand.name} on selection in the active block`, () => {
     const blockStore = new BlockStore();
     const selectCommandHandler = new CommandHandlerStub();
     const blockMother = new BlockMother();
