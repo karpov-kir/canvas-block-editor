@@ -4,16 +4,16 @@ import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockComman
 import { RemoveFocusFromBlockCommand } from '../../../commands/removeFocusFromBlock/RemoveFocusFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
-import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
+import { CursorInteractionClickEvent } from '../CursorInteractionMediator';
 
 export function clickHandler(
-  clickEvent: MouseEvent,
+  event: CursorInteractionClickEvent,
   blockStore: BlockStore,
   blockRectStore: BlockRectStore,
   commandBus: CommandBus,
 ) {
-  const clickedBlockRect = blockRectStore.findByPosition(new Vector(clickEvent.clientX, clickEvent.clientY));
+  const clickedBlockRect = blockRectStore.findByPosition(event.position);
 
   if (clickedBlockRect && clickedBlockRect.blockId !== blockStore.activeBlock?.block.id) {
     const clickedBlock = blockStore.blocks.get(clickedBlockRect.blockId);

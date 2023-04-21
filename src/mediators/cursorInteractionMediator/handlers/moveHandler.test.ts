@@ -4,7 +4,9 @@ import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
+import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
+import { CursorInteractionMoveEvent } from '../CursorInteractionMediator';
 import { moveHandler } from './moveHandler';
 
 describe(moveHandler, () => {
@@ -29,15 +31,7 @@ describe(moveHandler, () => {
     const highlightBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
-    moveHandler(
-      new MouseEvent('move', {
-        clientX: 10,
-        clientY: 10,
-      }),
-      blockStore,
-      blockRectStore,
-      commandBus,
-    );
+    moveHandler(new CursorInteractionMoveEvent(new Vector(10, 10)), blockStore, blockRectStore, commandBus);
 
     expect(highlightBlockHandler.execute).toBeCalledWith(new HighlightBlockCommand(1));
   });
@@ -46,24 +40,13 @@ describe(moveHandler, () => {
     const highlightBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
-    moveHandler(
-      new MouseEvent('move', {
-        clientX: 10,
-        clientY: 50,
-      }),
-      blockStore,
-      blockRectStore,
-      commandBus,
-    );
+    moveHandler(new CursorInteractionMoveEvent(new Vector(10, 50)), blockStore, blockRectStore, commandBus);
 
     expect(highlightBlockHandler.execute).toBeCalledWith(new HighlightBlockCommand(2));
   });
 
   it(`does not emit the ${HighlightBlockCommand.name} if the hovered block is already highlighted`, () => {
-    const moveEvent = new MouseEvent('move', {
-      clientX: 10,
-      clientY: 10,
-    });
+    const moveEvent = new CursorInteractionMoveEvent(new Vector(10, 10));
     const highlightBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
@@ -82,15 +65,7 @@ describe(moveHandler, () => {
     blockStore.highlightedBlock = blockStore.blocks.get(1);
 
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
-    moveHandler(
-      new MouseEvent('move', {
-        clientX: -100,
-        clientY: -100,
-      }),
-      blockStore,
-      blockRectStore,
-      commandBus,
-    );
+    moveHandler(new CursorInteractionMoveEvent(new Vector(-100, -100)), blockStore, blockRectStore, commandBus);
 
     expect(removeHighlightFromBlockHandler.execute).toBeCalledTimes(1);
   });
@@ -99,15 +74,7 @@ describe(moveHandler, () => {
     const removeHighlightFromBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
-    moveHandler(
-      new MouseEvent('move', {
-        clientX: -100,
-        clientY: -100,
-      }),
-      blockStore,
-      blockRectStore,
-      commandBus,
-    );
+    moveHandler(new CursorInteractionMoveEvent(new Vector(-100, -100)), blockStore, blockRectStore, commandBus);
 
     expect(removeHighlightFromBlockHandler.execute).not.toBeCalled();
   });

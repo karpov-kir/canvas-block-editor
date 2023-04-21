@@ -6,8 +6,11 @@ import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
+import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
+import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
+import { CursorInteractionClickEvent } from '../CursorInteractionMediator';
 import { clickHandler } from './clickHandler';
 
 describe(clickHandler, () => {
@@ -16,6 +19,7 @@ describe(clickHandler, () => {
   let blockRectStore: BlockRectStore;
   let blockRectMother: BlockRectMother;
   let activeBlockMother: ActiveBlockMother;
+  let blockMother: BlockMother;
 
   beforeEach(() => {
     commandBus = new CommandBus();
@@ -23,6 +27,7 @@ describe(clickHandler, () => {
     blockRectStore = new BlockRectStore();
     blockRectMother = new BlockRectMother();
     activeBlockMother = new ActiveBlockMother();
+    blockMother = new BlockMother();
 
     blockStore.add(BlockType.Text);
     blockStore.add(BlockType.Text);
@@ -31,17 +36,20 @@ describe(clickHandler, () => {
   });
 
   it(`emits the ${FocusBlockCommand.name} on a click on a block`, () => {
-    const clickEvent = new MouseEvent('click', {
-      clientX: blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
-      clientY: blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
-    });
+    const clickEvent = new CursorInteractionClickEvent(
+      new Vector(
+        blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
+        blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
+      ),
+    );
     const focusedBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
     // Clicking on a not active block should not emit the command
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
-    blockStore.activeBlock = activeBlockMother.create();
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
@@ -51,14 +59,18 @@ describe(clickHandler, () => {
   it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
     const focusedBlockHandler = new CommandHandlerStub();
 
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
+
     commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
-    blockStore.activeBlock = activeBlockMother.create();
 
     clickHandler(
-      new MouseEvent('click', {
-        clientX: blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
-        clientY: blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
-      }),
+      new CursorInteractionClickEvent(
+        new Vector(
+          blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
+          blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
+        ),
+      ),
       blockStore,
       blockRectStore,
       commandBus,
@@ -78,10 +90,12 @@ describe(clickHandler, () => {
     commandBus.subscribe(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
     commandBus.subscribe(AddBlockCommand, addBlockHandler);
     clickHandler(
-      new MouseEvent('click', {
-        clientX: blockRectStore.getById(3).position.x + blockRectStore.getById(3).margin.horizontal,
-        clientY: blockRectStore.getById(3).position.y + blockRectStore.getById(3).margin.vertical,
-      }),
+      new CursorInteractionClickEvent(
+        new Vector(
+          blockRectStore.getById(3).position.x + blockRectStore.getById(3).margin.horizontal,
+          blockRectStore.getById(3).position.y + blockRectStore.getById(3).margin.vertical,
+        ),
+      ),
       blockStore,
       blockRectStore,
       commandBus,
@@ -94,13 +108,11 @@ describe(clickHandler, () => {
   });
 
   it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of the active block`, () => {
-    const clickEvent = new MouseEvent('click', {
-      clientX: -100,
-      clientY: -100,
-    });
+    const clickEvent = new CursorInteractionClickEvent(new Vector(-100, -100));
     const removeFocusFromBlockHandler = new CommandHandlerStub();
 
-    blockStore.activeBlock = activeBlockMother.create();
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     commandBus.subscribe(RemoveFocusFromBlockCommand, removeFocusFromBlockHandler);
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);

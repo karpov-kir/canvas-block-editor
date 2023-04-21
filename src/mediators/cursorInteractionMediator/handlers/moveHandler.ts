@@ -2,16 +2,16 @@ import { HighlightBlockCommand } from '../../../commands/highlightBlock/Highligh
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore } from '../../../stores/BlockStore';
-import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
+import { CursorInteractionMoveEvent } from '../CursorInteractionMediator';
 
 export function moveHandler(
-  moveEvent: MouseEvent,
+  event: CursorInteractionMoveEvent,
   blockStore: BlockStore,
   blockRectStore: BlockRectStore,
   commandBus: CommandBus,
 ) {
-  const blockRect = blockRectStore.findByPosition(new Vector(moveEvent.clientX, moveEvent.clientY));
+  const blockRect = blockRectStore.findByPosition(event.position);
 
   if (blockRect && blockStore.highlightedBlock?.id !== blockRect.blockId) {
     commandBus.publish(new HighlightBlockCommand(blockRect.blockId));

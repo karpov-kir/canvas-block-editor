@@ -3,6 +3,7 @@ import { DocumentStore } from '../../../stores/DocumentStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
 import { Dimensions } from '../../../utils/math/Dimensions';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
+import { ViewportInteractionResizeEvent } from '../ViewportInteractionMediator';
 import { resizeHandler } from './resizeHandler';
 
 describe(resizeHandler, () => {
@@ -18,7 +19,7 @@ describe(resizeHandler, () => {
     const resizeCommandHandler = new CommandHandlerStub();
 
     commandBus.subscribe(ResizeDocumentCommand, resizeCommandHandler);
-    resizeHandler(new UIEvent('resize'), documentStore, commandBus);
+    resizeHandler(new ViewportInteractionResizeEvent(new Dimensions(100, 100)), documentStore, commandBus);
 
     expect(resizeCommandHandler.execute).toBeCalledWith(expect.any(ResizeDocumentCommand));
   });
@@ -29,7 +30,7 @@ describe(resizeHandler, () => {
     documentStore.dimensions = new Dimensions(200, 200);
 
     commandBus.subscribe(ResizeDocumentCommand, resizeCommandHandler);
-    resizeHandler(new UIEvent('resize'), documentStore, commandBus);
+    resizeHandler(new ViewportInteractionResizeEvent(new Dimensions(200, 200)), documentStore, commandBus);
 
     expect(resizeCommandHandler.execute).not.toBeCalledWith();
   });
