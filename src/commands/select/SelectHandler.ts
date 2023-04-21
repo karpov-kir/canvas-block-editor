@@ -22,7 +22,7 @@ export class SelectHandler extends CommandHandler {
       throw new Error('No active block');
     }
 
-    if (selection.end >= activeBlock.block.content.length) {
+    if (selection.end > activeBlock.block.content.length) {
       throw new RangeError('Selection is out of range');
     }
 
