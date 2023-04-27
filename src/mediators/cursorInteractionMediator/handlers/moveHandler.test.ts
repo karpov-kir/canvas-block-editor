@@ -59,7 +59,7 @@ describe(moveHandler, () => {
     expect(highlightBlockHandler.execute).toBeCalledTimes(1);
   });
 
-  it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse hover outside of the highlighted block`, () => {
+  it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the highlighted block`, () => {
     const removeHighlightFromBlockHandler = new CommandHandlerStub();
 
     blockStore.highlightedBlock = blockStore.blocks.get(1);
@@ -70,7 +70,7 @@ describe(moveHandler, () => {
     expect(removeHighlightFromBlockHandler.execute).toBeCalledTimes(1);
   });
 
-  it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse hover outside of blocks if there is no a highlighted block`, () => {
+  it(`does not emit the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the blocks if there is no a highlighted block`, () => {
     const removeHighlightFromBlockHandler = new CommandHandlerStub();
 
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);

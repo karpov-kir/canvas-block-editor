@@ -7,8 +7,8 @@ import { RenderCommand } from './RenderCommand';
 import { RenderCommandHandler, RenderedEvent } from './RenderCommandHandler';
 import { RenderService } from './RenderService';
 
-describe(RenderCommandHandler, () => {
-  it(`renders blocks and emits ${RenderedEvent}`, () => {
+describe(RenderCommandHandler.name, () => {
+  it(`renders blocks and emits ${RenderedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const renderService = new RenderService(
       new StubDrawer(),

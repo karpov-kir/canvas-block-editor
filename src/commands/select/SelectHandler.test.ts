@@ -5,7 +5,7 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { SelectCommand, Selection } from './SelectCommand';
 import { SelectedEvent, SelectHandler } from './SelectHandler';
 
-describe('SelectCommand', () => {
+describe(SelectCommand.name, () => {
   let blockStore: BlockStore;
   let eventBus: EventBus;
   let handler: SelectHandler;
@@ -20,7 +20,7 @@ describe('SelectCommand', () => {
     blockMother = new BlockMother();
   });
 
-  it(`selects some content and emits the ${SelectedEvent}`, () => {
+  it(`selects some content and emits the ${SelectedEvent.name}`, () => {
     const command = new SelectCommand(new Selection(0, 5));
     const selectedHandler = jest.fn();
 
@@ -34,7 +34,7 @@ describe('SelectCommand', () => {
     expect(selectedHandler).toBeCalledWith(new SelectedEvent(blockStore.activeBlock.block, new Selection(0, 5)));
   });
 
-  it(`throws an error if a selection is out of range`, () => {
+  it(`throws an error if the selection is out of range`, () => {
     const command = new SelectCommand(new Selection(0, Number.MAX_SAFE_INTEGER));
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);

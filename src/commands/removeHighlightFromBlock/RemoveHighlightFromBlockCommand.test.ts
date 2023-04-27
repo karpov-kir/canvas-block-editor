@@ -3,8 +3,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { RemoveHighlightFromBlockCommand } from './RemoveHighlightFromBlockCommand';
 import { HighlightRemovedFromBlockEvent, RemoveHighlightFromBlockHandler } from './RemoveHighlightFromBlockHandler';
 
-describe(RemoveHighlightFromBlockHandler, () => {
-  it(`highlights a block on hover and emits ${HighlightRemovedFromBlockEvent}`, () => {
+describe(RemoveHighlightFromBlockHandler.name, () => {
+  it(`removes highlight from the highlighted block on hover and emits ${HighlightRemovedFromBlockEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
     const command = new RemoveHighlightFromBlockCommand(1);

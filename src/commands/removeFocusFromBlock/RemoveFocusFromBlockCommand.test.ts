@@ -5,8 +5,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { RemoveFocusFromBlockCommand } from './RemoveFocusFromBlockCommand';
 import { FocusRemovedFromBlockEvent, RemoveFocusFromBlockCommandHandler } from './RemoveFocusFromBlockHandler';
 
-describe(RemoveFocusFromBlockCommand, () => {
-  it(`deactivates a block and emits the ${FocusRemovedFromBlockEvent}`, () => {
+describe(RemoveFocusFromBlockCommand.name, () => {
+  it(`deactivates a block and emits the ${FocusRemovedFromBlockEvent.name}`, () => {
     const blockMother = new BlockMother();
     const activeBlockMother = new ActiveBlockMother();
     const blockStore = new BlockStore();

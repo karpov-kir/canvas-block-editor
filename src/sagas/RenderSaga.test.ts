@@ -20,7 +20,7 @@ import { RenderSaga } from './RenderSaga';
 const blockMother = new BlockMother();
 
 describe(RenderSaga, () => {
-  it(`listens for some events and dispatches the ${RenderCommand}`, () => {
+  it(`listens for some events and dispatches the ${RenderCommand.name}`, () => {
     const eventBus = new EventBus();
     const commandBus = new CommandBus();
     const eventsThatShouldTriggerRender = [

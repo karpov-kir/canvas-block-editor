@@ -4,8 +4,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { InputCommand } from './InputCommand';
 import { InputHandler, InputReceivedEvent } from './InputHandler';
 
-describe(InputHandler, () => {
-  it(`adds some input to the currently active block and emits the ${InputReceivedEvent}`, () => {
+describe(InputHandler.name, () => {
+  it(`adds some input to the currently active block and emits the ${InputReceivedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
     const handler = new InputHandler(blockStore, eventBus);

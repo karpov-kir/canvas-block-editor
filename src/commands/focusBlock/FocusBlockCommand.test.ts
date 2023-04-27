@@ -5,8 +5,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { FocusBlockCommand } from './FocusBlockCommand';
 import { BlockFocusedEvent, FocusBlockHandler } from './FocusBlockHandler';
 
-describe(FocusBlockCommand, () => {
-  it(`activates a block on focus and emits the ${BlockFocusedEvent}`, () => {
+describe(FocusBlockCommand.name, () => {
+  it(`activates a block on focus and emits the ${BlockFocusedEvent.name}`, () => {
     const activeBlockMother = new ActiveBlockMother();
     const blockMother = new BlockMother();
     const blockStore = new BlockStore();

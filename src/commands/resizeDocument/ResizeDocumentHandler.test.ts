@@ -6,8 +6,8 @@ import { ResizeDocumentCommand } from './ResizeDocumentCommand';
 import { DocumentResizedEvent, ResizeDocumentHandler } from './ResizeDocumentHandler';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
-describe(ResizeDocumentHandler, () => {
-  it(`resizes document and emits the ${DocumentResizedEvent}`, () => {
+describe(ResizeDocumentHandler.name, () => {
+  it(`resizes document and emits the ${DocumentResizedEvent.name}`, () => {
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(new StubDrawer(), documentStore);
     const eventBus = new EventBus();

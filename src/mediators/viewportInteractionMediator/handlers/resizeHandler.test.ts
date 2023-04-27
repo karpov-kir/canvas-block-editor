@@ -24,7 +24,7 @@ describe(resizeHandler, () => {
     expect(resizeCommandHandler.execute).toBeCalledWith(expect.any(ResizeDocumentCommand));
   });
 
-  it(`does not emit the ${ResizeDocumentCommand.name} on document to the same dimensions`, () => {
+  it(`does not emit the ${ResizeDocumentCommand.name} on document resize to the same dimensions as stored currently`, () => {
     const resizeCommandHandler = new CommandHandlerStub();
 
     documentStore.dimensions = new Dimensions(200, 200);

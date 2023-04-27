@@ -19,8 +19,8 @@ beforeEach(() => {
   drawer = new CanvasDrawer(canvasContext);
 });
 
-describe(CanvasDrawer, () => {
-  it('fits text into a max width', () => {
+describe(CanvasDrawer.name, () => {
+  it('fits a text into a max width', () => {
     drawer.text({
       ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 100),
@@ -38,7 +38,7 @@ describe(CanvasDrawer, () => {
     });
   });
 
-  it('updates canvas size', () => {
+  it('updates the canvas size', () => {
     drawer.setViewportSize({ width: 10, height: 10 });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
@@ -49,7 +49,7 @@ describe(CanvasDrawer, () => {
     });
   });
 
-  it('renders rect', () => {
+  it('renders a rect', () => {
     drawer.rect({ position: new Vector(100, 100), dimensions: new Dimensions(150, 250), strokeStyle: 'red' });
 
     const imgBuffer = canvasElement.toBuffer('image/png');

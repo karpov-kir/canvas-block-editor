@@ -3,8 +3,8 @@ import { StubDrawer } from '../../testUtils/StubDrawer';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
-describe(ResizeDocumentService, () => {
-  it('update dimensions', () => {
+describe(ResizeDocumentService.name, () => {
+  it('updates dimensions', () => {
     const drawer = new StubDrawer();
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(drawer, documentStore);

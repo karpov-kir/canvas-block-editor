@@ -79,7 +79,7 @@ describe(clickHandler, () => {
     expect(focusedBlockHandler.execute).not.toBeCalled();
   });
 
-  it(`changes the block type on a click on a block with type ${BlockType.CreateBlock}, focuses the block, and adds a new ${BlockType.CreateBlock} block at the end`, () => {
+  it(`changes the "${BlockType.CreateBlock}" block type to another type on a click, focuses the block, and adds a new block with type "${BlockType.CreateBlock}" to the end`, () => {
     const focusBlockCommandHandler = new CommandHandlerStub();
     const changeBlockTypeCommandHandler = new CommandHandlerStub();
     const addBlockHandler = new CommandHandlerStub();

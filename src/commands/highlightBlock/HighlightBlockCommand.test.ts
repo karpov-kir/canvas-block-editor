@@ -3,8 +3,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { HighlightBlockCommand } from './HighlightBlockCommand';
 import { BlockHighlightedEvent, HighlightBlockHandler } from './HighlightBlockHandler';
 
-describe(HighlightBlockCommand, () => {
-  it(`highlights a block on hover and emits the ${BlockHighlightedEvent}`, () => {
+describe(HighlightBlockCommand.name, () => {
+  it(`highlights a block on hover and emits the ${BlockHighlightedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const command = new HighlightBlockCommand(1);
     const eventBus = new EventBus();

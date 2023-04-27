@@ -9,7 +9,7 @@ describe(createIdGenerator, () => {
     secondIdGenerator = createIdGenerator();
   });
 
-  it('generates unique IDs withing a group in sequence', () => {
+  it('generates unique IDs within a group in sequence', () => {
     const firstIdGroup = [firstIdGenerator(), firstIdGenerator()];
     const secondIdGroup = [secondIdGenerator()];
 

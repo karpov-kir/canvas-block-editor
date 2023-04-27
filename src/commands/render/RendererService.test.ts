@@ -9,7 +9,7 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
-describe(RenderService, () => {
+describe(RenderService.name, () => {
   let stubDrawer: StubDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
@@ -34,7 +34,7 @@ describe(RenderService, () => {
     documentStore.minContentWidth = 90;
   });
 
-  it('clears canvas on every render', () => {
+  it('clears the canvas on every render', () => {
     renderService.render();
     renderService.render();
 
@@ -160,7 +160,7 @@ describe(RenderService, () => {
     );
   });
 
-  it('renders a block as active only even if it is active and highlighted at the same time', () => {
+  it('renders a block as active only (in green color) even if it is active and highlighted at the same time', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
     blockStore.highlightedBlock = blockStore.activeBlock.block;
@@ -197,7 +197,7 @@ describe(RenderService, () => {
     );
   });
 
-  it(`renders the ${BlockType.CreateBlock} with "New +" as the content`, () => {
+  it(`renders a block with type "${BlockType.CreateBlock}" with "New +" as the content`, () => {
     blockStore.blocks.set(blockMother.withType(BlockType.CreateBlock).create().id, blockMother.last);
 
     renderService.render();

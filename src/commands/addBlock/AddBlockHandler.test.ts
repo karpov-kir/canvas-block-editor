@@ -4,8 +4,8 @@ import { EventBus } from '../../utils/pubSub/EventBus';
 import { AddBlockCommand } from './AddBlockCommand';
 import { AddBlockHandler, BlockAddedEvent } from './AddBlockHandler';
 
-describe('AddBlockCommand', () => {
-  it(`adds a text block and emits the ${BlockAddedEvent}`, () => {
+describe(AddBlockCommand.name, () => {
+  it(`adds a text block and emits the ${BlockAddedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const command = new AddBlockCommand(BlockType.Text);
     const eventBus = new EventBus();
