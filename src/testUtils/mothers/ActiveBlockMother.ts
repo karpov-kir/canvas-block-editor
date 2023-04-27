@@ -1,11 +1,11 @@
-import { ActiveBlock } from '../../stores/BlockStore';
+import { ActiveBlock, Block } from '../../stores/BlockStore';
 import { BlockMother } from './BlockMother';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 
 class ActiveBlockBuilder extends Builder<ActiveBlock> {
   private readonly blockMother: BlockMother;
-  public instance: ActiveBlock;
+  public override instance: ActiveBlock;
 
   constructor(blockMother: BlockMother) {
     super();
@@ -13,7 +13,7 @@ class ActiveBlockBuilder extends Builder<ActiveBlock> {
     this.instance = this.createEmpty();
   }
 
-  public createEmpty(): ActiveBlock {
+  public override createEmpty(): ActiveBlock {
     return {
       block: this.blockMother.create(),
       carriagePosition: 0,
@@ -22,26 +22,15 @@ class ActiveBlockBuilder extends Builder<ActiveBlock> {
 }
 
 export class ActiveBlockMother extends ObjectMother<ActiveBlockBuilder> {
-  public readonly builder: ActiveBlockBuilder;
+  public override readonly builder: ActiveBlockBuilder;
 
   constructor(private readonly blockMother: BlockMother = new BlockMother()) {
     super();
     this.builder = new ActiveBlockBuilder(blockMother);
   }
 
-  public withContent() {
-    this.builder.instance.block = {
-      ...this.blockMother.withContent().create(),
-      id: this.builder.instance.block.id,
-    };
-    return this;
-  }
-
-  public withLongContent() {
-    this.builder.instance.block = {
-      ...this.blockMother.withLongContent().create(),
-      id: this.builder.instance.block.id,
-    };
+  public withBlock(block: Block) {
+    this.builder.instance.block = block;
     return this;
   }
 }

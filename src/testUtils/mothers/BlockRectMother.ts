@@ -20,9 +20,9 @@ class BlockRectBuilder extends Builder<BlockRect> {
       this.instance.dimensions.height - this.instance.padding.vertical * 2 - this.instance.margin.vertical * 2;
   }
 
-  public instance = this.createEmpty();
+  public override instance = this.createEmpty();
 
-  public createEmpty(): BlockRect {
+  public override createEmpty(): BlockRect {
     return new BlockRect(this.blockIdGenerator());
   }
 
@@ -78,7 +78,7 @@ class BlockRectBuilder extends Builder<BlockRect> {
 }
 
 export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
-  public readonly builder = new BlockRectBuilder();
+  public override readonly builder = new BlockRectBuilder();
 
   public withSmallSize() {
     this.builder

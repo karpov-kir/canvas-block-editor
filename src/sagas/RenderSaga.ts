@@ -7,6 +7,7 @@ import { CarriageMovedEvent } from '../commands/moveCarriage/MoveCarriageHandler
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockHandler';
 import { RenderCommand } from '../commands/render/RenderCommand';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentHandler';
+import { SelectedEvent } from '../commands/select/SelectHandler';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
 import { FocusRemovedFromBlockEvent } from './../commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
@@ -23,6 +24,7 @@ export class RenderSaga {
       CarriageMovedEvent,
       HighlightRemovedFromBlockEvent,
       DocumentResizedEvent,
+      SelectedEvent,
     ];
 
     runsOn.forEach((event) => {

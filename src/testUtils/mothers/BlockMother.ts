@@ -13,9 +13,9 @@ export const longContent = "Hello world! But I'm not just a hello world, I'm als
 class BlockBuilder extends Builder<Block> {
   private idGenerator = createIdGenerator();
 
-  public instance = this.createEmpty();
+  public override instance = this.createEmpty();
 
-  public createEmpty() {
+  public override createEmpty() {
     return {
       id: this.idGenerator(),
       content: '',
@@ -35,7 +35,7 @@ class BlockBuilder extends Builder<Block> {
 }
 
 export class BlockMother extends ObjectMother<BlockBuilder> {
-  public readonly builder = new BlockBuilder();
+  public override readonly builder = new BlockBuilder();
 
   public withType(type: BlockType) {
     this.builder.setType(type);
