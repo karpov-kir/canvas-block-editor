@@ -10,7 +10,17 @@ export class CanvasDrawer implements Drawer {
    * @param options @type {RenderTextOptions}
    * @returns {number} height of the rendered text
    */
-  text({ position, fontFamily, width, fontSize, lineHeight, text, padding, margin }: RenderTextOptions): ContentRect {
+  text({
+    position,
+    fontFamily,
+    width,
+    fontSize,
+    lineHeight,
+    text,
+    padding,
+    margin,
+    selection,
+  }: RenderTextOptions): ContentRect {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
     const fitTextIntoWidthResult = fitTextIntoWidth(this.context, {
       width,
@@ -33,13 +43,48 @@ export class CanvasDrawer implements Drawer {
 
     const { lines, lineMetrics, lineHeightOffset } = contentRect;
 
-    this.context.fillStyle = 'black';
-    this.context.font = `${fontSize}px ${fontFamily}`;
-    this.context.textAlign = 'left';
-    this.context.textBaseline = 'top';
+    let lastCharacterIndex = 0;
+    let characterCountToSelectLeft = selection ? selection.end - selection.start : 0;
+    let selectedLineCount = 0;
+    lines.forEach((line, lineIndex) => {
+      const currentLineMetrics = lineMetrics[lineIndex];
 
-    lines.forEach((line, index) => {
-      const currentLineMetrics = lineMetrics[index];
+      if (
+        selection &&
+        (selection.start >= lastCharacterIndex || selection.end >= lastCharacterIndex) &&
+        characterCountToSelectLeft > 0
+      ) {
+        const { start, end } = selection;
+        let charactersToSelect: string;
+        let offsetWidth = 0;
+
+        if (selectedLineCount === 0) {
+          charactersToSelect = line.slice(start, end);
+          ({ width: offsetWidth } = this.context.measureText(line.slice(0, start)));
+        } else {
+          charactersToSelect = line.slice(0, characterCountToSelectLeft);
+        }
+
+        characterCountToSelectLeft -= charactersToSelect.length;
+        selectedLineCount += 1;
+
+        const { width } = this.context.measureText(charactersToSelect);
+
+        this.rect({
+          position: new Vector(contentRect.position.x + offsetWidth, contentRect.position.y + lineHeight * lineIndex),
+          dimensions: new Dimensions(width, lineHeight),
+          fill: true,
+          strokeStyle: 'transparent',
+          fillStyle: 'rgba(0, 0, 255, 0.2)',
+        });
+      }
+
+      lastCharacterIndex += line.length;
+
+      this.context.fillStyle = 'black';
+      this.context.font = `${fontSize}px ${fontFamily}`;
+      this.context.textAlign = 'left';
+      this.context.textBaseline = 'top';
       this.context.fillText(
         line,
         contentRect.position.x,
@@ -50,12 +95,16 @@ export class CanvasDrawer implements Drawer {
     return contentRect;
   }
 
-  rect({ x, y, width, height, fill, strokeStyle }: RenderRectOptions) {
+  rect({ position, dimensions, fill, strokeStyle, fillStyle }: RenderRectOptions) {
     this.context.beginPath();
     this.context.strokeStyle = strokeStyle;
-    this.context.rect(x, y, width, height);
+    this.context.rect(position.x, position.y, dimensions.width, dimensions.height);
 
     if (fill) {
+      if (fillStyle) {
+        this.context.fillStyle = fillStyle;
+      }
+
       this.context.fill();
     }
 

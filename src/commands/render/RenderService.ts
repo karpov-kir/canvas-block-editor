@@ -10,6 +10,7 @@ import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
+import { Selection } from '../select/SelectCommand';
 
 export interface RenderTextOptions {
   position: Vector;
@@ -20,15 +21,15 @@ export interface RenderTextOptions {
   text: string;
   padding: Padding;
   margin: Margin;
+  selection?: Selection;
 }
 
 export interface RenderRectOptions {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  position: Vector;
+  dimensions: Dimensions;
   strokeStyle: string;
   fill?: boolean;
+  fillStyle?: string;
 }
 
 export interface Drawer {
@@ -47,10 +48,14 @@ export class RenderService {
 
   private renderBlockRect(blockRect: BlockRect, strokeStyle: string) {
     this.drawer.rect({
-      x: blockRect.position.x + blockRect.margin.horizontal,
-      y: blockRect.position.y + blockRect.margin.vertical,
-      width: blockRect.dimensions.width - blockRect.margin.horizontal * 2,
-      height: blockRect.dimensions.height - blockRect.margin.vertical * 2,
+      position: new Vector(
+        blockRect.position.x + blockRect.margin.horizontal,
+        blockRect.position.y + blockRect.margin.vertical,
+      ),
+      dimensions: new Dimensions(
+        blockRect.dimensions.width - blockRect.margin.horizontal * 2,
+        blockRect.dimensions.height - blockRect.margin.vertical * 2,
+      ),
       strokeStyle,
     });
   }
@@ -96,6 +101,7 @@ export class RenderService {
     position: Vector,
     padding: Padding,
     margin: Margin,
+    selection?: Selection,
   ): ContentRect {
     return this.drawer.text({
       ...DEFAULT_FONT_STYLES,
@@ -104,6 +110,7 @@ export class RenderService {
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       padding,
       margin,
+      selection,
     });
   }
 
@@ -125,8 +132,10 @@ export class RenderService {
           : this.documentStore.dimensions.width < this.documentStore.minContentWidth
           ? this.documentStore.minContentWidth
           : this.documentStore.dimensions.width;
+      const selection =
+        this.blockStore.activeBlock?.block.id === block.id ? this.blockStore.activeBlock.selection : undefined;
 
-      const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin);
+      const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin, selection);
       const contentBoxHeight = contentRect.dimensions.height + margin.horizontal * 2 + padding.horizontal * 2;
       const blockRect = new BlockRect(
         block.id,

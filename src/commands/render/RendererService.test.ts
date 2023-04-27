@@ -6,6 +6,7 @@ import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';
 import { Dimensions } from '../../utils/math/Dimensions';
+import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
 describe(RenderService, () => {
@@ -65,18 +66,16 @@ describe(RenderService, () => {
       1,
       expect.objectContaining({
         // 5 comes from margins
-        x: 105,
-        y: 5,
-        width: 790,
+        position: new Vector(105, 5),
+        dimensions: new Dimensions(790, 30),
       }),
     );
     expect(stubDrawer.rect).nthCalledWith(
       2,
       expect.objectContaining({
         // 5 comes from margins
-        x: 105,
-        y: 46,
-        width: 790,
+        position: new Vector(105, 46),
+        dimensions: new Dimensions(790, 30),
       }),
     );
   });
@@ -97,9 +96,8 @@ describe(RenderService, () => {
     expect(stubDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         // 5 comes from margins
-        x: 5,
-        y: 5,
-        width: 90,
+        position: new Vector(5, 5),
+        dimensions: new Dimensions(90, 30),
       }),
     );
   });
@@ -149,8 +147,8 @@ describe(RenderService, () => {
   });
 
   it('strokes the active block in green color', () => {
-    blockStore.activeBlock = activeBlockMother.create();
-    blockStore.blocks.set(activeBlockMother.last.block.id, activeBlockMother.last.block);
+    blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     renderService.render();
 
@@ -163,9 +161,9 @@ describe(RenderService, () => {
   });
 
   it('renders a block as active only even if it is active and highlighted at the same time', () => {
-    blockStore.activeBlock = activeBlockMother.create();
+    blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
     blockStore.highlightedBlock = blockStore.activeBlock.block;
-    blockStore.blocks.set(activeBlockMother.last.block.id, activeBlockMother.last.block);
 
     renderService.render();
 
@@ -178,10 +176,11 @@ describe(RenderService, () => {
   });
 
   it('renders the active and the highlighted block if they are different blocks', () => {
-    blockStore.highlightedBlock = blockMother.create();
-    blockStore.activeBlock = activeBlockMother.create();
-    blockStore.blocks.set(blockStore.highlightedBlock.id, blockStore.highlightedBlock);
-    blockStore.blocks.set(blockStore.activeBlock.block.id, blockStore.activeBlock.block);
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.highlightedBlock = blockMother.last;
+
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     renderService.render();
 

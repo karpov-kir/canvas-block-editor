@@ -3,6 +3,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 import { DEFAULT_FONT_STYLES, Margin, Padding } from '../../stores/BlockRectStore';
 import { createCanvas } from '../../testUtils/createCanvas';
+import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { CanvasDrawer, fitTextIntoWidth } from './CanvasDrawer';
 import { Drawer } from './RenderService';
@@ -49,7 +50,7 @@ describe(CanvasDrawer, () => {
   });
 
   it('renders rect', () => {
-    drawer.rect({ x: 100, y: 100, width: 150, height: 250, strokeStyle: 'red' });
+    drawer.rect({ position: new Vector(100, 100), dimensions: new Dimensions(150, 250), strokeStyle: 'red' });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 
@@ -60,7 +61,12 @@ describe(CanvasDrawer, () => {
   });
 
   it('renders a filled rect', () => {
-    drawer.rect({ x: 100, y: 100, width: 150, height: 250, strokeStyle: 'red', fill: true });
+    drawer.rect({
+      position: new Vector(100, 100),
+      dimensions: new Dimensions(150, 250),
+      strokeStyle: 'red',
+      fill: true,
+    });
 
     const imgBuffer = canvasElement.toBuffer('image/png');
 
@@ -71,7 +77,7 @@ describe(CanvasDrawer, () => {
   });
 
   it('rect stroke does not affect the following up text', () => {
-    drawer.rect({ x: 100, y: 100, width: 10, height: 10, strokeStyle: 'red' });
+    drawer.rect({ position: new Vector(100, 100), dimensions: new Dimensions(10, 10), strokeStyle: 'red' });
     drawer.text({
       ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 110),

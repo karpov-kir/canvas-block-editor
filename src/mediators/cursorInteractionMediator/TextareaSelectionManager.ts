@@ -28,7 +28,7 @@ export class TextareaSelectionManager implements SelectionManager {
     this.textarea.style.border = '0px';
     this.textarea.style.outline = '0px';
     this.textarea.style.right = '0px';
-    this.textarea.style.color = 'violet';
+    this.textarea.style.color = 'transparent';
     this.textarea.style.background = 'transparent';
     this.textarea.style.verticalAlign = 'center';
     this.textarea.style.textAlign = 'left';
@@ -36,7 +36,7 @@ export class TextareaSelectionManager implements SelectionManager {
     this.textarea.style.overflow = 'hidden';
     this.textarea.style.display = 'none';
     this.textarea.style.wordBreak = 'break-all';
-    this.textarea.style.opacity = '0.4';
+    this.textarea.style.opacity = '0';
 
     this.textarea.value = '';
     this.textarea.readOnly = true;
