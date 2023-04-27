@@ -21,10 +21,17 @@ import { RenderService } from './commands/render/RenderService';
 import { ResizeDocumentCommand } from './commands/resizeDocument/ResizeDocumentCommand';
 import { ResizeDocumentHandler } from './commands/resizeDocument/ResizeDocumentHandler';
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
-import { UserCursorInteractionMediator } from './mediators/userCursorInteractionMediator/UserCursorInteractionMediator';
-import { UserKeyboardInteractionMediator } from './mediators/userKeyboardInteractionMediator/UserKeyboardInteractionMediator';
-import { UserViewportInteractionMediator } from './mediators/userViewportInteractionMediator/UserViewportInteractionMediator';
+import { SelectCommand } from './commands/select/SelectCommand';
+import { SelectHandler } from './commands/select/SelectHandler';
+import { CursorInteractionMediator } from './mediators/cursorInteractionMediator/CursorInteractionMediator';
+import { subscribeToCursorInteraction } from './mediators/cursorInteractionMediator/subscribeToUserCursorInteraction';
+import { TextareaSelectionManager } from './mediators/cursorInteractionMediator/TextareaSelectionManager';
+import { KeyboardInteractionMediator } from './mediators/keyboardInteractionMediator/KeyboardInteractionMediator';
+import { subscribeToKeyboardInteraction } from './mediators/keyboardInteractionMediator/subscribeToKeyboardnteraction';
+import { subscribeToViewportInteraction } from './mediators/viewportInteractionMediator/subscribeToViewportInteraction';
+import { ViewportInteractionMediator } from './mediators/viewportInteractionMediator/ViewportInteractionMediator';
 import { RenderSaga } from './sagas/RenderSaga';
+import { SelectionSaga } from './sagas/SelectionSaga';
 import { BlockRectStore } from './stores/BlockRectStore';
 import { BlockStore, BlockType } from './stores/BlockStore';
 import { DocumentStore } from './stores/DocumentStore';
@@ -73,6 +80,7 @@ const documentStore = new DocumentStore();
 const canvasDrawer = new CanvasDrawer(canvasContext);
 const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore, documentStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
+const textareaSelectionManager = new TextareaSelectionManager(blockStore, blockRectStore);
 
 documentStore.maxContentWidth = 1000;
 documentStore.minContentWidth = 200;
@@ -100,30 +108,20 @@ commandBus.subscribe(HighlightBlockCommand, new HighlightBlockHandler(blockStore
 commandBus.subscribe(InputCommand, new InputHandler(blockStore, eventBus));
 commandBus.subscribe(MoveCarriageCommand, new MoveCarriageHandler(blockStore, eventBus));
 commandBus.subscribe(RemoveHighlightFromBlockCommand, new RemoveHighlightFromBlockHandler(blockStore, eventBus));
-commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
 commandBus.subscribe(ResizeDocumentCommand, new ResizeDocumentHandler(resizeDocumentService, eventBus));
+commandBus.subscribe(SelectCommand, new SelectHandler(blockStore, eventBus));
+commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
 
-const userCursorInteractionMediator = new UserCursorInteractionMediator(commandBus, blockStore, blockRectStore);
-const userKeyboardInteractionMediator = new UserKeyboardInteractionMediator(commandBus, blockStore);
-const userViewportInteractionMediator = new UserViewportInteractionMediator(commandBus, documentStore);
+const cursorInteractionMediator = new CursorInteractionMediator(commandBus, blockStore, blockRectStore);
+const keyboardInteractionMediator = new KeyboardInteractionMediator(commandBus, blockStore);
+const viewportInteractionMediator = new ViewportInteractionMediator(commandBus, documentStore);
 
+subscribeToCursorInteraction(cursorInteractionMediator, containerElement, textareaSelectionManager);
+subscribeToKeyboardInteraction(keyboardInteractionMediator);
+subscribeToViewportInteraction(viewportInteractionMediator);
+
+new SelectionSaga(eventBus, textareaSelectionManager);
 new RenderSaga(eventBus, commandBus);
 
 commandBus.publish(new AddBlockCommand(BlockType.CreateBlock));
 commandBus.publish(new ResizeDocumentCommand(new Dimensions(window.innerWidth, window.innerHeight)));
-
-window.addEventListener('resize', (event) => {
-  userViewportInteractionMediator.notify(event);
-});
-
-containerElement.addEventListener('mousemove', (event) => {
-  userCursorInteractionMediator.notify(event);
-});
-
-containerElement.addEventListener('click', (event) => {
-  userCursorInteractionMediator.notify(event);
-});
-
-window.addEventListener('keypress', (event) => {
-  userKeyboardInteractionMediator.notify(event);
-});
