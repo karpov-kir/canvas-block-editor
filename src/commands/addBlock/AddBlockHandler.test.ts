@@ -7,16 +7,14 @@ import { AddBlockHandler, BlockAddedEvent } from './AddBlockHandler';
 describe(AddBlockCommand.name, () => {
   it(`adds a text block and emits the ${BlockAddedEvent.name}`, () => {
     const blockStore = new BlockStore();
-    const command = new AddBlockCommand(BlockType.Text);
     const eventBus = new EventBus();
-    const handler = new AddBlockHandler(blockStore, eventBus);
-    const expectedBlock = new BlockMother().create();
+    const blockMother = new BlockMother();
     const blockAddedHandler = jest.fn();
 
     eventBus.subscribe(BlockAddedEvent, blockAddedHandler);
-    handler.execute(command);
+    new AddBlockHandler(blockStore, eventBus).execute(new AddBlockCommand(BlockType.Text));
 
-    expect(blockStore.blocks).toEqual(new Map([[1, expectedBlock]]));
-    expect(blockAddedHandler).toBeCalledWith(new BlockAddedEvent(expectedBlock));
+    expect(blockStore.blocks).toEqual(new Map([[1, blockMother.create()]]));
+    expect(blockAddedHandler).toBeCalledWith(new BlockAddedEvent(blockMother.last));
   });
 });
