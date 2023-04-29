@@ -14,7 +14,7 @@ import { RemoveFocusFromBlockCommand } from './commands/removeFocusFromBlock/Rem
 import { RemoveFocusFromBlockCommandHandler } from './commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
 import { RemoveHighlightFromBlockCommand } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { RemoveHighlightFromBlockHandler } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockHandler';
-import { CanvasDrawer } from './commands/render/CanvasDrawer';
+import { CanvasDrawer } from './commands/render/CanvasDrawer/CanvasDrawer';
 import { RenderCommand } from './commands/render/RenderCommand';
 import { RenderCommandHandler } from './commands/render/RenderCommandHandler';
 import { RenderService } from './commands/render/RenderService';
