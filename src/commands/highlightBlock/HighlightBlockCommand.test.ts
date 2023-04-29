@@ -6,14 +6,12 @@ import { BlockHighlightedEvent, HighlightBlockHandler } from './HighlightBlockHa
 describe(HighlightBlockCommand.name, () => {
   it(`highlights a block on hover and emits the ${BlockHighlightedEvent.name}`, () => {
     const blockStore = new BlockStore();
-    const command = new HighlightBlockCommand(1);
     const eventBus = new EventBus();
-    const handler = new HighlightBlockHandler(blockStore, eventBus);
     const blockHighlightedHandler = jest.fn();
 
     eventBus.subscribe(BlockHighlightedEvent, blockHighlightedHandler);
     blockStore.add(BlockType.Text);
-    handler.execute(command);
+    new HighlightBlockHandler(blockStore, eventBus).execute(new HighlightBlockCommand(1));
 
     expect(blockStore.highlightedBlock).toEqual(blockStore.blocks.get(1));
     expect(blockHighlightedHandler).toBeCalledWith(expect.any(BlockHighlightedEvent));
