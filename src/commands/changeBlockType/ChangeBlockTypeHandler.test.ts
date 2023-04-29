@@ -8,15 +8,14 @@ describe(ChangeBlockTypeHandler.name, () => {
   it(`changes the type of a block from "${BlockType.Text}" to "${BlockType.H2}" and emits the ${BlockTypeChangedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
-    const handler = new ChangeBlockTypeHandler(blockStore, eventBus);
-    const expectedBlock = new BlockMother().withType(BlockType.H2).create();
+    const blockMother = new BlockMother();
     const blockTypeChangedHandler = jest.fn();
 
     eventBus.subscribe(BlockTypeChangedEvent, blockTypeChangedHandler);
     blockStore.add(BlockType.Text);
-    handler.execute(new ChangeBlockTypeCommand(1, BlockType.H2));
+    new ChangeBlockTypeHandler(blockStore, eventBus).execute(new ChangeBlockTypeCommand(1, BlockType.H2));
 
-    expect(blockStore.blocks).toEqual(new Map([[1, expectedBlock]]));
-    expect(blockTypeChangedHandler).toBeCalledWith(new BlockTypeChangedEvent(expectedBlock, BlockType.Text));
+    expect(blockStore.blocks).toEqual(new Map([[1, blockMother.withType(BlockType.H2).create()]]));
+    expect(blockTypeChangedHandler).toBeCalledWith(new BlockTypeChangedEvent(blockMother.last, BlockType.Text));
   });
 });
