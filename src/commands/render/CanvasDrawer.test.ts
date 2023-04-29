@@ -76,7 +76,7 @@ describe(CanvasDrawer.name, () => {
     });
   });
 
-  it('rect stroke does not affect the following up text', () => {
+  it('rect stroke does not affect the following up text color', () => {
     drawer.rect({ position: new Vector(100, 100), dimensions: new Dimensions(10, 10), strokeStyle: 'red' });
     drawer.text({
       ...DEFAULT_FONT_STYLES,
