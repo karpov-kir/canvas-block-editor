@@ -21,7 +21,7 @@ beforeEach(() => {
 
 describe(CanvasDrawer.name, () => {
   it('fits a text into a max width', () => {
-    drawer.text({
+    drawer.textContentRect({
       ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 100),
       width: 100,
@@ -81,10 +81,7 @@ describe(CanvasDrawer.name, () => {
     drawer.text({
       ...DEFAULT_FONT_STYLES,
       position: new Vector(100, 110),
-      width: 100,
       text: 'Test',
-      padding: new Padding(5, 5),
-      margin: new Margin(5, 5),
     });
 
     const imgBuffer = canvasElement.toBuffer('image/png');

@@ -14,11 +14,14 @@ import { Selection } from '../select/SelectCommand';
 
 export interface RenderTextOptions {
   position: Vector;
-  width: number;
   fontFamily: string;
   fontSize: number;
   lineHeight: number;
   text: string;
+}
+
+export interface RenderTextContentRectOptions extends RenderTextOptions {
+  width: number;
   padding: Padding;
   margin: Margin;
   selection?: Selection;
@@ -34,7 +37,8 @@ export interface RenderRectOptions {
 
 export interface Drawer {
   rect(options: RenderRectOptions): void;
-  text(options: RenderTextOptions): ContentRect;
+  text(options: RenderTextOptions): void;
+  textContentRect(options: RenderTextContentRectOptions): ContentRect;
   setViewportSize(dimensions: Dimensions): void;
   clear(): void;
 }
@@ -103,7 +107,7 @@ export class RenderService {
     margin: Margin,
     selection?: Selection,
   ): ContentRect {
-    return this.drawer.text({
+    return this.drawer.textContentRect({
       ...DEFAULT_FONT_STYLES,
       width: blockRectWidth,
       position,

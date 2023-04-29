@@ -47,9 +47,9 @@ describe(RenderService.name, () => {
 
     renderService.render();
 
-    expect(stubDrawer.text).toBeCalledTimes(2);
-    expect(stubDrawer.text).nthCalledWith(1, expect.objectContaining({ position: { x: 0, y: 0 } }));
-    expect(stubDrawer.text).nthCalledWith(2, expect.objectContaining({ position: { x: 0, y: 41 } }));
+    expect(stubDrawer.textContentRect).toBeCalledTimes(2);
+    expect(stubDrawer.textContentRect).nthCalledWith(1, expect.objectContaining({ position: { x: 0, y: 0 } }));
+    expect(stubDrawer.textContentRect).nthCalledWith(2, expect.objectContaining({ position: { x: 0, y: 41 } }));
   });
 
   it('renders blocks one under another and for the whole available width', () => {
@@ -202,6 +202,6 @@ describe(RenderService.name, () => {
 
     renderService.render();
 
-    expect(stubDrawer.text).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
+    expect(stubDrawer.textContentRect).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
   });
 });
