@@ -17,15 +17,13 @@ describe(RenderCommandHandler.name, () => {
       new DocumentStore(),
     );
     const eventBus = new EventBus();
-    const handler = new RenderCommandHandler(renderService, eventBus);
-    const command = new RenderCommand();
     const renderedHandler = jest.fn();
 
     jest.spyOn(renderService, 'render');
 
     eventBus.subscribe(RenderedEvent, renderedHandler);
     blockStore.add(BlockType.Text);
-    handler.execute(command);
+    new RenderCommandHandler(renderService, eventBus).execute(new RenderCommand());
 
     expect(renderService.render).toBeCalled();
     expect(renderedHandler).toBeCalledWith(new RenderedEvent());
