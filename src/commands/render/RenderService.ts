@@ -47,7 +47,7 @@ export class RenderService {
   constructor(
     private readonly drawer: Drawer,
     private readonly blockStore: BlockStore,
-    private readonly blockReactStore: BlockRectStore,
+    private readonly blockRectStore: BlockRectStore,
     private readonly documentStore: DocumentStore,
   ) {}
 
@@ -78,7 +78,7 @@ export class RenderService {
   }
 
   private maybeRenderActiveBlockRect() {
-    const { blockRects } = this.blockReactStore;
+    const { blockRects } = this.blockRectStore;
     const { activeBlock } = this.blockStore;
     const activeBlockRect = activeBlock ? blockRects.get(activeBlock.block.id) : undefined;
 
@@ -89,7 +89,7 @@ export class RenderService {
 
   private maybeRenderHighlightedBlockRect() {
     const { highlightedBlock, activeBlock } = this.blockStore;
-    const { blockRects } = this.blockReactStore;
+    const { blockRects } = this.blockRectStore;
 
     const highlightedBlockRect = highlightedBlock ? blockRects.get(highlightedBlock.id) : undefined;
     const activeBlockRect = activeBlock ? blockRects.get(activeBlock.block.id) : undefined;
@@ -123,40 +123,56 @@ export class RenderService {
     this.drawer.clear();
 
     const { blocks } = this.blockStore;
+    const {
+      width: blockRectWidth,
+      margin,
+      padding,
+      startX: blockRectStartX,
+    } = getBaseBlockRectSizing(this.documentStore);
 
     let nextBlockRectStartY = 0;
     blocks.forEach((block) => {
-      const documentVsMaxContentWidthDiff = this.documentStore.dimensions.width - this.documentStore.maxContentWidth;
-      const margin = new Margin(5, 5);
-      const padding = new Padding(5, 5);
-      const blockRectStartX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
       const blockRectPosition = new Vector(blockRectStartX, nextBlockRectStartY);
-      const blockRectWidth = constrain(
-        this.documentStore.dimensions.width,
-        this.documentStore.minContentWidth,
-        this.documentStore.maxContentWidth,
-      );
-      const selection =
-        this.blockStore.activeBlock?.block.id === block.id ? this.blockStore.activeBlock.selection : undefined;
-
+      const selection = getBlockSelection(this.blockStore, block);
       const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin, selection);
-      const contentBoxHeight = contentRect.dimensions.height + margin.horizontal * 2 + padding.horizontal * 2;
+      const blockRectHeight = contentRect.dimensions.height + margin.horizontal * 2 + padding.horizontal * 2;
       const blockRect = new BlockRect(
         block.id,
         padding,
         margin,
         contentRect,
         blockRectPosition,
-        new Dimensions(blockRectWidth, contentBoxHeight),
+        new Dimensions(blockRectWidth, blockRectHeight),
       );
 
-      this.blockReactStore.attach(block.id, blockRect);
+      this.blockRectStore.attach(block.id, blockRect);
       this.maybeRenderInactiveBlockRect(block, blockRect);
 
-      nextBlockRectStartY += contentBoxHeight + 1;
+      nextBlockRectStartY += blockRectHeight + 1;
     });
 
     this.maybeRenderActiveBlockRect();
     this.maybeRenderHighlightedBlockRect();
   }
+}
+
+function getBaseBlockRectSizing(documentStore: DocumentStore) {
+  const margin = new Margin(5, 5);
+  const padding = new Padding(5, 5);
+  const width = constrain(documentStore.dimensions.width, documentStore.minContentWidth, documentStore.maxContentWidth);
+  const documentVsMaxContentWidthDiff = documentStore.dimensions.width - documentStore.maxContentWidth;
+  const startX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
+
+  return {
+    margin,
+    padding,
+    width,
+    startX,
+  };
+}
+
+function getBlockSelection(blockStore: BlockStore, block: Block) {
+  const { activeBlock } = blockStore;
+
+  return activeBlock?.block.id === block.id ? activeBlock.selection : undefined;
 }
