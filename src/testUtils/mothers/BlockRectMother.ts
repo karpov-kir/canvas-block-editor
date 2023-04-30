@@ -9,15 +9,13 @@ class BlockRectBuilder extends Builder<BlockRect> {
   private blockIdGenerator = createIdGenerator();
 
   private updateContentRect() {
-    this.instance.contentRect.position.x =
-      this.instance.position.x + this.instance.padding.horizontal + this.instance.margin.horizontal;
-    this.instance.contentRect.position.y =
-      this.instance.position.y + this.instance.padding.vertical + this.instance.margin.vertical;
+    const { padding, margin, contentRect, position, dimensions } = this.instance;
 
-    this.instance.contentRect.dimensions.width =
-      this.instance.dimensions.width - this.instance.padding.horizontal * 2 - this.instance.margin.horizontal * 2;
-    this.instance.contentRect.dimensions.height =
-      this.instance.dimensions.height - this.instance.padding.vertical * 2 - this.instance.margin.vertical * 2;
+    contentRect.position.x = position.x + padding.horizontal + margin.horizontal;
+    contentRect.position.y = position.y + padding.vertical + margin.vertical;
+
+    contentRect.dimensions.width = dimensions.width - padding.horizontal * 2 - margin.horizontal * 2;
+    contentRect.dimensions.height = dimensions.height - padding.vertical * 2 - margin.vertical * 2;
   }
 
   public override instance = this.createEmpty();
