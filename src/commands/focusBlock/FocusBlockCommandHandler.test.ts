@@ -11,15 +11,15 @@ describe(FocusBlockCommandHandler.name, () => {
     const blockMother = new BlockMother();
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
-    const blockFocusedHandler = jest.fn();
+    const blockFocusedEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    eventBus.subscribe(BlockFocusedEvent, blockFocusedHandler);
+    eventBus.subscribe(BlockFocusedEvent, blockFocusedEventHandler);
     new FocusBlockCommandHandler(blockStore, eventBus).execute(new FocusBlockCommand(1));
 
     expect(blockStore.activeBlock).toEqual(activeBlockMother.last);
-    expect(blockFocusedHandler).toBeCalledWith(new BlockFocusedEvent(activeBlockMother.last.block));
+    expect(blockFocusedEventHandler).toBeCalledWith(new BlockFocusedEvent(activeBlockMother.last.block));
   });
 });

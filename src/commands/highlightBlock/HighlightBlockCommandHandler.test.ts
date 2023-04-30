@@ -7,13 +7,13 @@ describe(HighlightBlockCommandHandler.name, () => {
   it(`highlights a block on hover and emits the ${BlockHighlightedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
-    const blockHighlightedHandler = jest.fn();
+    const blockHighlightedEventHandler = jest.fn();
 
-    eventBus.subscribe(BlockHighlightedEvent, blockHighlightedHandler);
+    eventBus.subscribe(BlockHighlightedEvent, blockHighlightedEventHandler);
     blockStore.add(BlockType.Text);
     new HighlightBlockCommandHandler(blockStore, eventBus).execute(new HighlightBlockCommand(1));
 
     expect(blockStore.highlightedBlock).toEqual(blockStore.blocks.get(1));
-    expect(blockHighlightedHandler).toBeCalledWith(expect.any(BlockHighlightedEvent));
+    expect(blockHighlightedEventHandler).toBeCalledWith(expect.any(BlockHighlightedEvent));
   });
 });

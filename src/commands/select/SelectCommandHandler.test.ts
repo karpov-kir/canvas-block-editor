@@ -21,16 +21,16 @@ describe(SelectCommandHandler.name, () => {
   });
 
   it(`selects some content and emits the ${SelectedEvent.name}`, () => {
-    const selectedHandler = jest.fn();
+    const selectedEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    eventBus.subscribe(SelectedEvent, selectedHandler);
+    eventBus.subscribe(SelectedEvent, selectedEventHandler);
     handler.execute(new SelectCommand(new Selection(0, 5)));
 
     expect(blockStore.activeBlock.selection).toEqual(new Selection(0, 5));
-    expect(selectedHandler).toBeCalledWith(new SelectedEvent(blockStore.activeBlock.block, new Selection(0, 5)));
+    expect(selectedEventHandler).toBeCalledWith(new SelectedEvent(blockStore.activeBlock.block, new Selection(0, 5)));
   });
 
   it(`throws an error if the selection is out of range`, () => {

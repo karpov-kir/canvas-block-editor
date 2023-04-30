@@ -9,13 +9,13 @@ describe(ChangeBlockTypeCommandHandler.name, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
     const blockMother = new BlockMother();
-    const blockTypeChangedHandler = jest.fn();
+    const blockTypeChangedEventHandler = jest.fn();
 
-    eventBus.subscribe(BlockTypeChangedEvent, blockTypeChangedHandler);
+    eventBus.subscribe(BlockTypeChangedEvent, blockTypeChangedEventHandler);
     blockStore.add(BlockType.Text);
     new ChangeBlockTypeCommandHandler(blockStore, eventBus).execute(new ChangeBlockTypeCommand(1, BlockType.H2));
 
     expect(blockStore.blocks).toEqual(new Map([[1, blockMother.withType(BlockType.H2).create()]]));
-    expect(blockTypeChangedHandler).toBeCalledWith(new BlockTypeChangedEvent(blockMother.last, BlockType.Text));
+    expect(blockTypeChangedEventHandler).toBeCalledWith(new BlockTypeChangedEvent(blockMother.last, BlockType.Text));
   });
 });

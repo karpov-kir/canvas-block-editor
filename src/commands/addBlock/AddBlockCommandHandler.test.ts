@@ -9,12 +9,12 @@ describe(AddBlockCommandHandler.name, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
     const blockMother = new BlockMother();
-    const blockAddedHandler = jest.fn();
+    const blockAddedEventHandler = jest.fn();
 
-    eventBus.subscribe(BlockAddedEvent, blockAddedHandler);
+    eventBus.subscribe(BlockAddedEvent, blockAddedEventHandler);
     new AddBlockCommandHandler(blockStore, eventBus).execute(new AddBlockCommand(BlockType.Text));
 
     expect(blockStore.blocks).toEqual(new Map([[1, blockMother.create()]]));
-    expect(blockAddedHandler).toBeCalledWith(new BlockAddedEvent(blockMother.last));
+    expect(blockAddedEventHandler).toBeCalledWith(new BlockAddedEvent(blockMother.last));
   });
 });

@@ -11,9 +11,9 @@ describe(InputCommandHandler.name, () => {
     const eventBus = new EventBus();
     const blockMother = new BlockMother();
     const activeBlockMother = new ActiveBlockMother();
-    const inputReceivedHandler = jest.fn();
+    const inputReceivedEventHandler = jest.fn();
 
-    eventBus.subscribe(InputReceivedEvent, inputReceivedHandler);
+    eventBus.subscribe(InputReceivedEvent, inputReceivedEventHandler);
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
@@ -26,6 +26,8 @@ describe(InputCommandHandler.name, () => {
         }),
       }),
     );
-    expect(inputReceivedHandler).toBeCalledWith(new InputReceivedEvent(blockStore.activeBlock.block, 'Hello world!'));
+    expect(inputReceivedEventHandler).toBeCalledWith(
+      new InputReceivedEvent(blockStore.activeBlock.block, 'Hello world!'),
+    );
   });
 });

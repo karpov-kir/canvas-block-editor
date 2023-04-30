@@ -11,9 +11,9 @@ describe(MoveCarriageCommandHandler.name, () => {
     const activeBlockMother = new ActiveBlockMother();
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
-    const carriageMovedHandler = jest.fn();
+    const carriageMovedEventHandler = jest.fn();
 
-    eventBus.subscribe(CarriageMovedEvent, carriageMovedHandler);
+    eventBus.subscribe(CarriageMovedEvent, carriageMovedEventHandler);
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
@@ -24,6 +24,6 @@ describe(MoveCarriageCommandHandler.name, () => {
         carriagePosition: 5,
       }),
     );
-    expect(carriageMovedHandler).toBeCalledWith(new CarriageMovedEvent(blockStore.activeBlock.block, 5));
+    expect(carriageMovedEventHandler).toBeCalledWith(new CarriageMovedEvent(blockStore.activeBlock.block, 5));
   });
 });

@@ -11,16 +11,16 @@ describe(RemoveFocusFromBlockCommandHandler.name, () => {
     const activeBlockMother = new ActiveBlockMother();
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
-    const removeFocusFromBlockCommandHandler = jest.fn();
+    const removeFocusFromBlockEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    eventBus.subscribe(FocusRemovedFromBlockEvent, removeFocusFromBlockCommandHandler);
+    eventBus.subscribe(FocusRemovedFromBlockEvent, removeFocusFromBlockEventHandler);
     new RemoveFocusFromBlockCommandHandler(blockStore, eventBus).execute(new RemoveFocusFromBlockCommand(1));
 
     expect(blockStore.activeBlock).toBe(undefined);
-    expect(removeFocusFromBlockCommandHandler).toBeCalledWith(
+    expect(removeFocusFromBlockEventHandler).toBeCalledWith(
       new FocusRemovedFromBlockEvent(activeBlockMother.last.block),
     );
   });
