@@ -21,25 +21,24 @@ describe(SelectCommand.name, () => {
   });
 
   it(`selects some content and emits the ${SelectedEvent.name}`, () => {
-    const command = new SelectCommand(new Selection(0, 5));
     const selectedHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     eventBus.subscribe(SelectedEvent, selectedHandler);
-    handler.execute(command);
+    handler.execute(new SelectCommand(new Selection(0, 5)));
 
     expect(blockStore.activeBlock.selection).toEqual(new Selection(0, 5));
     expect(selectedHandler).toBeCalledWith(new SelectedEvent(blockStore.activeBlock.block, new Selection(0, 5)));
   });
 
   it(`throws an error if the selection is out of range`, () => {
-    const command = new SelectCommand(new Selection(0, Number.MAX_SAFE_INTEGER));
-
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    expect(() => handler.execute(command)).toThrow(expect.any(RangeError));
+    expect(() => handler.execute(new SelectCommand(new Selection(0, Number.MAX_SAFE_INTEGER)))).toThrow(
+      expect.any(RangeError),
+    );
   });
 });
