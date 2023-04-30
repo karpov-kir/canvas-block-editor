@@ -1,12 +1,12 @@
-import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockHandler';
-import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
+import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockCommandHandler';
+import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
 import { Selection } from '../commands/select/SelectCommand';
 import { Event } from '../utils/pubSub/Event';
 import { EventBus } from '../utils/pubSub/EventBus';
 
-export type SelectHandler = (selection: Selection) => void;
-export type UnselectHandler = () => void;
+export type SelectCommandHandler = (selection: Selection) => void;
+export type UnselectCommandHandler = () => void;
 
 export interface SelectionManager {
   enable(): void;
@@ -14,8 +14,8 @@ export interface SelectionManager {
   disable(): void;
   resetPosition(): void;
   update(): void;
-  onSelect(handler: SelectHandler): void;
-  onUnselect(handler: UnselectHandler): void;
+  onSelect(handler: SelectCommandHandler): void;
+  onUnselect(handler: UnselectCommandHandler): void;
 }
 
 export class SelectionSaga {

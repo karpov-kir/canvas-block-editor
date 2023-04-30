@@ -2,29 +2,28 @@ import { Block, BlockStore } from '../../stores/BlockStore';
 import { CommandHandler } from '../../utils/pubSub/Command';
 import { Event } from '../../utils/pubSub/Event';
 import { EventBus } from '../../utils/pubSub/EventBus';
-import { ChangeBlockTypeCommand } from './ChangeBlockTypeCommand';
+import { HighlightBlockCommand } from './HighlightBlockCommand';
 
-export class BlockTypeChangedEvent extends Event {
-  constructor(public readonly block: Block, public readonly oldType: string) {
+export class BlockHighlightedEvent extends Event {
+  constructor(public readonly block: Block) {
     super();
   }
 }
 
-export class ChangeBlockTypeHandler extends CommandHandler {
+export class HighlightBlockCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
-  public execute({ blockId, newType }: ChangeBlockTypeCommand) {
+  public execute({ blockId }: HighlightBlockCommand) {
     const block = this.blockStore.blocks.get(blockId);
 
     if (!block) {
       throw new Error(`Block with id ${blockId} not found`);
     }
 
-    const oldType = block.type;
-    block.type = newType;
+    this.blockStore.highlightedBlock = block;
 
-    this.eventBus.publish(new BlockTypeChangedEvent(block, oldType));
+    this.eventBus.publish(new BlockHighlightedEvent(this.blockStore.highlightedBlock));
   }
 }

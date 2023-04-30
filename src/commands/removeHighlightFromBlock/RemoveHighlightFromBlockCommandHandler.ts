@@ -2,31 +2,28 @@ import { Block, BlockStore } from '../../stores/BlockStore';
 import { CommandHandler } from '../../utils/pubSub/Command';
 import { Event } from '../../utils/pubSub/Event';
 import { EventBus } from '../../utils/pubSub/EventBus';
-import { FocusBlockCommand } from './FocusBlockCommand';
+import { RemoveHighlightFromBlockCommand } from './RemoveHighlightFromBlockCommand';
 
-export class BlockFocusedEvent extends Event {
+export class HighlightRemovedFromBlockEvent extends Event {
   constructor(public readonly block: Block) {
     super();
   }
 }
 
-export class FocusBlockHandler extends CommandHandler {
+export class RemoveHighlightFromBlockCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
-  public execute({ blockId }: FocusBlockCommand) {
+  public execute({ blockId }: RemoveHighlightFromBlockCommand) {
     const block = this.blockStore.blocks.get(blockId);
 
     if (!block) {
       throw new Error(`Block with id ${blockId} not found`);
     }
 
-    this.blockStore.activeBlock = {
-      block: block,
-      carriagePosition: 0,
-    };
+    this.blockStore.highlightedBlock = undefined;
 
-    this.eventBus.publish(new BlockFocusedEvent(this.blockStore.activeBlock.block));
+    this.eventBus.publish(new HighlightRemovedFromBlockEvent(block));
   }
 }

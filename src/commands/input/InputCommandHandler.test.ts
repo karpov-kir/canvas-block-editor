@@ -3,9 +3,9 @@ import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { InputCommand } from './InputCommand';
-import { InputHandler, InputReceivedEvent } from './InputHandler';
+import { InputCommandHandler, InputReceivedEvent } from './InputCommandHandler';
 
-describe(InputHandler.name, () => {
+describe(InputCommandHandler.name, () => {
   it(`adds some input to the currently active block and emits the ${InputReceivedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
@@ -17,7 +17,7 @@ describe(InputHandler.name, () => {
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    new InputHandler(blockStore, eventBus).execute(new InputCommand('Hello world!'));
+    new InputCommandHandler(blockStore, eventBus).execute(new InputCommand('Hello world!'));
 
     expect(blockStore.activeBlock).toEqual(
       expect.objectContaining({

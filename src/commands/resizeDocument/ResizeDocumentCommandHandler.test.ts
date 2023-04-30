@@ -3,10 +3,10 @@ import { StubDrawer } from '../../testUtils/StubDrawer';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { ResizeDocumentCommand } from './ResizeDocumentCommand';
-import { DocumentResizedEvent, ResizeDocumentHandler } from './ResizeDocumentHandler';
+import { DocumentResizedEvent, ResizeDocumentCommandHandler } from './ResizeDocumentCommandHandler';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
-describe(ResizeDocumentHandler.name, () => {
+describe(ResizeDocumentCommandHandler.name, () => {
   it(`resizes document and emits the ${DocumentResizedEvent.name}`, () => {
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(new StubDrawer(), documentStore);
@@ -16,7 +16,7 @@ describe(ResizeDocumentHandler.name, () => {
     jest.spyOn(resizeDocumentService, 'updateDimensions');
 
     eventBus.subscribe(DocumentResizedEvent, documentResizedHandler);
-    new ResizeDocumentHandler(resizeDocumentService, eventBus).execute(
+    new ResizeDocumentCommandHandler(resizeDocumentService, eventBus).execute(
       new ResizeDocumentCommand(new Dimensions(100, 100)),
     );
 

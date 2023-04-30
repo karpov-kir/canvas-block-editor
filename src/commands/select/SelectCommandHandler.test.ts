@@ -3,19 +3,19 @@ import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { SelectCommand, Selection } from './SelectCommand';
-import { SelectedEvent, SelectHandler } from './SelectHandler';
+import { SelectCommandHandler, SelectedEvent } from './SelectCommandHandler';
 
-describe(SelectCommand.name, () => {
+describe(SelectCommandHandler.name, () => {
   let blockStore: BlockStore;
   let eventBus: EventBus;
-  let handler: SelectHandler;
+  let handler: SelectCommandHandler;
   let activeBlockMother: ActiveBlockMother;
   let blockMother: BlockMother;
 
   beforeEach(() => {
     blockStore = new BlockStore();
     eventBus = new EventBus();
-    handler = new SelectHandler(blockStore, eventBus);
+    handler = new SelectCommandHandler(blockStore, eventBus);
     activeBlockMother = new ActiveBlockMother();
     blockMother = new BlockMother();
   });

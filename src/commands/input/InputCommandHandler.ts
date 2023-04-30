@@ -10,7 +10,7 @@ export class InputReceivedEvent extends Event {
   }
 }
 
-export class InputHandler extends CommandHandler {
+export class InputCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }

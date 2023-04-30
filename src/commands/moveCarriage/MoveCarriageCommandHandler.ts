@@ -10,7 +10,7 @@ export class CarriageMovedEvent extends Event {
   }
 }
 
-export class MoveCarriageHandler extends CommandHandler {
+export class MoveCarriageCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }

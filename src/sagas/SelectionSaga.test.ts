@@ -1,5 +1,5 @@
-import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockHandler';
-import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockHandler';
+import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockCommandHandler';
+import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
 import { BlockMother } from '../testUtils/mothers/BlockMother';
 import { StubSelectionManager } from '../testUtils/StubSelectionManager';

@@ -1,5 +1,5 @@
 import { Selection } from '../../commands/select/SelectCommand';
-import { SelectHandler, SelectionManager, UnselectHandler } from '../../sagas/SelectionSaga';
+import { SelectCommandHandler, SelectionManager, UnselectCommandHandler } from '../../sagas/SelectionSaga';
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore } from '../../stores/BlockStore';
 import { MultiChannelPubSub } from '../../utils/pubSub/PubSub';
@@ -16,8 +16,8 @@ export class TextareaSelectionManager implements SelectionManager {
     private readonly blockRectStore: BlockRectStore,
     private readonly textarea = document.createElement('textarea'),
     private readonly pubSub = new MultiChannelPubSub<{
-      select: SelectHandler;
-      unselect: UnselectHandler;
+      select: SelectCommandHandler;
+      unselect: UnselectCommandHandler;
     }>(),
   ) {
     document.body.append(this.textarea);
@@ -111,11 +111,11 @@ export class TextareaSelectionManager implements SelectionManager {
     this.textarea.value = activeBlock.block.content;
   }
 
-  public onSelect(handler: SelectHandler) {
+  public onSelect(handler: SelectCommandHandler) {
     this.pubSub.subscribe('select', handler);
   }
 
-  public onUnselect(handler: UnselectHandler) {
+  public onUnselect(handler: UnselectCommandHandler) {
     this.pubSub.subscribe('unselect', handler);
   }
 }

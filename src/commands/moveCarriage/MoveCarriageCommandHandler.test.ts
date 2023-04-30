@@ -3,9 +3,9 @@ import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
-import { CarriageMovedEvent, MoveCarriageHandler } from './MoveCarriageHandler';
+import { CarriageMovedEvent, MoveCarriageCommandHandler } from './MoveCarriageCommandHandler';
 
-describe(MoveCarriageHandler.name, () => {
+describe(MoveCarriageCommandHandler.name, () => {
   it(`moves the carriage to a position and emits the ${CarriageMovedEvent.name}`, () => {
     const blockMother = new BlockMother();
     const activeBlockMother = new ActiveBlockMother();
@@ -17,7 +17,7 @@ describe(MoveCarriageHandler.name, () => {
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    new MoveCarriageHandler(blockStore, eventBus).execute(new MoveCarriageCommand(5));
+    new MoveCarriageCommandHandler(blockStore, eventBus).execute(new MoveCarriageCommand(5));
 
     expect(blockStore.activeBlock).toEqual(
       expect.objectContaining({

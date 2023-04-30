@@ -82,13 +82,13 @@ describe(clickHandler, () => {
   it(`changes the "${BlockType.CreateBlock}" block type to another type on a click, focuses the block, and adds a new block with type "${BlockType.CreateBlock}" to the end`, () => {
     const focusBlockCommandHandler = new CommandHandlerStub();
     const changeBlockTypeCommandHandler = new CommandHandlerStub();
-    const addBlockHandler = new CommandHandlerStub();
+    const addBlockCommandHandler = new CommandHandlerStub();
 
     blockStore.add(BlockType.CreateBlock);
     blockRectStore.attach(3, blockRectMother.withSmallSize().underLast().create());
     commandBus.subscribe(FocusBlockCommand, focusBlockCommandHandler);
     commandBus.subscribe(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
-    commandBus.subscribe(AddBlockCommand, addBlockHandler);
+    commandBus.subscribe(AddBlockCommand, addBlockCommandHandler);
     clickHandler(
       new CursorInteractionClickEvent(
         new Vector(
@@ -103,24 +103,24 @@ describe(clickHandler, () => {
 
     expect(focusBlockCommandHandler.execute).toBeCalledTimes(1);
     expect(changeBlockTypeCommandHandler.execute).toBeCalledTimes(1);
-    expect(addBlockHandler.execute).toBeCalledTimes(1);
-    expect(addBlockHandler.execute).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
+    expect(addBlockCommandHandler.execute).toBeCalledTimes(1);
+    expect(addBlockCommandHandler.execute).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
   });
 
   it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of the active block`, () => {
     const clickEvent = new CursorInteractionClickEvent(new Vector(-100, -100));
-    const removeFocusFromBlockHandler = new CommandHandlerStub();
+    const removeFocusFromBlockCommandHandler = new CommandHandlerStub();
 
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    commandBus.subscribe(RemoveFocusFromBlockCommand, removeFocusFromBlockHandler);
+    commandBus.subscribe(RemoveFocusFromBlockCommand, removeFocusFromBlockCommandHandler);
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.activeBlock = undefined;
 
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
-    expect(removeFocusFromBlockHandler.execute).toBeCalledTimes(1);
+    expect(removeFocusFromBlockCommandHandler.execute).toBeCalledTimes(1);
   });
 });

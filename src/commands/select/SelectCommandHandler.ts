@@ -10,7 +10,7 @@ export class SelectedEvent extends Event {
   }
 }
 
-export class SelectHandler extends CommandHandler {
+export class SelectCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }

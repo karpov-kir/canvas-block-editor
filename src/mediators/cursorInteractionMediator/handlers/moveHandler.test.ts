@@ -28,54 +28,54 @@ describe(moveHandler, () => {
   });
 
   it(`emits the ${HighlightBlockCommand.name} on the first block mouse hover`, () => {
-    const highlightBlockHandler = new CommandHandlerStub();
+    const highlightBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockCommandHandler);
     moveHandler(new CursorInteractionMoveEvent(new Vector(10, 10)), blockStore, blockRectStore, commandBus);
 
-    expect(highlightBlockHandler.execute).toBeCalledWith(new HighlightBlockCommand(1));
+    expect(highlightBlockCommandHandler.execute).toBeCalledWith(new HighlightBlockCommand(1));
   });
 
   it(`emits the ${HighlightBlockCommand.name} on the second block mouse hover`, () => {
-    const highlightBlockHandler = new CommandHandlerStub();
+    const highlightBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockCommandHandler);
     moveHandler(new CursorInteractionMoveEvent(new Vector(10, 50)), blockStore, blockRectStore, commandBus);
 
-    expect(highlightBlockHandler.execute).toBeCalledWith(new HighlightBlockCommand(2));
+    expect(highlightBlockCommandHandler.execute).toBeCalledWith(new HighlightBlockCommand(2));
   });
 
   it(`does not emit the ${HighlightBlockCommand.name} if the hovered block is already highlighted`, () => {
     const moveEvent = new CursorInteractionMoveEvent(new Vector(10, 10));
-    const highlightBlockHandler = new CommandHandlerStub();
+    const highlightBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(HighlightBlockCommand, highlightBlockHandler);
+    commandBus.subscribe(HighlightBlockCommand, highlightBlockCommandHandler);
     moveHandler(moveEvent, blockStore, blockRectStore, commandBus);
 
     blockStore.highlightedBlock = blockStore.blocks.get(1);
 
     moveHandler(moveEvent, blockStore, blockRectStore, commandBus);
 
-    expect(highlightBlockHandler.execute).toBeCalledTimes(1);
+    expect(highlightBlockCommandHandler.execute).toBeCalledTimes(1);
   });
 
   it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the highlighted block`, () => {
-    const removeHighlightFromBlockHandler = new CommandHandlerStub();
+    const removeHighlightFromBlockCommandHandler = new CommandHandlerStub();
 
     blockStore.highlightedBlock = blockStore.blocks.get(1);
 
-    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockCommandHandler);
     moveHandler(new CursorInteractionMoveEvent(new Vector(-100, -100)), blockStore, blockRectStore, commandBus);
 
-    expect(removeHighlightFromBlockHandler.execute).toBeCalledTimes(1);
+    expect(removeHighlightFromBlockCommandHandler.execute).toBeCalledTimes(1);
   });
 
   it(`does not emit the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the blocks if there is no a highlighted block`, () => {
-    const removeHighlightFromBlockHandler = new CommandHandlerStub();
+    const removeHighlightFromBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockHandler);
+    commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockCommandHandler);
     moveHandler(new CursorInteractionMoveEvent(new Vector(-100, -100)), blockStore, blockRectStore, commandBus);
 
-    expect(removeHighlightFromBlockHandler.execute).not.toBeCalled();
+    expect(removeHighlightFromBlockCommandHandler.execute).not.toBeCalled();
   });
 });

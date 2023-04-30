@@ -13,11 +13,11 @@ describe(doubleClickHandler, () => {
   });
 
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
-    const addBlockHandler = new CommandHandlerStub();
+    const addBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(AddBlockCommand, addBlockHandler);
+    commandBus.subscribe(AddBlockCommand, addBlockCommandHandler);
     doubleClickHandler(new CursorInteractionDoubleClickEvent(new Vector()), commandBus);
 
-    expect(addBlockHandler.execute).toBeCalledWith(expect.any(AddBlockCommand));
+    expect(addBlockCommandHandler.execute).toBeCalledWith(expect.any(AddBlockCommand));
   });
 });
