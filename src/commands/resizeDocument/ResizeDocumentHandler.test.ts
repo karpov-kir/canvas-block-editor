@@ -11,14 +11,14 @@ describe(ResizeDocumentHandler.name, () => {
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(new StubDrawer(), documentStore);
     const eventBus = new EventBus();
-    const handler = new ResizeDocumentHandler(resizeDocumentService, eventBus);
-    const command = new ResizeDocumentCommand(new Dimensions(100, 100));
     const documentResizedHandler = jest.fn();
 
     jest.spyOn(resizeDocumentService, 'updateDimensions');
 
     eventBus.subscribe(DocumentResizedEvent, documentResizedHandler);
-    handler.execute(command);
+    new ResizeDocumentHandler(resizeDocumentService, eventBus).execute(
+      new ResizeDocumentCommand(new Dimensions(100, 100)),
+    );
 
     expect(resizeDocumentService.updateDimensions).toBeCalledWith(new Dimensions(100, 100));
     expect(documentStore.dimensions.width).toEqual(100);
