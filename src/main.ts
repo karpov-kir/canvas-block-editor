@@ -24,7 +24,7 @@ import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentS
 import { SelectCommand } from './commands/select/SelectCommand';
 import { SelectCommandHandler } from './commands/select/SelectCommandHandler';
 import { CursorInteractionMediator } from './mediators/cursorInteractionMediator/CursorInteractionMediator';
-import { subscribeToCursorInteraction } from './mediators/cursorInteractionMediator/subscribeToUserCursorInteraction';
+import { subscribeToCursorInteraction } from './mediators/cursorInteractionMediator/subscribeToCursorInteraction';
 import { TextareaSelectionManager } from './mediators/cursorInteractionMediator/TextareaSelectionManager';
 import { KeyboardInteractionMediator } from './mediators/keyboardInteractionMediator/KeyboardInteractionMediator';
 import { subscribeToKeyboardInteraction } from './mediators/keyboardInteractionMediator/subscribeToKeyboardnteraction';
