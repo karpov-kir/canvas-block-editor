@@ -2,13 +2,13 @@ import { ContentRect } from '../../../stores/BlockRectStore';
 import { Dimensions } from '../../../utils/math/Dimensions';
 import { Vector } from '../../../utils/math/Vector';
 import { Selection } from '../../select/SelectCommand';
-import { CanvasDrawer } from './CanvasDrawer';
+import { Drawer } from '../RenderService';
 
 export class DrawSelectionHelper {
   #selectedLineCount = 0;
 
-  private characterCountToSelectLeft: number;
   private lastCharacterIndex = 0;
+  private lastLineIndex = 0;
 
   public get selectedLineCount() {
     return this.#selectedLineCount;
@@ -17,44 +17,43 @@ export class DrawSelectionHelper {
   constructor(
     private readonly selection: Selection,
     private readonly canvasContext: CanvasRenderingContext2D,
-    private canvasDrawer: CanvasDrawer,
-  ) {
-    this.characterCountToSelectLeft = selection.end - selection.start;
-  }
+    private canvasDrawer: Drawer,
+  ) {}
 
   public processLineAndMaybeDrawSelection(contentRect: ContentRect) {
+    const line = contentRect.lines[this.lastLineIndex];
+    const { start: absoluteSelectionStart, end: absoluteSelectionEnd } = this.selection;
+    const absoluteLineStart = this.lastCharacterIndex;
+    const absoluteLineEnd = absoluteLineStart + line.length;
 
-    if (
-      (this.selection.start >= this.lastCharacterIndex || this.selection.end >= this.lastCharacterIndex) &&
-      this.characterCountToSelectLeft > 0
-    ) {
-      const { start, end } = this.selection;
-      let charactersToSelect: string;
-      let lineOffsetX = 0;
+    const selectionStartInLine = Math.max(absoluteSelectionStart - absoluteLineStart, 0);
+    const absoluteSelectionEndInLine = Math.min(absoluteSelectionEnd, absoluteLineEnd);
+    const selectionEndInLine = absoluteSelectionEndInLine - absoluteLineStart;
+    const selectedCharacterCountInLine = selectionEndInLine - selectionStartInLine;
+
+    if (selectedCharacterCountInLine > 0) {
+      const charactersToSelectInLine = line.slice(selectionStartInLine, selectionEndInLine);
+      const { width } = this.canvasContext.measureText(charactersToSelectInLine);
+      let selectionOffsetX = 0;
 
       if (this.selectedLineCount === 0) {
-        charactersToSelect = line.slice(start, end);
-        ({ width: lineOffsetX } = this.canvasContext.measureText(line.slice(0, start)));
-      } else {
-        charactersToSelect = line.slice(0, this.characterCountToSelectLeft);
+        ({ width: selectionOffsetX } = this.canvasContext.measureText(line.slice(0, selectionStartInLine)));
       }
 
-      this.characterCountToSelectLeft -= charactersToSelect.length;
       this.#selectedLineCount += 1;
 
-      const { width } = this.canvasContext.measureText(charactersToSelect);
-
-      this.drawSelection(contentRect, lineOffsetX, width, lineIndex);
+      this.drawSelection(contentRect, selectionOffsetX, width);
     }
 
     this.lastCharacterIndex += line.length;
+    this.lastLineIndex++;
   }
 
-  private drawSelection(contentRect: ContentRect, lineOffsetX: number, width: number, lineIndex: number) {
+  private drawSelection(contentRect: ContentRect, selectionOffsetX: number, width: number) {
     this.canvasDrawer.rect({
       position: new Vector(
-        contentRect.position.x + lineOffsetX,
-        contentRect.position.y + contentRect.lineHeight * lineIndex,
+        contentRect.position.x + selectionOffsetX,
+        contentRect.position.y + contentRect.lineHeight * this.lastLineIndex,
       ),
       dimensions: new Dimensions(width, contentRect.lineHeight),
       fill: true,
