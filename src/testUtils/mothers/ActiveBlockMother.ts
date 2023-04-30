@@ -24,7 +24,7 @@ class ActiveBlockBuilder extends Builder<ActiveBlock> {
 export class ActiveBlockMother extends ObjectMother<ActiveBlockBuilder> {
   public override readonly builder: ActiveBlockBuilder;
 
-  constructor(private readonly blockMother: BlockMother = new BlockMother()) {
+  constructor(blockMother: BlockMother = new BlockMother()) {
     super();
     this.builder = new ActiveBlockBuilder(blockMother);
   }

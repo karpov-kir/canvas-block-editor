@@ -1,7 +1,7 @@
 import { BlockRect, Margin, Padding } from '../../stores/BlockRectStore';
 import { createIdGenerator } from '../../utils/idGenerator';
 import { Dimensions } from '../../utils/math/Dimensions';
-import { content, longContent } from './BlockMother';
+import { content, longContentLines } from './BlockMother';
 import { Builder } from './Builder';
 import { ObjectMother } from './ObjectMother';
 
@@ -9,7 +9,8 @@ class BlockRectBuilder extends Builder<BlockRect> {
   private blockIdGenerator = createIdGenerator();
 
   private updateContentRect() {
-    const { padding, margin, contentRect, position, dimensions } = this.instance;
+    const blockRect = this.instance;
+    const { padding, margin, contentRect, position, dimensions } = blockRect;
 
     contentRect.position.x = position.x + padding.horizontal + margin.horizontal;
     contentRect.position.y = position.y + padding.vertical + margin.vertical;
@@ -89,7 +90,19 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
     return this;
   }
 
+  public withMediumSize() {
+    this.builder
+      .setDimensions(new Dimensions(100, 60))
+      .setPadding(new Padding(5, 5))
+      .setMargin(new Margin(5, 5))
+      .setX(0)
+      .setY(0);
+
+    return this;
+  }
+
   public withContent() {
+    this.withSmallSize();
     this.builder.instance.contentRect.lines = [content];
     this.builder.instance.contentRect.lineMetrics = [
       {
@@ -102,11 +115,16 @@ export class BlockRectMother extends ObjectMother<BlockRectBuilder> {
   }
 
   public withLongContent() {
-    this.builder.instance.contentRect.lines = [longContent];
+    this.withMediumSize();
+    this.builder.instance.contentRect.lines = longContentLines;
     this.builder.instance.contentRect.lineMetrics = [
       {
         width: 80,
         topOffset: 0,
+      },
+      {
+        width: 80,
+        topOffset: this.builder.instance.contentRect.lineHeight + 1,
       },
     ];
 

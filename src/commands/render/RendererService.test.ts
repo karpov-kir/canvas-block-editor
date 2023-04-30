@@ -9,7 +9,8 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
-describe(RenderService.name, () => {
+// describe(RenderService.name, () => {
+describe('test', () => {
   let stubDrawer: StubDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
@@ -75,7 +76,7 @@ describe(RenderService.name, () => {
       expect.objectContaining({
         // 5 comes from margins
         position: new Vector(105, 46),
-        dimensions: new Dimensions(790, 30),
+        dimensions: new Dimensions(790, 50),
       }),
     );
   });
@@ -110,11 +111,11 @@ describe(RenderService.name, () => {
 
     expect(blockRectStore.blockRects.size).toBe(2);
     expect(blockRectStore.blockRects.get(blockMother.lastTwo[0].id)).toEqual({
-      ...blockRectMother.withSmallSize().withContent().create(),
+      ...blockRectMother.withContent().create(),
       blockId: blockMother.lastTwo[0].id,
     });
     expect(blockRectStore.blockRects.get(blockMother.lastTwo[1].id)).toEqual({
-      ...blockRectMother.withSmallSize().underLast().withLongContent().create(),
+      ...blockRectMother.withLongContent().underLast().create(),
       blockId: blockMother.lastTwo[1].id,
     });
   });

@@ -5,10 +5,8 @@ import { ObjectMother } from './ObjectMother';
 
 export const content = 'Hello world!';
 
-export const longContent = "Hello world! But I'm not just a hello world, I'm also a long content that is repeated!"
-  .repeat(2)
-  .split('!')
-  .join('! ');
+export const longContentLines = ['This is supposed to be the first line', 'This is supposed to be the second line'];
+export const longContent = longContentLines.join(' ');
 
 class BlockBuilder extends Builder<Block> {
   private idGenerator = createIdGenerator();
