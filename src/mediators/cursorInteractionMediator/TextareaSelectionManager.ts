@@ -14,73 +14,55 @@ export class TextareaSelectionManager implements SelectionManager {
   constructor(
     private readonly blockStore: BlockStore,
     private readonly blockRectStore: BlockRectStore,
-    private readonly textarea = document.createElement('textarea'),
+    private readonly textareaElement = document.createElement('textarea'),
     private readonly pubSub = new MultiChannelPubSub<{
       select: SelectCommandHandler;
       unselect: UnselectCommandHandler;
     }>(),
   ) {
-    document.body.append(this.textarea);
-
-    this.textarea.style.position = 'absolute';
-    this.textarea.style.margin = '0px';
-    this.textarea.style.padding = '0px';
-    this.textarea.style.border = '0px';
-    this.textarea.style.outline = '0px';
-    this.textarea.style.right = '0px';
-    this.textarea.style.color = 'transparent';
-    this.textarea.style.background = 'transparent';
-    this.textarea.style.verticalAlign = 'center';
-    this.textarea.style.textAlign = 'left';
-    this.textarea.style.resize = 'none';
-    this.textarea.style.overflow = 'hidden';
-    this.textarea.style.display = 'none';
-    this.textarea.style.wordBreak = 'break-all';
-    this.textarea.style.opacity = '0';
-
-    this.textarea.value = '';
-    this.textarea.readOnly = true;
+    resetTextarea(this.textareaElement);
+    preventTextareaShortcuts(this.textareaElement);
+    document.body.append(this.textareaElement);
 
     this.resetPosition();
-
-    // https://stackoverflow.com/questions/48633149/disable-drag-and-drop-of-selected-text
-    const eventsToPrevent = ['copy', 'paste', 'cut', 'dragstart'];
-    eventsToPrevent.forEach((type) => {
-      this.textarea.addEventListener(type, function (event) {
-        event.preventDefault();
-      });
-    });
 
     document.addEventListener('mousedown', () => {
       this.pubSub.publish('unselect', undefined);
     });
 
     document.addEventListener('selectionchange', (_event) => {
-      if (document.activeElement !== this.textarea) {
-        return;
-      }
-
-      if (this.textarea.selectionStart !== this.textarea.selectionEnd) {
-        this.pubSub.publish('select', new Selection(this.textarea.selectionStart, this.textarea.selectionEnd));
-      }
+      this.handleSelectionChange();
     });
+  }
+
+  private handleSelectionChange() {
+    if (document.activeElement !== this.textareaElement) {
+      return;
+    }
+
+    if (this.textareaElement.selectionStart !== this.textareaElement.selectionEnd) {
+      this.pubSub.publish(
+        'select',
+        new Selection(this.textareaElement.selectionStart, this.textareaElement.selectionEnd),
+      );
+    }
   }
 
   public enable() {
     this.#isEnabled = true;
-    this.textarea.style.display = 'block';
+    this.textareaElement.style.display = 'block';
   }
 
   public disable() {
     this.#isEnabled = false;
-    this.textarea.style.display = 'none';
+    this.textareaElement.style.display = 'none';
   }
 
   public resetPosition() {
-    this.textarea.style.width = '0px';
-    this.textarea.style.height = '0px';
-    this.textarea.style.left = '0px';
-    this.textarea.style.top = '0px';
+    this.textareaElement.style.width = '0px';
+    this.textareaElement.style.height = '0px';
+    this.textareaElement.style.left = '0px';
+    this.textareaElement.style.top = '0px';
   }
 
   public update() {
@@ -102,13 +84,13 @@ export class TextareaSelectionManager implements SelectionManager {
 
     const { dimensions: textDimensions, fontSize, fontFamily, lineHeight, position } = blockRect.contentRect;
 
-    this.textarea.style.top = `${position.y}px`;
-    this.textarea.style.left = `${position.x}px`;
-    this.textarea.style.font = `${fontSize}px ${fontFamily}`;
-    this.textarea.style.lineHeight = `${lineHeight}px`;
-    this.textarea.style.width = `${textDimensions.width}px`;
-    this.textarea.style.height = `${textDimensions.height}px`;
-    this.textarea.value = activeBlock.block.content;
+    this.textareaElement.style.top = `${position.y}px`;
+    this.textareaElement.style.left = `${position.x}px`;
+    this.textareaElement.style.font = `${fontSize}px ${fontFamily}`;
+    this.textareaElement.style.lineHeight = `${lineHeight}px`;
+    this.textareaElement.style.width = `${textDimensions.width}px`;
+    this.textareaElement.style.height = `${textDimensions.height}px`;
+    this.textareaElement.value = activeBlock.block.content;
   }
 
   public onSelect(handler: SelectCommandHandler) {
@@ -118,4 +100,35 @@ export class TextareaSelectionManager implements SelectionManager {
   public onUnselect(handler: UnselectCommandHandler) {
     this.pubSub.subscribe('unselect', handler);
   }
+}
+
+function resetTextarea(textareaElement: HTMLTextAreaElement) {
+  textareaElement.style.position = 'absolute';
+  textareaElement.style.margin = '0px';
+  textareaElement.style.padding = '0px';
+  textareaElement.style.border = '0px';
+  textareaElement.style.outline = '0px';
+  textareaElement.style.right = '0px';
+  textareaElement.style.color = 'transparent';
+  textareaElement.style.background = 'transparent';
+  textareaElement.style.verticalAlign = 'center';
+  textareaElement.style.textAlign = 'left';
+  textareaElement.style.resize = 'none';
+  textareaElement.style.overflow = 'hidden';
+  textareaElement.style.display = 'none';
+  textareaElement.style.wordBreak = 'break-all';
+  textareaElement.style.opacity = '0';
+
+  textareaElement.value = '';
+  textareaElement.readOnly = true;
+}
+
+function preventTextareaShortcuts(textareaElement: HTMLTextAreaElement) {
+  // https://stackoverflow.com/questions/48633149/disable-drag-and-drop-of-selected-text
+  const eventsToPrevent = ['copy', 'paste', 'cut', 'dragstart'];
+  eventsToPrevent.forEach((type) => {
+    textareaElement.addEventListener(type, function (event) {
+      event.preventDefault();
+    });
+  });
 }
