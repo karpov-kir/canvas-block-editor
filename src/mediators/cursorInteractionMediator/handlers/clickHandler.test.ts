@@ -42,9 +42,9 @@ describe(clickHandler, () => {
         blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
       ),
     );
-    const focusedBlockHandler = new CommandHandlerStub();
+    const focusedBlockCommandHandler = new CommandHandlerStub();
 
-    commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
+    commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
     // Clicking on a not active block should not emit the command
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
@@ -53,16 +53,16 @@ describe(clickHandler, () => {
 
     clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
-    expect(focusedBlockHandler.execute).toBeCalledTimes(1);
+    expect(focusedBlockCommandHandler.execute).toBeCalledTimes(1);
   });
 
   it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
-    const focusedBlockHandler = new CommandHandlerStub();
+    const focusedBlockCommandHandler = new CommandHandlerStub();
 
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    commandBus.subscribe(FocusBlockCommand, focusedBlockHandler);
+    commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
 
     clickHandler(
       new CursorInteractionClickEvent(
@@ -76,7 +76,7 @@ describe(clickHandler, () => {
       commandBus,
     );
 
-    expect(focusedBlockHandler.execute).not.toBeCalled();
+    expect(focusedBlockCommandHandler.execute).not.toBeCalled();
   });
 
   it(`changes the "${BlockType.CreateBlock}" block type to another type on a click, focuses the block, and adds a new block with type "${BlockType.CreateBlock}" to the end`, () => {
