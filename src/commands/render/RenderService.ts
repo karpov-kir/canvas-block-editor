@@ -8,6 +8,7 @@ import {
 } from '../../stores/BlockRectStore';
 import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
+import { constrain } from '../../utils/math/constrain';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { Selection } from '../select/SelectCommand';
@@ -130,12 +131,11 @@ export class RenderService {
       const padding = new Padding(5, 5);
       const blockRectStartX = documentVsMaxContentWidthDiff > 0 ? documentVsMaxContentWidthDiff / 2 : 0;
       const blockRectPosition = new Vector(blockRectStartX, nextBlockRectStartY);
-      const blockRectWidth =
-        this.documentStore.dimensions.width > this.documentStore.maxContentWidth
-          ? this.documentStore.maxContentWidth
-          : this.documentStore.dimensions.width < this.documentStore.minContentWidth
-          ? this.documentStore.minContentWidth
-          : this.documentStore.dimensions.width;
+      const blockRectWidth = constrain(
+        this.documentStore.dimensions.width,
+        this.documentStore.minContentWidth,
+        this.documentStore.maxContentWidth,
+      );
       const selection =
         this.blockStore.activeBlock?.block.id === block.id ? this.blockStore.activeBlock.selection : undefined;
 
