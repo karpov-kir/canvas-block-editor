@@ -22,8 +22,7 @@ export class DrawSelectionHelper {
     this.characterCountToSelectLeft = selection.end - selection.start;
   }
 
-  public maybeDrawSelection(contentRect: ContentRect, lineIndex: number) {
-    const line = contentRect.lines[lineIndex];
+  public processLineAndMaybeDrawSelection(contentRect: ContentRect) {
 
     if (
       (this.selection.start >= this.lastCharacterIndex || this.selection.end >= this.lastCharacterIndex) &&

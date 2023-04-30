@@ -61,7 +61,7 @@ export class CanvasDrawer implements Drawer {
       const currentLineMetrics = lineMetrics[lineIndex];
 
       if (drawSelectionHelper) {
-        drawSelectionHelper.maybeDrawSelection(contentRect, lineIndex);
+        drawSelectionHelper.processLineAndMaybeDrawSelection(contentRect);
       }
 
       this.text({
