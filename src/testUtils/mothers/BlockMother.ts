@@ -19,6 +19,7 @@ class BlockBuilder extends Builder<Block> {
       content: '',
       type: BlockType.Text,
       isFocused: false,
+      isHighlighted: false,
       carriagePosition: 0,
     };
   }

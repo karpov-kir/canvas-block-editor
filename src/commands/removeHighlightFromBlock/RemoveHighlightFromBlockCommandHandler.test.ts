@@ -1,4 +1,5 @@
-import { BlockStore, BlockType } from '../../stores/BlockStore';
+import { BlockStore } from '../../stores/BlockStore';
+import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { RemoveHighlightFromBlockCommand } from './RemoveHighlightFromBlockCommand';
 import {
@@ -10,14 +11,16 @@ describe(RemoveHighlightFromBlockCommandHandler.name, () => {
   it(`removes highlight from the highlighted block on hover and emits ${HighlightRemovedFromBlockEvent.name}`, () => {
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
+    const blockMother = new BlockMother();
     const highlightRemovedFromBlockEventHandler = jest.fn();
 
     eventBus.subscribe(HighlightRemovedFromBlockEvent, highlightRemovedFromBlockEventHandler);
-    blockStore.add(BlockType.Text);
-    blockStore.highlightedBlock = blockStore.blocks.get(1);
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.highlightBlock(blockMother.last.id);
     new RemoveHighlightFromBlockCommandHandler(blockStore, eventBus).execute(new RemoveHighlightFromBlockCommand(1));
 
-    expect(blockStore.highlightedBlock).toEqual(undefined);
+    expect(blockStore.highlightedBlocks.size).toEqual(0);
+    expect(blockStore.getById(blockMother.last.id).isHighlighted).toBeFalsy();
     expect(highlightRemovedFromBlockEventHandler).toBeCalledWith(expect.any(HighlightRemovedFromBlockEvent));
   });
 });

@@ -8,7 +8,8 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
-describe(RenderService.name, () => {
+// describe(RenderService.name, () => {
+describe('test', () => {
   let stubDrawer: StubDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
@@ -106,13 +107,13 @@ describe(RenderService.name, () => {
     renderService.render();
 
     expect(blockRectStore.blockRects.size).toBe(2);
-    expect(blockRectStore.blockRects.get(blockMother.lastTwo[0].id)).toEqual({
+    expect(blockRectStore.blockRects.get(blockMother.beforeLast.id)).toEqual({
       ...blockRectMother.withContent().create(),
-      blockId: blockMother.lastTwo[0].id,
+      blockId: blockMother.beforeLast.id,
     });
-    expect(blockRectStore.blockRects.get(blockMother.lastTwo[1].id)).toEqual({
+    expect(blockRectStore.blockRects.get(blockMother.last.id)).toEqual({
       ...blockRectMother.withLongContent().underLast().create(),
-      blockId: blockMother.lastTwo[1].id,
+      blockId: blockMother.last.id,
     });
   });
 
@@ -131,7 +132,7 @@ describe(RenderService.name, () => {
 
   it('strokes the highlighted block in red color', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.highlightedBlock = blockMother.last;
+    blockStore.highlightBlock(blockMother.last.id);
 
     renderService.render();
 
@@ -160,7 +161,7 @@ describe(RenderService.name, () => {
   it('renders a block as focused only (in green color) even if it is focused and highlighted at the same time', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
     blockStore.focusBlock(blockMother.last.id);
-    blockStore.highlightedBlock = blockMother.last;
+    blockStore.highlightBlock(blockMother.last.id);
 
     renderService.render();
 
@@ -172,9 +173,9 @@ describe(RenderService.name, () => {
     );
   });
 
-  it('renders the focused and the highlighted block if they are different blocks', () => {
+  it('renders the focused block (in green color) and the highlighted block (in red color) if they are different blocks', () => {
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.highlightedBlock = blockMother.last;
+    blockStore.highlightBlock(blockMother.last.id);
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.focusBlock(blockMother.last.id);
 

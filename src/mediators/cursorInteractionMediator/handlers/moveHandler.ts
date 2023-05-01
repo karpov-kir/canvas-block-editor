@@ -11,11 +11,15 @@ export function moveHandler(
   blockRectStore: BlockRectStore,
   commandBus: CommandBus,
 ) {
-  const blockRect = blockRectStore.findByPosition(event.position);
+  const hoveredBlockRect = blockRectStore.findByPosition(event.position);
 
-  if (blockRect && blockStore.highlightedBlock?.id !== blockRect.blockId) {
-    commandBus.publish(new HighlightBlockCommand(blockRect.blockId));
-  } else if (!blockRect && blockStore.highlightedBlock) {
-    commandBus.publish(new RemoveHighlightFromBlockCommand(blockStore.highlightedBlock.id));
+  blockStore.highlightedBlocks.forEach((block) => {
+    if (block.id !== hoveredBlockRect?.blockId) {
+      commandBus.publish(new RemoveHighlightFromBlockCommand(block.id));
+    }
+  });
+
+  if (hoveredBlockRect && !blockStore.highlightedBlocks.has(hoveredBlockRect.blockId)) {
+    commandBus.publish(new HighlightBlockCommand(hoveredBlockRect.blockId));
   }
 }

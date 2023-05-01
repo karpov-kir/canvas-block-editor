@@ -18,7 +18,7 @@ export class RemoveFocusFromBlockCommandHandler extends CommandHandler {
   public execute({ blockId }: RemoveFocusFromBlockCommand) {
     const focusedBlock = this.blockStore.getFocusedBlockById(blockId);
 
-    this.blockStore.focusedBlocks.delete(focusedBlock.id);
+    this.blockStore.removeFocusFromBlock(blockId);
     this.eventBus.publish(new FocusRemovedFromBlockEvent(focusedBlock));
   }
 }

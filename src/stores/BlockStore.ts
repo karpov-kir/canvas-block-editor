@@ -13,6 +13,7 @@ export interface Block {
   content: string;
   type: BlockType;
   isFocused: boolean;
+  isHighlighted: boolean;
   selection?: Selection;
   carriagePosition: number;
 }
@@ -20,24 +21,9 @@ export interface Block {
 export class BlockStore {
   public readonly blocks: Map<number, Block> = new Map();
   public readonly focusedBlocks: Map<number, Block> = new Map();
-
-  public focusBlock(blockId: number) {
-    const block = this.getById(blockId);
-
-    block.isFocused = true;
-    this.focusedBlocks.set(blockId, block);
-  }
-
-  public removeFocusFromBlock(blockId: number) {
-    const block = this.getById(blockId);
-
-    block.isFocused = false;
-    this.focusedBlocks.delete(blockId);
-  }
+  public readonly highlightedBlocks: Map<number, Block> = new Map();
 
   private idGenerator = createIdGenerator();
-
-  public highlightedBlock?: Block;
 
   public add(type: BlockType) {
     const id = this.idGenerator();
@@ -46,6 +32,7 @@ export class BlockStore {
       content: '',
       id,
       isFocused: false,
+      isHighlighted: false,
       carriagePosition: 0,
     };
 
@@ -72,5 +59,43 @@ export class BlockStore {
     }
 
     return block;
+  }
+
+  public getHighlightedBlock(blockId: number) {
+    const block = this.highlightedBlocks.get(blockId);
+
+    if (!block) {
+      throw new Error(`Block with ID ${blockId} not found`);
+    }
+
+    return block;
+  }
+
+  public focusBlock(blockId: number) {
+    const block = this.getById(blockId);
+
+    block.isFocused = true;
+    this.focusedBlocks.set(blockId, block);
+  }
+
+  public removeFocusFromBlock(blockId: number) {
+    const block = this.getById(blockId);
+
+    block.isFocused = false;
+    this.focusedBlocks.delete(blockId);
+  }
+
+  public highlightBlock(blockId: number) {
+    const block = this.getById(blockId);
+
+    block.isHighlighted = true;
+    this.highlightedBlocks.set(blockId, block);
+  }
+
+  public removeHighlightFromBlock(blockId: number) {
+    const block = this.getById(blockId);
+
+    block.isHighlighted = false;
+    this.highlightedBlocks.delete(blockId);
   }
 }

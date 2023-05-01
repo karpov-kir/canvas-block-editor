@@ -18,6 +18,7 @@ describe(RemoveFocusFromBlockCommandHandler.name, () => {
     new RemoveFocusFromBlockCommandHandler(blockStore, eventBus).execute(new RemoveFocusFromBlockCommand(1));
 
     expect(blockStore.focusedBlocks.size).toBe(0);
+    expect(blockStore.getById(blockMother.last.id).isFocused).toBeFalsy();
     expect(removeFocusFromBlockEventHandler).toBeCalledWith(new FocusRemovedFromBlockEvent(blockMother.last));
   });
 });

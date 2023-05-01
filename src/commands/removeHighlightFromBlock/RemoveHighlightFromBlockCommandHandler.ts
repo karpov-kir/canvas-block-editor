@@ -18,8 +18,7 @@ export class RemoveHighlightFromBlockCommandHandler extends CommandHandler {
   public execute({ blockId }: RemoveHighlightFromBlockCommand) {
     const block = this.blockStore.getById(blockId);
 
-    this.blockStore.highlightedBlock = undefined;
-
+    this.blockStore.removeHighlightFromBlock(blockId);
     this.eventBus.publish(new HighlightRemovedFromBlockEvent(block));
   }
 }

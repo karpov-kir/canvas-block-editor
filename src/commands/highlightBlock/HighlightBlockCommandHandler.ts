@@ -18,8 +18,7 @@ export class HighlightBlockCommandHandler extends CommandHandler {
   public execute({ blockId }: HighlightBlockCommand) {
     const block = this.blockStore.getById(blockId);
 
-    this.blockStore.highlightedBlock = block;
-
-    this.eventBus.publish(new BlockHighlightedEvent(this.blockStore.highlightedBlock));
+    this.blockStore.highlightBlock(blockId);
+    this.eventBus.publish(new BlockHighlightedEvent(block));
   }
 }
