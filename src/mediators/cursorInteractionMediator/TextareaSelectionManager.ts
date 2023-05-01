@@ -9,6 +9,12 @@ export class TextareaSelectionManager implements SelectionManager {
 
   private blockId?: number;
 
+  private readonly textareaElement = document.createElement('textarea');
+  private readonly pubSub = new MultiChannelPubSub<{
+    select: SelectCommandHandler;
+    unselect: UnselectCommandHandler;
+  }>();
+
   public get isEnabled() {
     return this.#isEnabled;
   }
@@ -16,15 +22,11 @@ export class TextareaSelectionManager implements SelectionManager {
   constructor(
     private readonly blockStore: BlockStore,
     private readonly blockRectStore: BlockRectStore,
-    private readonly textareaElement = document.createElement('textarea'),
-    private readonly pubSub = new MultiChannelPubSub<{
-      select: SelectCommandHandler;
-      unselect: UnselectCommandHandler;
-    }>(),
+    containerElement: HTMLDivElement,
   ) {
     resetTextarea(this.textareaElement);
     preventTextareaShortcuts(this.textareaElement);
-    document.body.append(this.textareaElement);
+    containerElement.append(this.textareaElement);
 
     this.resetPosition();
 

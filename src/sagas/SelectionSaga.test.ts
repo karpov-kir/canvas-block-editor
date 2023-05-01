@@ -1,9 +1,10 @@
-import { BlockFocusedEvent } from '../commands/focusBlock/FocusBlockCommandHandler';
-import { FocusRemovedFromBlockEvent } from '../commands/removeFocusFromBlock/RemoveFocusFromBlockCommandHandler';
+import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
+import { BlockType } from '../stores/BlockStore';
 import { BlockMother } from '../testUtils/mothers/BlockMother';
 import { StubSelectionManager } from '../testUtils/StubSelectionManager';
 import { EventBus } from '../utils/pubSub/EventBus';
+import { HighlightRemovedFromBlockEvent } from './../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
 import { SelectionManager, SelectionSaga } from './SelectionSaga';
 
 describe(SelectionSaga.name, () => {
@@ -19,19 +20,28 @@ describe(SelectionSaga.name, () => {
     new SelectionSaga(eventBus, stubSelectionManager);
   });
 
-  it(`enables the selection manager on ${BlockFocusedEvent.name}`, () => {
+  it(`enables the selection manager on ${BlockHighlightedEvent.name}`, () => {
     const isSelectionManagerEnabledBefore = stubSelectionManager.isEnabled;
 
-    eventBus.publish(new BlockFocusedEvent(blockMother.create()));
+    eventBus.publish(new BlockHighlightedEvent(blockMother.create()));
 
     expect(isSelectionManagerEnabledBefore).toBe(false);
     expect(stubSelectionManager.isEnabled).toBe(true);
   });
 
-  it(`disabled the selection manager on ${FocusRemovedFromBlockEvent.name} and resets its position`, () => {
+  it(`does not enable the selection manager on ${BlockHighlightedEvent.name} with "${BlockType.CreateBlock}" block type`, () => {
+    const isSelectionManagerEnabledBefore = stubSelectionManager.isEnabled;
+
+    eventBus.publish(new BlockHighlightedEvent(blockMother.withType(BlockType.CreateBlock).create()));
+
+    expect(isSelectionManagerEnabledBefore).toBe(false);
+    expect(stubSelectionManager.isEnabled).toBe(false);
+  });
+
+  it(`disabled the selection manager on ${HighlightRemovedFromBlockEvent.name} and resets its position`, () => {
     stubSelectionManager.enable(1);
 
-    eventBus.publish(new FocusRemovedFromBlockEvent(blockMother.create()));
+    eventBus.publish(new HighlightRemovedFromBlockEvent(blockMother.create()));
 
     expect(stubSelectionManager.isEnabled).toBe(false);
     expect(stubSelectionManager.resetPosition).toBeCalled();

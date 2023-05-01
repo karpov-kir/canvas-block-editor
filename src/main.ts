@@ -80,7 +80,7 @@ const documentStore = new DocumentStore();
 const canvasDrawer = new CanvasDrawer(canvasContext);
 const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore, documentStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
-const textareaSelectionManager = new TextareaSelectionManager(blockStore, blockRectStore);
+const textareaSelectionManager = new TextareaSelectionManager(blockStore, blockRectStore, containerElement);
 
 documentStore.maxContentWidth = 1000;
 documentStore.minContentWidth = 200;
