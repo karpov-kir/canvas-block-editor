@@ -1,5 +1,4 @@
 import { BlockStore } from '../../stores/BlockStore';
-import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { SelectCommand, Selection } from './SelectCommand';
@@ -9,14 +8,12 @@ describe(SelectCommandHandler.name, () => {
   let blockStore: BlockStore;
   let eventBus: EventBus;
   let handler: SelectCommandHandler;
-  let activeBlockMother: ActiveBlockMother;
   let blockMother: BlockMother;
 
   beforeEach(() => {
     blockStore = new BlockStore();
     eventBus = new EventBus();
     handler = new SelectCommandHandler(blockStore, eventBus);
-    activeBlockMother = new ActiveBlockMother();
     blockMother = new BlockMother();
   });
 
@@ -24,21 +21,22 @@ describe(SelectCommandHandler.name, () => {
     const selectedEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
-
+    blockStore.focusBlock(blockMother.last.id);
     eventBus.subscribe(SelectedEvent, selectedEventHandler);
-    handler.execute(new SelectCommand(new Selection(0, 5)));
 
-    expect(blockStore.activeBlock.selection).toEqual(new Selection(0, 5));
-    expect(selectedEventHandler).toBeCalledWith(new SelectedEvent(blockStore.activeBlock.block, new Selection(0, 5)));
+    handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, 5)));
+
+    expect(blockStore.getById(blockMother.last.id).selection).toEqual(new Selection(0, 5));
+    expect(selectedEventHandler).toBeCalledWith(new SelectedEvent(blockMother.last, new Selection(0, 5)));
   });
 
   it(`throws an error if the selection is out of range`, () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
-    expect(() => handler.execute(new SelectCommand(new Selection(0, Number.MAX_SAFE_INTEGER)))).toThrow(
-      expect.any(RangeError),
-    );
+    blockStore.focusBlock(blockMother.last.id);
+
+    expect(() =>
+      handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, Number.MAX_SAFE_INTEGER))),
+    ).toThrow(expect.any(RangeError));
   });
 });

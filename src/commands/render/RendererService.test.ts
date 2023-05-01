@@ -1,7 +1,6 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
-import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
 import { StubDrawer } from '../../testUtils/StubDrawer';
@@ -9,14 +8,12 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
-// describe(RenderService.name, () => {
-describe('test', () => {
+describe(RenderService.name, () => {
   let stubDrawer: StubDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
   let renderService: RenderService;
   let blockMother: BlockMother;
-  let activeBlockMother: ActiveBlockMother;
   let blockRectMother: BlockRectMother;
   let documentStore: DocumentStore;
 
@@ -28,7 +25,6 @@ describe('test', () => {
     renderService = new RenderService(stubDrawer, blockStore, blockRectStore, documentStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
-    activeBlockMother = new ActiveBlockMother(blockMother);
 
     documentStore.dimensions = new Dimensions(100, 100);
     documentStore.maxContentWidth = 100;
@@ -120,7 +116,7 @@ describe('test', () => {
     });
   });
 
-  it('strokes inactive blocks in gray color', () => {
+  it('strokes unfocused and unhovered blocks in gray color', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
 
     renderService.render();
@@ -147,9 +143,9 @@ describe('test', () => {
     );
   });
 
-  it('strokes the active block in green color', () => {
+  it('strokes the focused block in green color', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
+    blockStore.focusBlock(blockMother.last.id);
 
     renderService.render();
 
@@ -161,27 +157,26 @@ describe('test', () => {
     );
   });
 
-  it('renders a block as active only (in green color) even if it is active and highlighted at the same time', () => {
+  it('renders a block as focused only (in green color) even if it is focused and highlighted at the same time', () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
-    blockStore.highlightedBlock = blockStore.activeBlock.block;
-
-    renderService.render();
-
-    expect(stubDrawer.rect).toBeCalledTimes(1);
-    expect(stubDrawer.rect).toBeCalledWith(
-      expect.objectContaining({
-        strokeStyle: 'green',
-      }),
-    );
-  });
-
-  it('renders the active and the highlighted block if they are different blocks', () => {
-    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.focusBlock(blockMother.last.id);
     blockStore.highlightedBlock = blockMother.last;
 
+    renderService.render();
+
+    expect(stubDrawer.rect).toBeCalledTimes(1);
+    expect(stubDrawer.rect).toBeCalledWith(
+      expect.objectContaining({
+        strokeStyle: 'green',
+      }),
+    );
+  });
+
+  it('renders the focused and the highlighted block if they are different blocks', () => {
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
+    blockStore.highlightedBlock = blockMother.last;
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockStore.focusBlock(blockMother.last.id);
 
     renderService.render();
 

@@ -29,7 +29,7 @@ describe(SelectionSaga.name, () => {
   });
 
   it(`disabled the selection manager on ${FocusRemovedFromBlockEvent.name} and resets its position`, () => {
-    stubSelectionManager.enable();
+    stubSelectionManager.enable(1);
 
     eventBus.publish(new FocusRemovedFromBlockEvent(blockMother.create()));
 

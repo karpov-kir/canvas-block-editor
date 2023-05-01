@@ -95,7 +95,7 @@ export class BlockRectStore {
     const blockRect = this.blockRects.get(blockId);
 
     if (!blockRect) {
-      throw new Error(`BlockRect with id ${blockId} not found`);
+      throw new Error(`BlockRect with ID ${blockId} not found`);
     }
 
     return blockRect;

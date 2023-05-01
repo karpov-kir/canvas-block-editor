@@ -15,15 +15,11 @@ export class InputCommandHandler extends CommandHandler {
     super();
   }
 
-  execute(command: InputCommand) {
-    const activeBlock = this.blockStore.activeBlock;
+  execute({ blockId, content }: InputCommand) {
+    const block = this.blockStore.getById(blockId);
 
-    if (!activeBlock) {
-      throw new Error('No active block');
-    }
+    block.content += content;
 
-    activeBlock.block.content += command.content;
-
-    this.eventBus.publish(new InputReceivedEvent(activeBlock.block, command.content));
+    this.eventBus.publish(new InputReceivedEvent(block, content));
   }
 }

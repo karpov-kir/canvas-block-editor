@@ -21,8 +21,8 @@ export function subscribeToCursorInteraction(
     cursorInteractionMediator.notify(new CursorInteractionClickEvent(new Vector(event.clientX, event.clientY)));
   });
 
-  selectionManager.onSelect((selection) => {
-    cursorInteractionMediator.notify(new CursorInteractionSelectEvent(selection));
+  selectionManager.onSelect(({ blockId, selection }) => {
+    cursorInteractionMediator.notify(new CursorInteractionSelectEvent(blockId, selection));
   });
 
   selectionManager.onUnselect(() => {

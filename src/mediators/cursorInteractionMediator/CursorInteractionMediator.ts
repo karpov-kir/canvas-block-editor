@@ -34,7 +34,7 @@ export class CursorInteractionDoubleClickEvent implements MediatorEvent {
 
 export class CursorInteractionSelectEvent implements MediatorEvent {
   public readonly type = CursorInteractionEventType.Select;
-  constructor(public readonly selection: Selection) {}
+  constructor(public readonly blockId: number, public readonly selection: Selection) {}
 }
 
 export class CursorInteractionUnselectEvent implements MediatorEvent {
@@ -63,7 +63,7 @@ export class CursorInteractionMediator implements Mediator<CursorInteractionEven
     } else if (event.type === CursorInteractionEventType.Click) {
       clickHandler(event, this.blockStore, this.blockRectStore, this.commandBus);
     } else if (event.type === CursorInteractionEventType.Select) {
-      selectHandler(event, this.blockStore, this.commandBus);
+      selectHandler(event, this.commandBus);
     } else if (event.type === CursorInteractionEventType.Unselect) {
     }
   }

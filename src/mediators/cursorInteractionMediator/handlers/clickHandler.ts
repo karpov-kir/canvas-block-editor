@@ -15,18 +15,29 @@ export function clickHandler(
 ) {
   const clickedBlockRect = blockRectStore.findByPosition(event.position);
 
-  if (clickedBlockRect && clickedBlockRect.blockId !== blockStore.activeBlock?.block.id) {
-    const clickedBlock = blockStore.blocks.get(clickedBlockRect.blockId);
+  if (clickedBlockRect) {
+    const clickedBlock = blockStore.getById(clickedBlockRect.blockId);
+    let isAlreadyFocused = false;
 
-    commandBus.publish(new FocusBlockCommand(clickedBlockRect.blockId));
+    blockStore.focusedBlocks.forEach((block) => {
+      if (block.id !== clickedBlockRect.blockId) {
+        commandBus.publish(new RemoveFocusFromBlockCommand(block.id));
+      } else {
+        isAlreadyFocused = true;
+      }
+    });
 
-    if (clickedBlock?.type === BlockType.CreateBlock) {
+    if (!isAlreadyFocused) {
+      commandBus.publish(new FocusBlockCommand(clickedBlockRect.blockId));
+    }
+
+    if (clickedBlock.type === BlockType.CreateBlock) {
       commandBus.publish(new ChangeBlockTypeCommand(clickedBlockRect.blockId, BlockType.Text));
       commandBus.publish(new AddBlockCommand(BlockType.CreateBlock));
     }
-  }
-
-  if (!clickedBlockRect && blockStore.activeBlock) {
-    commandBus.publish(new RemoveFocusFromBlockCommand(blockStore.activeBlock.block.id));
+  } else {
+    blockStore.focusedBlocks.forEach((block) => {
+      commandBus.publish(new RemoveFocusFromBlockCommand(block.id));
+    });
   }
 }

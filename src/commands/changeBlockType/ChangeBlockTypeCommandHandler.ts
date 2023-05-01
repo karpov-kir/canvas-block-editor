@@ -16,11 +16,7 @@ export class ChangeBlockTypeCommandHandler extends CommandHandler {
   }
 
   public execute({ blockId, newType }: ChangeBlockTypeCommand) {
-    const block = this.blockStore.blocks.get(blockId);
-
-    if (!block) {
-      throw new Error(`Block with id ${blockId} not found`);
-    }
+    const block = this.blockStore.getById(blockId);
 
     const oldType = block.type;
     block.type = newType;

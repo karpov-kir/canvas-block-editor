@@ -39,7 +39,7 @@ export class Selection {
 }
 
 export class SelectCommand extends Command {
-  constructor(public readonly selection: Selection) {
+  constructor(public readonly blockId: number, public readonly selection: Selection) {
     super();
   }
 }

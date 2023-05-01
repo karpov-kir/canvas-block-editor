@@ -65,35 +65,34 @@ export class RenderService {
     });
   }
 
-  private maybeRenderInactiveBlockRect(block: Block, blockRect: BlockRect) {
-    const { highlightedBlock, activeBlock } = this.blockStore;
+  private maybeRenderNormalBlock(block: Block, blockRect: BlockRect) {
+    const { highlightedBlock } = this.blockStore;
 
-    const isBlockFocused = activeBlock?.block.id === block.id;
+    const isBlockFocused = this.blockStore.focusedBlocks.has(block.id);
     const isBlockHighlighted = highlightedBlock?.id === block.id;
-    const isBlockInactive = !isBlockFocused && !isBlockHighlighted;
+    const isBlockNormal = !isBlockFocused && !isBlockHighlighted;
 
-    if (isBlockInactive) {
+    if (isBlockNormal) {
       this.renderBlockRect(blockRect, 'gray');
     }
   }
 
-  private maybeRenderActiveBlockRect() {
-    const { blockRects } = this.blockRectStore;
-    const { activeBlock } = this.blockStore;
-    const activeBlockRect = activeBlock ? blockRects.get(activeBlock.block.id) : undefined;
+  private renderFocusedBlocks() {
+    const { focusedBlocks } = this.blockStore;
 
-    if (activeBlockRect) {
-      this.renderBlockRect(activeBlockRect, 'green');
-    }
+    focusedBlocks.forEach((block) => {
+      const focusedBlockRect = this.blockRectStore.getById(block.id);
+
+      this.renderBlockRect(focusedBlockRect, 'green');
+    });
   }
 
   private maybeRenderHighlightedBlockRect() {
-    const { highlightedBlock, activeBlock } = this.blockStore;
+    const { highlightedBlock, focusedBlocks } = this.blockStore;
     const { blockRects } = this.blockRectStore;
 
     const highlightedBlockRect = highlightedBlock ? blockRects.get(highlightedBlock.id) : undefined;
-    const activeBlockRect = activeBlock ? blockRects.get(activeBlock.block.id) : undefined;
-    const isHighlightedBlockFocused = highlightedBlockRect?.blockId === activeBlockRect?.blockId;
+    const isHighlightedBlockFocused = focusedBlocks.has(highlightedBlockRect?.blockId ?? -1);
 
     if (highlightedBlockRect && !isHighlightedBlockFocused) {
       this.renderBlockRect(highlightedBlockRect, 'red');
@@ -106,7 +105,6 @@ export class RenderService {
     position: Vector,
     padding: Padding,
     margin: Margin,
-    selection?: Selection,
   ): ContentRect {
     return this.drawer.textContentRect({
       ...DEFAULT_FONT_STYLES,
@@ -115,7 +113,7 @@ export class RenderService {
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       padding,
       margin,
-      selection,
+      selection: block.selection,
     });
   }
 
@@ -133,8 +131,7 @@ export class RenderService {
     let nextBlockRectStartY = 0;
     blocks.forEach((block) => {
       const blockRectPosition = new Vector(blockRectStartX, nextBlockRectStartY);
-      const selection = getBlockSelection(this.blockStore, block);
-      const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin, selection);
+      const contentRect = this.renderBlockContent(block, blockRectWidth, blockRectPosition, padding, margin);
       const blockRectHeight = contentRect.dimensions.height + margin.horizontal * 2 + padding.horizontal * 2;
       const blockRect = new BlockRect(
         block.id,
@@ -146,13 +143,13 @@ export class RenderService {
       );
 
       this.blockRectStore.attach(block.id, blockRect);
-      this.maybeRenderInactiveBlockRect(block, blockRect);
+      this.maybeRenderNormalBlock(block, blockRect);
 
       nextBlockRectStartY += blockRectHeight + 1;
     });
 
-    this.maybeRenderActiveBlockRect();
     this.maybeRenderHighlightedBlockRect();
+    this.renderFocusedBlocks();
   }
 }
 
@@ -169,10 +166,4 @@ function getBaseBlockRectSizing(documentStore: DocumentStore) {
     width,
     startX,
   };
-}
-
-function getBlockSelection(blockStore: BlockStore, block: Block) {
-  const { activeBlock } = blockStore;
-
-  return activeBlock?.block.id === block.id ? activeBlock.selection : undefined;
 }

@@ -5,7 +5,7 @@ import { RemoveFocusFromBlockCommand } from '../../../commands/removeFocusFromBl
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
 import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
-import { ActiveBlockMother } from '../../../testUtils/mothers/ActiveBlockMother';
+import { getPointInBlockRect } from '../../../testUtils/getPointInBlockRect';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
 import { Vector } from '../../../utils/math/Vector';
@@ -18,7 +18,6 @@ describe(clickHandler, () => {
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
   let blockRectMother: BlockRectMother;
-  let activeBlockMother: ActiveBlockMother;
   let blockMother: BlockMother;
 
   beforeEach(() => {
@@ -26,51 +25,38 @@ describe(clickHandler, () => {
     blockStore = new BlockStore();
     blockRectStore = new BlockRectStore();
     blockRectMother = new BlockRectMother();
-    activeBlockMother = new ActiveBlockMother();
     blockMother = new BlockMother();
 
-    blockStore.add(BlockType.Text);
-    blockStore.add(BlockType.Text);
-    blockRectStore.attach(1, blockRectMother.withSmallSize().create());
-    blockRectStore.attach(2, blockRectMother.withSmallSize().underLast().create());
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockRectStore.attach(blockMother.last.id, blockRectMother.withSmallSize().create());
+
+    blockStore.blocks.set(blockMother.create().id, blockMother.last);
+    blockRectStore.attach(blockMother.last.id, blockRectMother.withSmallSize().underLast().create());
   });
 
   it(`emits the ${FocusBlockCommand.name} on a click on a block`, () => {
-    const clickEvent = new CursorInteractionClickEvent(
-      new Vector(
-        blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
-        blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
-      ),
-    );
     const focusedBlockCommandHandler = new CommandHandlerStub();
-
-    commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
-    // Clicking on a not active block should not emit the command
-    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
-
-    blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
-
-    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
-
-    expect(focusedBlockCommandHandler.execute).toBeCalledTimes(1);
-  });
-
-  it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already active`, () => {
-    const focusedBlockCommandHandler = new CommandHandlerStub();
-
-    blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
 
     clickHandler(
-      new CursorInteractionClickEvent(
-        new Vector(
-          blockRectStore.getById(1).position.x + blockRectStore.getById(1).margin.horizontal,
-          blockRectStore.getById(1).position.y + blockRectStore.getById(1).margin.vertical,
-        ),
-      ),
+      new CursorInteractionClickEvent(getPointInBlockRect(blockRectMother.last)),
+      blockStore,
+      blockRectStore,
+      commandBus,
+    );
+
+    expect(focusedBlockCommandHandler.execute).toBeCalledTimes(1);
+  });
+
+  it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already focused`, () => {
+    const focusedBlockCommandHandler = new CommandHandlerStub();
+
+    blockStore.focusBlock(blockMother.last.id);
+    commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
+
+    clickHandler(
+      new CursorInteractionClickEvent(getPointInBlockRect(blockRectMother.last)),
       blockStore,
       blockRectStore,
       commandBus,
@@ -84,18 +70,14 @@ describe(clickHandler, () => {
     const changeBlockTypeCommandHandler = new CommandHandlerStub();
     const addBlockCommandHandler = new CommandHandlerStub();
 
-    blockStore.add(BlockType.CreateBlock);
-    blockRectStore.attach(3, blockRectMother.withSmallSize().underLast().create());
+    blockStore.blocks.set(blockMother.withType(BlockType.CreateBlock).create().id, blockMother.last);
+    blockRectStore.attach(blockMother.last.id, blockRectMother.withSmallSize().underLast().create());
     commandBus.subscribe(FocusBlockCommand, focusBlockCommandHandler);
     commandBus.subscribe(ChangeBlockTypeCommand, changeBlockTypeCommandHandler);
     commandBus.subscribe(AddBlockCommand, addBlockCommandHandler);
+
     clickHandler(
-      new CursorInteractionClickEvent(
-        new Vector(
-          blockRectStore.getById(3).position.x + blockRectStore.getById(3).margin.horizontal,
-          blockRectStore.getById(3).position.y + blockRectStore.getById(3).margin.vertical,
-        ),
-      ),
+      new CursorInteractionClickEvent(getPointInBlockRect(blockRectMother.last)),
       blockStore,
       blockRectStore,
       commandBus,
@@ -107,20 +89,18 @@ describe(clickHandler, () => {
     expect(addBlockCommandHandler.execute).toBeCalledWith(new AddBlockCommand(BlockType.CreateBlock));
   });
 
-  it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of the active block`, () => {
-    const clickEvent = new CursorInteractionClickEvent(new Vector(-100, -100));
+  it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of focused blocks`, () => {
     const removeFocusFromBlockCommandHandler = new CommandHandlerStub();
 
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
-
+    blockStore.focusBlock(blockMother.last.id);
     commandBus.subscribe(RemoveFocusFromBlockCommand, removeFocusFromBlockCommandHandler);
-    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
 
-    blockStore.activeBlock = undefined;
-
-    clickHandler(clickEvent, blockStore, blockRectStore, commandBus);
+    clickHandler(new CursorInteractionClickEvent(new Vector(-100, -100)), blockStore, blockRectStore, commandBus);
 
     expect(removeFocusFromBlockCommandHandler.execute).toBeCalledTimes(1);
+    expect(removeFocusFromBlockCommandHandler.execute).toBeCalledWith(
+      new RemoveFocusFromBlockCommand(blockMother.last.id),
+    );
   });
 });

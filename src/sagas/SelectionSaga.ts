@@ -5,11 +5,11 @@ import { Selection } from '../commands/select/SelectCommand';
 import { Event } from '../utils/pubSub/Event';
 import { EventBus } from '../utils/pubSub/EventBus';
 
-export type SelectCommandHandler = (selection: Selection) => void;
+export type SelectCommandHandler = (data: { blockId: number; selection: Selection }) => void;
 export type UnselectCommandHandler = () => void;
 
 export interface SelectionManager {
-  enable(): void;
+  enable(blockId: number): void;
   isEnabled: boolean;
   disable(): void;
   resetPosition(): void;
@@ -29,7 +29,7 @@ export class SelectionSaga {
 
   private run = (event: Event) => {
     if (event instanceof BlockFocusedEvent) {
-      this.selectionManager.enable();
+      this.selectionManager.enable(event.block.id);
     } else if (event instanceof FocusRemovedFromBlockEvent) {
       this.selectionManager.disable();
       this.selectionManager.resetPosition();

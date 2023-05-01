@@ -1,5 +1,4 @@
 import { BlockStore } from '../../stores/BlockStore';
-import { ActiveBlockMother } from '../../testUtils/mothers/ActiveBlockMother';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { MoveCarriageCommand } from './MoveCarriageCommand';
@@ -8,22 +7,21 @@ import { CarriageMovedEvent, MoveCarriageCommandHandler } from './MoveCarriageCo
 describe(MoveCarriageCommandHandler.name, () => {
   it(`moves the carriage to a position and emits the ${CarriageMovedEvent.name}`, () => {
     const blockMother = new BlockMother();
-    const activeBlockMother = new ActiveBlockMother();
     const blockStore = new BlockStore();
     const eventBus = new EventBus();
     const carriageMovedEventHandler = jest.fn();
 
     eventBus.subscribe(CarriageMovedEvent, carriageMovedEventHandler);
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
-    blockStore.activeBlock = activeBlockMother.withBlock(blockMother.last).create();
+    blockStore.focusBlock(blockMother.last.id);
 
-    new MoveCarriageCommandHandler(blockStore, eventBus).execute(new MoveCarriageCommand(5));
+    new MoveCarriageCommandHandler(blockStore, eventBus).execute(new MoveCarriageCommand(blockMother.last.id, 5));
 
-    expect(blockStore.activeBlock).toEqual(
+    expect(blockStore.getById(blockMother.last.id)).toEqual(
       expect.objectContaining({
         carriagePosition: 5,
       }),
     );
-    expect(carriageMovedEventHandler).toBeCalledWith(new CarriageMovedEvent(blockStore.activeBlock.block, 5));
+    expect(carriageMovedEventHandler).toBeCalledWith(new CarriageMovedEvent(blockMother.last, 5));
   });
 });

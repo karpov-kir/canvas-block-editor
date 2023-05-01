@@ -15,15 +15,11 @@ export class MoveCarriageCommandHandler extends CommandHandler {
     super();
   }
 
-  execute(command: MoveCarriageCommand) {
-    const { activeBlock } = this.blockStore;
+  execute({ blockId, position }: MoveCarriageCommand) {
+    const block = this.blockStore.getById(blockId);
 
-    if (!activeBlock) {
-      throw new Error('No active block');
-    }
+    block.carriagePosition = position;
 
-    activeBlock.carriagePosition = command.position;
-
-    this.eventBus.publish(new CarriageMovedEvent(activeBlock.block, command.position));
+    this.eventBus.publish(new CarriageMovedEvent(block, position));
   }
 }

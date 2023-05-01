@@ -18,6 +18,8 @@ class BlockBuilder extends Builder<Block> {
       id: this.idGenerator(),
       content: '',
       type: BlockType.Text,
+      isFocused: false,
+      carriagePosition: 0,
     };
   }
 

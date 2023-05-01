@@ -7,6 +7,8 @@ import { MultiChannelPubSub } from '../../utils/pubSub/PubSub';
 export class TextareaSelectionManager implements SelectionManager {
   #isEnabled = false;
 
+  private blockId?: number;
+
   public get isEnabled() {
     return this.#isEnabled;
   }
@@ -40,20 +42,26 @@ export class TextareaSelectionManager implements SelectionManager {
       return;
     }
 
+    if (!this.blockId) {
+      throw new Error('Block ID is not set');
+    }
+
     if (this.textareaElement.selectionStart !== this.textareaElement.selectionEnd) {
-      this.pubSub.publish(
-        'select',
-        new Selection(this.textareaElement.selectionStart, this.textareaElement.selectionEnd),
-      );
+      this.pubSub.publish('select', {
+        blockId: this.blockId,
+        selection: new Selection(this.textareaElement.selectionStart, this.textareaElement.selectionEnd),
+      });
     }
   }
 
-  public enable() {
+  public enable(blockId: number) {
+    this.blockId = blockId;
     this.#isEnabled = true;
     this.textareaElement.style.display = 'block';
   }
 
   public disable() {
+    this.blockId = undefined;
     this.#isEnabled = false;
     this.textareaElement.style.display = 'none';
   }
@@ -70,18 +78,12 @@ export class TextareaSelectionManager implements SelectionManager {
       return;
     }
 
-    const activeBlock = this.blockStore.activeBlock;
-
-    if (!activeBlock) {
-      throw new Error('No active block');
+    if (!this.blockId) {
+      throw new Error('Block ID is not set');
     }
 
-    const blockRect = this.blockRectStore.blockRects.get(activeBlock.block.id);
-
-    if (!blockRect) {
-      throw new Error('No block rect');
-    }
-
+    const block = this.blockStore.getById(this.blockId);
+    const blockRect = this.blockRectStore.getById(this.blockId);
     const { dimensions: textDimensions, fontSize, fontFamily, lineHeight, position } = blockRect.contentRect;
 
     this.textareaElement.style.top = `${position.y}px`;
@@ -90,7 +92,7 @@ export class TextareaSelectionManager implements SelectionManager {
     this.textareaElement.style.lineHeight = `${lineHeight}px`;
     this.textareaElement.style.width = `${textDimensions.width}px`;
     this.textareaElement.style.height = `${textDimensions.height}px`;
-    this.textareaElement.value = activeBlock.block.content;
+    this.textareaElement.value = block.content;
   }
 
   public onSelect(handler: SelectCommandHandler) {

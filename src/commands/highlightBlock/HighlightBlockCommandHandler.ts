@@ -16,11 +16,7 @@ export class HighlightBlockCommandHandler extends CommandHandler {
   }
 
   public execute({ blockId }: HighlightBlockCommand) {
-    const block = this.blockStore.blocks.get(blockId);
-
-    if (!block) {
-      throw new Error(`Block with id ${blockId} not found`);
-    }
+    const block = this.blockStore.getById(blockId);
 
     this.blockStore.highlightedBlock = block;
 

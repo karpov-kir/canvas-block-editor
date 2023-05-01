@@ -8,9 +8,11 @@ export function keyPressHandler(
   blockStore: BlockStore,
   commandBus: CommandBus,
 ) {
-  if (!blockStore.activeBlock) {
+  if (!blockStore.focusedBlocks.size) {
     return;
   }
 
-  commandBus.publish(new InputCommand(event.key));
+  blockStore.focusedBlocks.forEach((block) => {
+    commandBus.publish(new InputCommand(block.id, event.key));
+  });
 }

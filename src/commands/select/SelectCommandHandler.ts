@@ -15,19 +15,15 @@ export class SelectCommandHandler extends CommandHandler {
     super();
   }
 
-  public execute({ selection }: SelectCommand) {
-    const activeBlock = this.blockStore.activeBlock;
+  public execute({ selection, blockId }: SelectCommand) {
+    const block = this.blockStore.getById(blockId);
 
-    if (!activeBlock) {
-      throw new Error('No active block');
-    }
-
-    if (selection.end > activeBlock.block.content.length) {
+    if (selection.end > block.content.length) {
       throw new RangeError('Selection is out of range');
     }
 
-    activeBlock.selection = selection;
+    block.selection = selection;
 
-    this.eventBus.publish(new SelectedEvent(activeBlock.block, selection));
+    this.eventBus.publish(new SelectedEvent(block, selection));
   }
 }

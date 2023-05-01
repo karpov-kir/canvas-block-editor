@@ -16,14 +16,9 @@ export class RemoveFocusFromBlockCommandHandler extends CommandHandler {
   }
 
   public execute({ blockId }: RemoveFocusFromBlockCommand) {
-    const activeBlock = this.blockStore.activeBlock;
+    const focusedBlock = this.blockStore.getFocusedBlockById(blockId);
 
-    if (activeBlock?.block.id !== blockId) {
-      throw new Error(`Block with id ${blockId} is not active`);
-    }
-
-    this.blockStore.activeBlock = undefined;
-
-    this.eventBus.publish(new FocusRemovedFromBlockEvent(activeBlock.block));
+    this.blockStore.focusedBlocks.delete(focusedBlock.id);
+    this.eventBus.publish(new FocusRemovedFromBlockEvent(focusedBlock));
   }
 }

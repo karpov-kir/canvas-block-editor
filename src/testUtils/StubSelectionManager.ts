@@ -40,8 +40,8 @@ export class StubSelectionManager implements SelectionManager {
     this.pubSub.subscribe('unselect', handler);
   });
 
-  public simulateSelection = jest.fn((selection: Selection) => {
-    this.pubSub.publish('select', selection);
+  public simulateSelection = jest.fn((blockId: number, selection: Selection) => {
+    this.pubSub.publish('select', { blockId, selection });
   });
 
   public simulateUnselection = jest.fn(() => {
