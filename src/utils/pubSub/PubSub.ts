@@ -1,4 +1,6 @@
 export abstract class PubSub<Channel, Handler, Data> {
+  public isDebugMode = false;
+
   protected handlers: Map<Channel, Array<Handler>> = new Map();
 
   protected abstract execute(data: Data, handler: Handler): void;
@@ -10,6 +12,12 @@ export abstract class PubSub<Channel, Handler, Data> {
 
   public publish(channel: Channel, data: Data) {
     const handlers = this.handlers.get(channel) || [];
+
+    if (this.isDebugMode) {
+      const channelName = (channel as any)?.name || channel;
+      console.log(`Publishing to channel ${channelName} with data:`, data);
+    }
+
     handlers.forEach((handler) => this.execute(data, handler));
   }
 }
