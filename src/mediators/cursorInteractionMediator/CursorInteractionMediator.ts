@@ -8,6 +8,7 @@ import { clickHandler } from './handlers/clickHandler';
 import { doubleClickHandler } from './handlers/doubleClickHandler';
 import { moveHandler } from './handlers/moveHandler';
 import { selectHandler } from './handlers/selectHandler';
+import { unselectHandler } from './handlers/unselectHandler';
 
 enum CursorInteractionEventType {
   Click = 'click',
@@ -65,6 +66,7 @@ export class CursorInteractionMediator implements Mediator<CursorInteractionEven
     } else if (event.type === CursorInteractionEventType.Select) {
       selectHandler(event, this.commandBus);
     } else if (event.type === CursorInteractionEventType.Unselect) {
+      unselectHandler(event, this.blockStore, this.commandBus);
     }
   }
 }

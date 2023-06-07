@@ -9,6 +9,7 @@ import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromB
 import { RenderCommand } from '../commands/render/RenderCommand';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentCommandHandler';
 import { SelectedEvent } from '../commands/select/SelectCommandHandler';
+import { UnselectedEvent } from '../commands/unselect/UnselectCommandHandler';
 import { CommandBus } from '../utils/pubSub/CommandBus';
 import { EventBus } from '../utils/pubSub/EventBus';
 
@@ -25,6 +26,7 @@ export class RenderSaga {
       HighlightRemovedFromBlockEvent,
       DocumentResizedEvent,
       SelectedEvent,
+      UnselectedEvent,
     ];
 
     runsOn.forEach((event) => {

@@ -23,6 +23,8 @@ import { ResizeDocumentCommandHandler } from './commands/resizeDocument/ResizeDo
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
 import { SelectCommand } from './commands/select/SelectCommand';
 import { SelectCommandHandler } from './commands/select/SelectCommandHandler';
+import { UnselectCommand } from './commands/unselect/UnselectCommand';
+import { UnselectCommandHandler } from './commands/unselect/UnselectCommandHandler';
 import { CursorInteractionMediator } from './mediators/cursorInteractionMediator/CursorInteractionMediator';
 import { subscribeToCursorInteraction } from './mediators/cursorInteractionMediator/subscribeToCursorInteraction';
 import { TextareaSelectionManager } from './mediators/cursorInteractionMediator/TextareaSelectionManager';
@@ -110,6 +112,7 @@ commandBus.subscribe(MoveCarriageCommand, new MoveCarriageCommandHandler(blockSt
 commandBus.subscribe(RemoveHighlightFromBlockCommand, new RemoveHighlightFromBlockCommandHandler(blockStore, eventBus));
 commandBus.subscribe(ResizeDocumentCommand, new ResizeDocumentCommandHandler(resizeDocumentService, eventBus));
 commandBus.subscribe(SelectCommand, new SelectCommandHandler(blockStore, eventBus));
+commandBus.subscribe(UnselectCommand, new UnselectCommandHandler(blockStore, eventBus));
 commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
 
 const cursorInteractionMediator = new CursorInteractionMediator(commandBus, blockStore, blockRectStore);
