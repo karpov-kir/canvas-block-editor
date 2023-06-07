@@ -1,9 +1,97 @@
 import { ContentRect } from '../../../stores/BlockRectStore';
 import { Dimensions } from '../../../utils/math/Dimensions';
 import { Vector } from '../../../utils/math/Vector';
-import { Drawer, RenderRectOptions, RenderTextContentRectOptions, RenderTextOptions } from '../RenderService';
+import {
+  ClearRectOptions,
+  Drawer,
+  RenderCarriageOptions,
+  RenderCarriageResult,
+  RenderRectOptions,
+  RenderSelectionOptions,
+  RenderTextContentRectOptions,
+  RenderTextOptions,
+} from '../RenderService';
 import { createContentRect } from './createContentRect';
-import { DrawSelectionHelper } from './DrawSelectionHelper';
+
+class BlinkingCarriageDrawer implements RenderCarriageResult {
+  private isShown = true;
+  private scheduledBlinkTimeoutId?: NodeJS.Timeout;
+
+  constructor(
+    private readonly drawer: Drawer,
+    private readonly canvasContext: CanvasRenderingContext2D,
+    private options: RenderCarriageOptions,
+  ) {
+    this.render();
+    this.scheduleBlink();
+  }
+
+  private unscheduleBlink() {
+    this.isShown = true;
+    clearTimeout(this.scheduledBlinkTimeoutId);
+    this.scheduledBlinkTimeoutId = undefined;
+  }
+
+  private scheduleBlink() {
+    if (this.scheduledBlinkTimeoutId) {
+      return;
+    }
+
+    this.scheduledBlinkTimeoutId = setTimeout(() => {
+      this.scheduledBlinkTimeoutId = undefined;
+      this.isShown = !this.isShown;
+      this.render();
+      this.scheduleBlink();
+    }, 500);
+  }
+
+  private render() {
+    let lastCharacterIndex = 0;
+    const { lines, carriagePosition, contentStartPosition, lineHeight } = this.options;
+
+    lines.forEach((line, lineIndex) => {
+      const isCarriageInLine =
+        carriagePosition > lastCharacterIndex && carriagePosition <= lastCharacterIndex + line.length;
+
+      if (isCarriageInLine) {
+        const characterCountBeforeCarriageInLine = carriagePosition - lastCharacterIndex;
+        const charactersBeforeCarriageInLine = lines[lineIndex].slice(0, characterCountBeforeCarriageInLine);
+        const { width } = this.canvasContext.measureText(charactersBeforeCarriageInLine);
+        const position = new Vector(contentStartPosition.x + width, contentStartPosition.y + lineHeight * lineIndex);
+        const dimensions = new Dimensions(1, lineHeight);
+
+        if (this.isShown) {
+          this.drawer.rect({
+            position,
+            dimensions,
+            fill: true,
+            strokeStyle: 'transparent',
+            fillStyle: 'black',
+          });
+        } else {
+          this.drawer.clearRect({
+            position,
+            dimensions,
+          });
+        }
+      }
+
+      lastCharacterIndex += line.length;
+    });
+  }
+
+  public stopBlinking() {
+    this.unscheduleBlink();
+  }
+
+  public update(newOptions: RenderCarriageOptions) {
+    this.options = newOptions;
+
+    this.unscheduleBlink();
+    this.render();
+    this.scheduleBlink();
+  }
+}
 
 export class CanvasDrawer implements Drawer {
   constructor(private readonly canvasContext: CanvasRenderingContext2D) {}
@@ -32,6 +120,10 @@ export class CanvasDrawer implements Drawer {
     this.canvasContext.stroke();
   }
 
+  clearRect({ position, dimensions }: ClearRectOptions) {
+    this.canvasContext.clearRect(position.x, position.y, dimensions.width, dimensions.height);
+  }
+
   textContentRect({
     position,
     fontFamily,
@@ -41,7 +133,6 @@ export class CanvasDrawer implements Drawer {
     text,
     padding,
     margin,
-    selection,
   }: RenderTextContentRectOptions): ContentRect {
     // TODO maybe use a pub/sub to notify about the new lines and render them on the fly?
     const contentRect = createContentRect(this.canvasContext, {
@@ -55,14 +146,9 @@ export class CanvasDrawer implements Drawer {
       position,
     });
     const { lines, lineMetrics, lineHeightOffset } = contentRect;
-    const drawSelectionHelper = selection ? new DrawSelectionHelper(selection, this.canvasContext, this) : undefined;
 
     lines.forEach((line, lineIndex) => {
       const currentLineMetrics = lineMetrics[lineIndex];
-
-      if (drawSelectionHelper) {
-        drawSelectionHelper.processLineAndMaybeDrawSelection(contentRect);
-      }
 
       this.text({
         fontSize,
@@ -77,6 +163,52 @@ export class CanvasDrawer implements Drawer {
     });
 
     return contentRect;
+  }
+
+  selection({ lineHeight, lines, selection, contentStartPosition }: RenderSelectionOptions) {
+    let selectedLineCount = 0;
+    let lastCharacterIndex = 0;
+
+    // TODO break whenever selection is rendered
+    lines.forEach((line, lineIndex) => {
+      const { start: absoluteSelectionStart, end: absoluteSelectionEnd } = selection;
+      const absoluteLineStart = lastCharacterIndex;
+      const absoluteLineEnd = absoluteLineStart + line.length;
+
+      const selectionStartInLine = Math.max(absoluteSelectionStart - absoluteLineStart, 0);
+      const absoluteSelectionEndInLine = Math.min(absoluteSelectionEnd, absoluteLineEnd);
+      const selectionEndInLine = absoluteSelectionEndInLine - absoluteLineStart;
+      const selectedCharacterCountInLine = selectionEndInLine - selectionStartInLine;
+
+      if (selectedCharacterCountInLine > 0) {
+        const charactersToSelectInLine = line.slice(selectionStartInLine, selectionEndInLine);
+        const { width } = this.canvasContext.measureText(charactersToSelectInLine);
+        let selectionOffsetX = 0;
+
+        if (selectedLineCount === 0) {
+          ({ width: selectionOffsetX } = this.canvasContext.measureText(line.slice(0, selectionStartInLine)));
+        }
+
+        selectedLineCount += 1;
+
+        this.rect({
+          position: new Vector(
+            contentStartPosition.x + selectionOffsetX,
+            contentStartPosition.y + lineHeight * lineIndex,
+          ),
+          dimensions: new Dimensions(width, lineHeight),
+          fill: true,
+          strokeStyle: 'transparent',
+          fillStyle: 'rgba(0, 0, 255, 0.2)',
+        });
+      }
+
+      lastCharacterIndex += line.length;
+    });
+  }
+
+  carriage(options: RenderCarriageOptions): RenderCarriageResult {
+    return new BlinkingCarriageDrawer(this, this.canvasContext, options);
   }
 
   setViewportSize({ width, height }: Dimensions) {

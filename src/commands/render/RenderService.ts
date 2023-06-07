@@ -25,7 +25,25 @@ export interface RenderTextContentRectOptions extends RenderTextOptions {
   width: number;
   padding: Padding;
   margin: Margin;
-  selection?: Selection;
+}
+
+export interface RenderSelectionOptions {
+  lines: string[];
+  lineHeight: number;
+  selection: Selection;
+  contentStartPosition: Vector;
+}
+
+export interface RenderCarriageOptions {
+  lines: string[];
+  lineHeight: number;
+  carriagePosition: number;
+  contentStartPosition: Vector;
+}
+
+export interface RenderCarriageResult {
+  stopBlinking: () => void;
+  update: (newOptions: RenderCarriageOptions) => void;
 }
 
 export interface RenderRectOptions {
@@ -36,13 +54,22 @@ export interface RenderRectOptions {
   fillStyle?: string;
 }
 
+export interface ClearRectOptions {
+  position: Vector;
+  dimensions: Dimensions;
+}
+
 export interface Drawer {
   rect(options: RenderRectOptions): void;
+  clearRect(options: ClearRectOptions): void;
   text(options: RenderTextOptions): void;
+  selection(options: RenderSelectionOptions): void;
+  carriage(options: RenderCarriageOptions): RenderCarriageResult;
   textContentRect(options: RenderTextContentRectOptions): ContentRect;
   setViewportSize(dimensions: Dimensions): void;
   clear(): void;
 }
+
 export class RenderService {
   constructor(
     private readonly drawer: Drawer,
@@ -50,6 +77,8 @@ export class RenderService {
     private readonly blockRectStore: BlockRectStore,
     private readonly documentStore: DocumentStore,
   ) {}
+
+  private blinkingCarriages = new Map<number, RenderCarriageResult>();
 
   private renderBlockRect(blockRect: BlockRect, strokeStyle: string) {
     this.drawer.rect({
@@ -110,19 +139,67 @@ export class RenderService {
     padding: Padding,
     margin: Margin,
   ): ContentRect {
-    return this.drawer.textContentRect({
+    const contentRect = this.drawer.textContentRect({
       ...DEFAULT_FONT_STYLES,
       width: blockRectWidth,
       position,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,
       padding,
       margin,
+    });
+
+    return contentRect;
+  }
+
+  private maybeRenderSelection(block: Block, contentRect: ContentRect) {
+    if (!block.selection) {
+      return;
+    }
+
+    this.drawer.selection({
+      lines: contentRect.lines,
       selection: block.selection,
+      lineHeight: contentRect.lineHeight,
+      contentStartPosition: contentRect.position,
+    });
+  }
+
+  private maybeRenderCarriage(block: Block, contentRect: ContentRect) {
+    if (!block.carriagePosition) {
+      return;
+    }
+
+    const existingBlinkingCarriage = this.blinkingCarriages.get(block.id);
+    const renderCarriageOptions = {
+      lines: contentRect.lines,
+      carriagePosition: block.carriagePosition,
+      lineHeight: contentRect.lineHeight,
+      contentStartPosition: contentRect.position,
+    };
+
+    if (existingBlinkingCarriage) {
+      existingBlinkingCarriage.update(renderCarriageOptions);
+      return;
+    }
+
+    const newBlinkingCarriage = this.drawer.carriage(renderCarriageOptions);
+    this.blinkingCarriages.set(block.id, newBlinkingCarriage);
+  }
+
+  private removeOldBlinkingCarriages() {
+    this.blinkingCarriages.forEach((blinkingCarriage, blockId) => {
+      if (this.blockStore.blocks.has(blockId)) {
+        return;
+      }
+
+      blinkingCarriage.stopBlinking();
+      this.blinkingCarriages.delete(blockId);
     });
   }
 
   public render() {
     this.drawer.clear();
+    this.removeOldBlinkingCarriages();
 
     const { blocks } = this.blockStore;
     const {
@@ -147,7 +224,10 @@ export class RenderService {
       );
 
       this.blockRectStore.attach(block.id, blockRect);
+
       this.maybeRenderNormalBlock(block, blockRect);
+      this.maybeRenderSelection(block, contentRect);
+      this.maybeRenderCarriage(block, contentRect);
 
       nextBlockRectStartY += blockRectHeight + 1;
     });
