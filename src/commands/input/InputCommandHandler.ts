@@ -18,7 +18,22 @@ export class InputCommandHandler extends CommandHandler {
   execute({ blockId, content }: InputCommand) {
     const block = this.blockStore.getById(blockId);
 
-    block.content += content;
+    if (block.selection) {
+      const contentBeforeSelection = block.content.slice(0, block.selection.start);
+      const contentAfterSelection = block.content.slice(block.selection.end);
+      const newContentBeforeCarriage = contentBeforeSelection + content;
+
+      block.content = newContentBeforeCarriage + contentAfterSelection;
+      block.selection = undefined;
+      block.carriagePosition = newContentBeforeCarriage.length;
+    } else {
+      const contentBeforeCarriage = block.content.slice(0, block.carriagePosition);
+      const contentAfterCarriage = block.content.slice(block.carriagePosition);
+      const newContentBeforeCarriage = contentBeforeCarriage + content;
+
+      block.content = newContentBeforeCarriage + contentAfterCarriage;
+      block.carriagePosition = newContentBeforeCarriage.length;
+    }
 
     this.eventBus.publish(new InputReceivedEvent(block, content));
   }
