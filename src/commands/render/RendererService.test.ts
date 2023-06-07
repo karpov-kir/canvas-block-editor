@@ -1,16 +1,16 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
+import { FakeDrawer } from '../../testUtils/FakeDrawer';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../testUtils/mothers/BlockRectMother';
-import { StubDrawer } from '../../testUtils/StubDrawer';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { RenderService } from './RenderService';
 
 // describe(RenderService.name, () => {
 describe('test', () => {
-  let stubDrawer: StubDrawer;
+  let fakeDrawer: FakeDrawer;
   let blockStore: BlockStore;
   let blockRectStore: BlockRectStore;
   let renderService: RenderService;
@@ -19,11 +19,11 @@ describe('test', () => {
   let documentStore: DocumentStore;
 
   beforeEach(() => {
-    stubDrawer = new StubDrawer();
+    fakeDrawer = new FakeDrawer();
     blockStore = new BlockStore();
     blockRectStore = new BlockRectStore();
     documentStore = new DocumentStore();
-    renderService = new RenderService(stubDrawer, blockStore, blockRectStore, documentStore);
+    renderService = new RenderService(fakeDrawer, blockStore, blockRectStore, documentStore);
     blockMother = new BlockMother();
     blockRectMother = new BlockRectMother();
 
@@ -36,7 +36,7 @@ describe('test', () => {
     renderService.render();
     renderService.render();
 
-    expect(stubDrawer.clear).toBeCalledTimes(2);
+    expect(fakeDrawer.clear).toBeCalledTimes(2);
   });
 
   it('renders text of blocks one under another', () => {
@@ -45,9 +45,9 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.textContentRect).toBeCalledTimes(2);
-    expect(stubDrawer.textContentRect).nthCalledWith(1, expect.objectContaining({ position: { x: 0, y: 0 } }));
-    expect(stubDrawer.textContentRect).nthCalledWith(2, expect.objectContaining({ position: { x: 0, y: 41 } }));
+    expect(fakeDrawer.textContentRect).toBeCalledTimes(2);
+    expect(fakeDrawer.textContentRect).nthCalledWith(1, expect.objectContaining({ position: { x: 0, y: 0 } }));
+    expect(fakeDrawer.textContentRect).nthCalledWith(2, expect.objectContaining({ position: { x: 0, y: 41 } }));
   });
 
   it('renders blocks one under another and for the whole available width', () => {
@@ -59,8 +59,8 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(2);
-    expect(stubDrawer.rect).nthCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(2);
+    expect(fakeDrawer.rect).nthCalledWith(
       1,
       expect.objectContaining({
         // 5 comes from margins
@@ -68,7 +68,7 @@ describe('test', () => {
         dimensions: new Dimensions(790, 30),
       }),
     );
-    expect(stubDrawer.rect).nthCalledWith(
+    expect(fakeDrawer.rect).nthCalledWith(
       2,
       expect.objectContaining({
         // 5 comes from margins
@@ -91,7 +91,7 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         // 5 comes from margins
         position: new Vector(5, 5),
@@ -122,8 +122,8 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(1);
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(1);
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'gray',
       }),
@@ -136,8 +136,8 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(1);
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(1);
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'red',
       }),
@@ -150,8 +150,8 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(1);
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(1);
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
@@ -165,8 +165,8 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(1);
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(1);
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
@@ -181,13 +181,13 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.rect).toBeCalledTimes(2);
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledTimes(2);
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'green',
       }),
     );
-    expect(stubDrawer.rect).toBeCalledWith(
+    expect(fakeDrawer.rect).toBeCalledWith(
       expect.objectContaining({
         strokeStyle: 'red',
       }),
@@ -199,6 +199,6 @@ describe('test', () => {
 
     renderService.render();
 
-    expect(stubDrawer.textContentRect).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
+    expect(fakeDrawer.textContentRect).toBeCalledWith(expect.objectContaining({ text: 'New +' }));
   });
 });

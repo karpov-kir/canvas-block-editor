@@ -1,6 +1,6 @@
 import { SelectCommand, Selection } from '../../../commands/select/SelectCommand';
 import { BlockStore } from '../../../stores/BlockStore';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorInteractionSelectEvent } from '../CursorInteractionMediator';
@@ -15,7 +15,7 @@ describe(selectHandler, () => {
 
   it(`emits the ${SelectCommand.name} on selection in the focused block`, () => {
     const blockStore = new BlockStore();
-    const selectCommandHandler = new CommandHandlerStub();
+    const selectCommandHandler = new FakeHandlerStub();
     const blockMother = new BlockMother();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);

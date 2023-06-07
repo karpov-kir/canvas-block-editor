@@ -1,5 +1,5 @@
 import { AddBlockCommand } from '../../../commands/addBlock/AddBlockCommand';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { Vector } from '../../../utils/math/Vector';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorInteractionDoubleClickEvent } from '../CursorInteractionMediator';
@@ -13,7 +13,7 @@ describe(doubleClickHandler, () => {
   });
 
   it(`emits the ${AddBlockCommand.name} on a double click`, () => {
-    const addBlockCommandHandler = new CommandHandlerStub();
+    const addBlockCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(AddBlockCommand, addBlockCommandHandler);
     doubleClickHandler(new CursorInteractionDoubleClickEvent(new Vector()), commandBus);

@@ -10,7 +10,7 @@ import { RenderCommand } from '../commands/render/RenderCommand';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
 import { DocumentResizedEvent } from '../commands/resizeDocument/ResizeDocumentCommandHandler';
 import { BlockType } from '../stores/BlockStore';
-import { CommandHandlerStub } from '../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../testUtils/FakeCommandHandler';
 import { BlockMother } from '../testUtils/mothers/BlockMother';
 import { Dimensions } from '../utils/math/Dimensions';
 import { CommandBus } from '../utils/pubSub/CommandBus';
@@ -35,7 +35,7 @@ describe(RenderSaga, () => {
       new DocumentResizedEvent(new Dimensions()),
     ];
     const eventsThatShouldNotTriggerRender = [new RenderedEvent()];
-    const renderCommandHandler = new CommandHandlerStub();
+    const renderCommandHandler = new FakeHandlerStub();
 
     new RenderSaga(eventBus, commandBus);
 

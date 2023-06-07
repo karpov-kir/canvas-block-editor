@@ -2,7 +2,7 @@ import { Selection } from '../commands/select/SelectCommand';
 import { SelectCommandHandler, SelectionManager, UnselectCommandHandler } from '../sagas/SelectionSaga';
 import { MultiChannelPubSub } from '../utils/pubSub/PubSub';
 
-export class StubSelectionManager implements SelectionManager {
+export class FakeSelectionManager implements SelectionManager {
   #isEnabled = false;
   #isSelecting = false;
 

@@ -4,7 +4,7 @@ import { Dimensions } from '../utils/math/Dimensions';
 import { Vector } from '../utils/math/Vector';
 import { longContent, longContentLines } from './mothers/BlockMother';
 
-export class StubDrawer implements Drawer {
+export class FakeDrawer implements Drawer {
   textContentRect = jest.fn(
     ({ lineHeight, padding, margin, width, position, fontFamily, fontSize, text }: RenderTextContentRectOptions) => {
       const contentWidth = width - padding.horizontal * 2 - margin.horizontal * 2;

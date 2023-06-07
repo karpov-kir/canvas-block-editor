@@ -1,7 +1,7 @@
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
-import { StubDrawer } from '../../testUtils/StubDrawer';
+import { FakeDrawer } from '../../testUtils/FakeDrawer';
 import { EventBus } from '../../utils/pubSub/EventBus';
 import { RenderCommand } from './RenderCommand';
 import { RenderCommandHandler, RenderedEvent } from './RenderCommandHandler';
@@ -11,7 +11,7 @@ describe(RenderCommandHandler.name, () => {
   it(`renders blocks and emits ${RenderedEvent.name}`, () => {
     const blockStore = new BlockStore();
     const renderService = new RenderService(
-      new StubDrawer(),
+      new FakeDrawer(),
       new BlockStore(),
       new BlockRectStore(),
       new DocumentStore(),

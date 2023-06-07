@@ -1,7 +1,7 @@
 import { Selection } from '../../../commands/select/SelectCommand';
 import { UnselectCommand } from '../../../commands/unselect/UnselectCommand';
 import { BlockStore } from '../../../stores/BlockStore';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { CursorInteractionUnselectEvent } from '../CursorInteractionMediator';
@@ -16,7 +16,7 @@ describe(unselectHandler, () => {
 
   it(`emits the ${UnselectCommand.name} on selection in the focused block`, () => {
     const blockStore = new BlockStore();
-    const unselectCommandHandler = new CommandHandlerStub();
+    const unselectCommandHandler = new FakeHandlerStub();
     const blockMother = new BlockMother();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);

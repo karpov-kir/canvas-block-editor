@@ -1,6 +1,6 @@
 import { InputCommand } from '../../../commands/input/InputCommand';
-import { BlockStore, BlockType } from '../../../stores/BlockStore';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { BlockStore } from '../../../stores/BlockStore';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { CommandBus } from '../../../utils/pubSub/CommandBus';
 import { KeyboardInteractionKeyPressEvent } from '../KeyboardInteractionMediator';
@@ -20,7 +20,7 @@ describe(keyPressHandler, () => {
   });
 
   it(`emits the ${InputCommand.name} on a key press`, () => {
-    const inputCommandHandler = new CommandHandlerStub();
+    const inputCommandHandler = new FakeHandlerStub();
 
     blockStore.focusBlock(blockMother.last.id);
     commandBus.subscribe(InputCommand, inputCommandHandler);
@@ -31,7 +31,7 @@ describe(keyPressHandler, () => {
   });
 
   it(`does not emit the ${InputCommand.name} on a key press when there is no focused blocks`, () => {
-    const inputCommandHandler = new CommandHandlerStub();
+    const inputCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(InputCommand, inputCommandHandler);
 

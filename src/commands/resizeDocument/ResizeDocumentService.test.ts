@@ -1,11 +1,11 @@
 import { DocumentStore } from '../../stores/DocumentStore';
-import { StubDrawer } from '../../testUtils/StubDrawer';
+import { FakeDrawer } from '../../testUtils/FakeDrawer';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { ResizeDocumentService } from './ResizeDocumentService';
 
 describe(ResizeDocumentService.name, () => {
   it('updates dimensions', () => {
-    const drawer = new StubDrawer();
+    const drawer = new FakeDrawer();
     const documentStore = new DocumentStore();
     const resizeDocumentService = new ResizeDocumentService(drawer, documentStore);
 

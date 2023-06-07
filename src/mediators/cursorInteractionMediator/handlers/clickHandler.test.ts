@@ -4,7 +4,7 @@ import { FocusBlockCommand } from '../../../commands/focusBlock/FocusBlockComman
 import { RemoveFocusFromBlockCommand } from '../../../commands/removeFocusFromBlock/RemoveFocusFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore, BlockType } from '../../../stores/BlockStore';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { getPointInBlockRect } from '../../../testUtils/getPointInBlockRect';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
@@ -35,7 +35,7 @@ describe(clickHandler, () => {
   });
 
   it(`emits the ${FocusBlockCommand.name} on a click on a block`, () => {
-    const focusedBlockCommandHandler = new CommandHandlerStub();
+    const focusedBlockCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
 
@@ -50,7 +50,7 @@ describe(clickHandler, () => {
   });
 
   it(`does not emit the ${FocusBlockCommand.name} if the clicked block is already focused`, () => {
-    const focusedBlockCommandHandler = new CommandHandlerStub();
+    const focusedBlockCommandHandler = new FakeHandlerStub();
 
     blockStore.focusBlock(blockMother.last.id);
     commandBus.subscribe(FocusBlockCommand, focusedBlockCommandHandler);
@@ -66,9 +66,9 @@ describe(clickHandler, () => {
   });
 
   it(`changes the "${BlockType.CreateBlock}" block type to another type on a click, focuses the block, and adds a new block with type "${BlockType.CreateBlock}" to the end`, () => {
-    const focusBlockCommandHandler = new CommandHandlerStub();
-    const changeBlockTypeCommandHandler = new CommandHandlerStub();
-    const addBlockCommandHandler = new CommandHandlerStub();
+    const focusBlockCommandHandler = new FakeHandlerStub();
+    const changeBlockTypeCommandHandler = new FakeHandlerStub();
+    const addBlockCommandHandler = new FakeHandlerStub();
 
     blockStore.blocks.set(blockMother.withType(BlockType.CreateBlock).create().id, blockMother.last);
     blockRectStore.attach(blockMother.last.id, blockRectMother.withSmallSize().underLast().create());
@@ -90,7 +90,7 @@ describe(clickHandler, () => {
   });
 
   it(`emits the ${RemoveFocusFromBlockCommand.name} on a click outside of focused blocks`, () => {
-    const removeFocusFromBlockCommandHandler = new CommandHandlerStub();
+    const removeFocusFromBlockCommandHandler = new FakeHandlerStub();
 
     blockStore.blocks.set(blockMother.create().id, blockMother.last);
     blockStore.focusBlock(blockMother.last.id);

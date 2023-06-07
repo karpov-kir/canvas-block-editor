@@ -2,7 +2,7 @@ import { HighlightBlockCommand } from '../../../commands/highlightBlock/Highligh
 import { RemoveHighlightFromBlockCommand } from '../../../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { BlockRectStore } from '../../../stores/BlockRectStore';
 import { BlockStore } from '../../../stores/BlockStore';
-import { CommandHandlerStub } from '../../../testUtils/CommandHandlerStub';
+import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { getPointInBlockRect } from '../../../testUtils/getPointInBlockRect';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
 import { BlockRectMother } from '../../../testUtils/mothers/BlockRectMother';
@@ -32,7 +32,7 @@ describe(moveHandler, () => {
   });
 
   it(`emits the ${HighlightBlockCommand.name} on the first block mouse hover`, () => {
-    const highlightBlockCommandHandler = new CommandHandlerStub();
+    const highlightBlockCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(HighlightBlockCommand, highlightBlockCommandHandler);
 
@@ -47,7 +47,7 @@ describe(moveHandler, () => {
   });
 
   it(`does not emit the ${HighlightBlockCommand.name} if the hovered block is already highlighted`, () => {
-    const highlightBlockCommandHandler = new CommandHandlerStub();
+    const highlightBlockCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(HighlightBlockCommand, highlightBlockCommandHandler);
     blockStore.highlightBlock(blockMother.last.id);
@@ -63,7 +63,7 @@ describe(moveHandler, () => {
   });
 
   it(`emits the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the highlighted block`, () => {
-    const removeHighlightFromBlockCommandHandler = new CommandHandlerStub();
+    const removeHighlightFromBlockCommandHandler = new FakeHandlerStub();
 
     blockStore.highlightBlock(blockMother.last.id);
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockCommandHandler);
@@ -77,7 +77,7 @@ describe(moveHandler, () => {
   });
 
   it(`does not emit the ${RemoveHighlightFromBlockCommand.name} on mouse move outside of the blocks if there is no a highlighted block`, () => {
-    const removeHighlightFromBlockCommandHandler = new CommandHandlerStub();
+    const removeHighlightFromBlockCommandHandler = new FakeHandlerStub();
 
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockCommandHandler);
 
@@ -87,7 +87,7 @@ describe(moveHandler, () => {
   });
 
   it(`emit the ${RemoveHighlightFromBlockCommand.name} for the first block on mouse move to the second block `, () => {
-    const removeHighlightFromBlockCommandHandler = new CommandHandlerStub();
+    const removeHighlightFromBlockCommandHandler = new FakeHandlerStub();
 
     blockStore.highlightBlock(blockMother.beforeLast.id);
     commandBus.subscribe(RemoveHighlightFromBlockCommand, removeHighlightFromBlockCommandHandler);
