@@ -30,4 +30,7 @@ export class StubDrawer implements Drawer {
   setViewportSize = jest.fn();
   clear = jest.fn();
   rect = jest.fn();
+  clearRect = jest.fn();
+  carriage = jest.fn();
+  selection = jest.fn();
 }

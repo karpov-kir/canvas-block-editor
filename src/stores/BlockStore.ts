@@ -22,8 +22,9 @@ export class BlockStore {
   public readonly blocks: Map<number, Block> = new Map();
   public readonly focusedBlocks: Map<number, Block> = new Map();
   public readonly highlightedBlocks: Map<number, Block> = new Map();
+  public readonly blocksWithSelection: Map<number, Block> = new Map();
 
-  private idGenerator = createIdGenerator();
+  private readonly idGenerator = createIdGenerator();
 
   public add(type: BlockType) {
     const id = this.idGenerator();
@@ -97,5 +98,22 @@ export class BlockStore {
 
     block.isHighlighted = false;
     this.highlightedBlocks.delete(blockId);
+  }
+
+  public setSelection(blockId: number, selection: Selection) {
+    const block = this.getById(blockId);
+
+    if (selection.end > block.content.length) {
+      throw new RangeError('Selection is out of range');
+    }
+
+    this.blocksWithSelection.set(blockId, block);
+    block.selection = selection;
+  }
+
+  public removeSelection(blockId: number) {
+    const block = this.getById(blockId);
+
+    block.selection = undefined;
   }
 }

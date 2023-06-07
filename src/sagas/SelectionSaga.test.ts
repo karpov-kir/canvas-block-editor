@@ -5,11 +5,11 @@ import { BlockMother } from '../testUtils/mothers/BlockMother';
 import { StubSelectionManager } from '../testUtils/StubSelectionManager';
 import { EventBus } from '../utils/pubSub/EventBus';
 import { HighlightRemovedFromBlockEvent } from './../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
-import { SelectionManager, SelectionSaga } from './SelectionSaga';
+import { SelectionSaga } from './SelectionSaga';
 
 describe(SelectionSaga.name, () => {
   let eventBus: EventBus;
-  let stubSelectionManager: SelectionManager;
+  let stubSelectionManager: StubSelectionManager;
   let blockMother: BlockMother;
 
   beforeEach(() => {

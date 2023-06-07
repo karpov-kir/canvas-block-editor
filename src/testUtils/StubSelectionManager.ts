@@ -4,9 +4,14 @@ import { MultiChannelPubSub } from '../utils/pubSub/PubSub';
 
 export class StubSelectionManager implements SelectionManager {
   #isEnabled = false;
+  #isSelecting = false;
 
   public get isEnabled() {
     return this.#isEnabled;
+  }
+
+  public get isSelecting() {
+    return this.#isSelecting;
   }
 
   constructor(
@@ -16,7 +21,7 @@ export class StubSelectionManager implements SelectionManager {
     }>(),
   ) {}
 
-  public enable = jest.fn(() => {
+  public enable = jest.fn((_blockId: number) => {
     this.#isEnabled = true;
   });
 
@@ -41,10 +46,12 @@ export class StubSelectionManager implements SelectionManager {
   });
 
   public simulateSelection = jest.fn((blockId: number, selection: Selection) => {
+    this.#isSelecting = true;
     this.pubSub.publish('select', { blockId, selection });
   });
 
   public simulateUnselection = jest.fn(() => {
+    this.#isSelecting = false;
     this.pubSub.publish('unselect', undefined);
   });
 }

@@ -18,12 +18,7 @@ export class SelectCommandHandler extends CommandHandler {
   public execute({ selection, blockId }: SelectCommand) {
     const block = this.blockStore.getById(blockId);
 
-    if (selection.end > block.content.length) {
-      throw new RangeError('Selection is out of range');
-    }
-
-    block.selection = selection;
-
+    this.blockStore.setSelection(block.id, selection);
     this.eventBus.publish(new SelectedEvent(block, selection));
   }
 }

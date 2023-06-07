@@ -1,3 +1,4 @@
+import { BlockTypeChangedEvent } from '../commands/changeBlockType/ChangeBlockTypeCommandHandler';
 import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockCommandHandler';
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
@@ -11,7 +12,8 @@ export type UnselectCommandHandler = () => void;
 
 export interface SelectionManager {
   enable(blockId: number): void;
-  isEnabled: boolean;
+  readonly isEnabled: boolean;
+  readonly isSelecting: boolean;
   disable(): void;
   resetPosition(): void;
   update(): void;
@@ -21,7 +23,7 @@ export interface SelectionManager {
 
 export class SelectionSaga {
   constructor(private readonly eventBus: EventBus, private readonly selectionManager: SelectionManager) {
-    const runsOn = [BlockHighlightedEvent, HighlightRemovedFromBlockEvent, RenderedEvent];
+    const runsOn = [BlockHighlightedEvent, HighlightRemovedFromBlockEvent, RenderedEvent, BlockTypeChangedEvent];
 
     runsOn.forEach((event) => {
       this.eventBus.subscribe(event, this.run);
@@ -29,11 +31,19 @@ export class SelectionSaga {
   }
 
   private run = (event: Event) => {
-    if (event instanceof BlockHighlightedEvent) {
+    if (event instanceof BlockHighlightedEvent || event instanceof BlockTypeChangedEvent) {
+      if (this.selectionManager.isSelecting) {
+        return;
+      }
+
       if (event.block.type !== BlockType.CreateBlock) {
         this.selectionManager.enable(event.block.id);
       }
     } else if (event instanceof HighlightRemovedFromBlockEvent) {
+      if (this.selectionManager.isSelecting) {
+        return;
+      }
+
       this.selectionManager.disable();
       this.selectionManager.resetPosition();
     } else if (event instanceof RenderedEvent) {

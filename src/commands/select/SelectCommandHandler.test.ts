@@ -21,19 +21,17 @@ describe(SelectCommandHandler.name, () => {
     const selectedEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    blockStore.focusBlock(blockMother.last.id);
     eventBus.subscribe(SelectedEvent, selectedEventHandler);
 
     handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, 5)));
 
     expect(blockStore.getById(blockMother.last.id).selection).toEqual(new Selection(0, 5));
+    expect(blockStore.blocksWithSelection.get(blockMother.last.id)).toEqual(blockMother.last);
     expect(selectedEventHandler).toBeCalledWith(new SelectedEvent(blockMother.last, new Selection(0, 5)));
   });
 
   it(`throws an error if the selection is out of range`, () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-
-    blockStore.focusBlock(blockMother.last.id);
 
     expect(() =>
       handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, Number.MAX_SAFE_INTEGER))),

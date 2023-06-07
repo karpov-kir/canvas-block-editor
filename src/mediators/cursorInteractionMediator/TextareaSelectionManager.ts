@@ -6,6 +6,7 @@ import { MultiChannelPubSub } from '../../utils/pubSub/PubSub';
 
 export class TextareaSelectionManager implements SelectionManager {
   #isEnabled = false;
+  #isSelecting = false;
 
   private blockId?: number;
 
@@ -19,6 +20,10 @@ export class TextareaSelectionManager implements SelectionManager {
     return this.#isEnabled;
   }
 
+  public get isSelecting() {
+    return this.#isSelecting;
+  }
+
   constructor(
     private readonly blockStore: BlockStore,
     private readonly blockRectStore: BlockRectStore,
@@ -30,8 +35,18 @@ export class TextareaSelectionManager implements SelectionManager {
 
     this.resetPosition();
 
-    document.addEventListener('mousedown', () => {
+    document.addEventListener('mousedown', (event) => {
       this.pubSub.publish('unselect', undefined);
+
+      const blockRect = this.blockRectStore.findByPosition({ x: event.clientX, y: event.clientY });
+
+      if (blockRect && blockRect.blockId === this.blockId) {
+        this.#isSelecting = true;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      this.#isSelecting = false;
     });
 
     document.addEventListener('selectionchange', (_event) => {
@@ -48,7 +63,9 @@ export class TextareaSelectionManager implements SelectionManager {
       throw new Error('Block ID is not set');
     }
 
-    if (this.textareaElement.selectionStart !== this.textareaElement.selectionEnd) {
+    const { selectionStart, selectionEnd } = this.textareaElement;
+
+    if (selectionStart !== selectionEnd) {
       this.pubSub.publish('select', {
         blockId: this.blockId,
         selection: new Selection(this.textareaElement.selectionStart, this.textareaElement.selectionEnd),

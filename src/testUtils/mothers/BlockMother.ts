@@ -1,3 +1,4 @@
+import { Selection } from '../../commands/select/SelectCommand';
 import { Block, BlockType } from '../../stores/BlockStore';
 import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';
@@ -13,7 +14,7 @@ class BlockBuilder extends Builder<Block> {
 
   public override instance = this.createEmpty();
 
-  public override createEmpty() {
+  public override createEmpty(): Block {
     return {
       id: this.idGenerator(),
       content: '',
@@ -31,6 +32,11 @@ class BlockBuilder extends Builder<Block> {
 
   public setType(type: BlockType) {
     this.instance.type = type;
+    return this;
+  }
+
+  public setSelection(selection: Selection) {
+    this.instance.selection = selection;
     return this;
   }
 }
