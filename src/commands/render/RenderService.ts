@@ -11,7 +11,7 @@ import { DocumentStore } from '../../stores/DocumentStore';
 import { constrain } from '../../utils/math/constrain';
 import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
-import { Selection } from '../select/SelectCommand';
+import { Selection } from '../selectInBlock/SelectInBlockCommand';
 
 export interface RenderTextOptions {
   position: Vector;

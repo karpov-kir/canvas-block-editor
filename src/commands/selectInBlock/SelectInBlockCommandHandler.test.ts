@@ -1,40 +1,40 @@
 import { BlockStore } from '../../stores/BlockStore';
 import { BlockMother } from '../../testUtils/mothers/BlockMother';
 import { EventBus } from '../../utils/pubSub/EventBus';
-import { SelectCommand, Selection } from './SelectCommand';
-import { SelectCommandHandler, SelectedEvent } from './SelectCommandHandler';
+import { SelectInBlockCommand, Selection } from './SelectInBlockCommand';
+import { SelectedInBlockEvent, SelectInBlockCommandHandler } from './SelectInBlockCommandHandler';
 
-describe(SelectCommandHandler.name, () => {
+describe(SelectInBlockCommandHandler.name, () => {
   let blockStore: BlockStore;
   let eventBus: EventBus;
-  let handler: SelectCommandHandler;
+  let handler: SelectInBlockCommandHandler;
   let blockMother: BlockMother;
 
   beforeEach(() => {
     blockStore = new BlockStore();
     eventBus = new EventBus();
-    handler = new SelectCommandHandler(blockStore, eventBus);
+    handler = new SelectInBlockCommandHandler(blockStore, eventBus);
     blockMother = new BlockMother();
   });
 
-  it(`selects some content and emits the ${SelectedEvent.name}`, () => {
-    const selectedEventHandler = jest.fn();
+  it(`selects some content and emits the ${SelectedInBlockEvent.name}`, () => {
+    const SelectedInBlockEventHandler = jest.fn();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    eventBus.subscribe(SelectedEvent, selectedEventHandler);
+    eventBus.subscribe(SelectedInBlockEvent, SelectedInBlockEventHandler);
 
-    handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, 5)));
+    handler.execute(new SelectInBlockCommand(blockMother.last.id, new Selection(0, 5)));
 
     expect(blockStore.getById(blockMother.last.id).selection).toEqual(new Selection(0, 5));
     expect(blockStore.blocksWithSelection.get(blockMother.last.id)).toEqual(blockMother.last);
-    expect(selectedEventHandler).toBeCalledWith(new SelectedEvent(blockMother.last, new Selection(0, 5)));
+    expect(SelectedInBlockEventHandler).toBeCalledWith(new SelectedInBlockEvent(blockMother.last, new Selection(0, 5)));
   });
 
   it(`throws an error if the selection is out of range`, () => {
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
 
     expect(() =>
-      handler.execute(new SelectCommand(blockMother.last.id, new Selection(0, Number.MAX_SAFE_INTEGER))),
+      handler.execute(new SelectInBlockCommand(blockMother.last.id, new Selection(0, Number.MAX_SAFE_INTEGER))),
     ).toThrow(expect.any(RangeError));
   });
 });

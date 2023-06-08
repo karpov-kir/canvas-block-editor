@@ -2,23 +2,23 @@ import { Block, BlockStore } from '../../stores/BlockStore';
 import { CommandHandler } from '../../utils/pubSub/Command';
 import { Event } from '../../utils/pubSub/Event';
 import { EventBus } from '../../utils/pubSub/EventBus';
-import { SelectCommand, Selection } from './SelectCommand';
+import { SelectInBlockCommand, Selection } from './SelectInBlockCommand';
 
-export class SelectedEvent extends Event {
+export class SelectedInBlockEvent extends Event {
   constructor(public readonly block: Block, public readonly selection: Selection) {
     super();
   }
 }
 
-export class SelectCommandHandler extends CommandHandler {
+export class SelectInBlockCommandHandler extends CommandHandler {
   constructor(private readonly blockStore: BlockStore, private readonly eventBus: EventBus) {
     super();
   }
 
-  public execute({ selection, blockId }: SelectCommand) {
+  public execute({ selection, blockId }: SelectInBlockCommand) {
     const block = this.blockStore.getById(blockId);
 
     this.blockStore.setSelection(block.id, selection);
-    this.eventBus.publish(new SelectedEvent(block, selection));
+    this.eventBus.publish(new SelectedInBlockEvent(block, selection));
   }
 }

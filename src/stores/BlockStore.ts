@@ -1,4 +1,4 @@
-import { Selection } from '../commands/select/SelectCommand';
+import { Selection } from '../commands/selectInBlock/SelectInBlockCommand';
 import { createIdGenerator } from '../utils/idGenerator';
 
 export enum BlockType {

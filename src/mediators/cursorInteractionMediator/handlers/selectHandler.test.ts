@@ -1,4 +1,4 @@
-import { SelectCommand, Selection } from '../../../commands/select/SelectCommand';
+import { SelectInBlockCommand, Selection } from '../../../commands/selectInBlock/SelectInBlockCommand';
 import { BlockStore } from '../../../stores/BlockStore';
 import { FakeHandlerStub } from '../../../testUtils/FakeCommandHandler';
 import { BlockMother } from '../../../testUtils/mothers/BlockMother';
@@ -13,16 +13,16 @@ describe(selectHandler, () => {
     commandBus = new CommandBus();
   });
 
-  it(`emits the ${SelectCommand.name} on selection in the focused block`, () => {
+  it(`emits the ${SelectInBlockCommand.name} on selection in the focused block`, () => {
     const blockStore = new BlockStore();
-    const selectCommandHandler = new FakeHandlerStub();
+    const SelectInBlockCommandHandler = new FakeHandlerStub();
     const blockMother = new BlockMother();
 
     blockStore.blocks.set(blockMother.withContent().create().id, blockMother.last);
-    commandBus.subscribe(SelectCommand, selectCommandHandler);
+    commandBus.subscribe(SelectInBlockCommand, SelectInBlockCommandHandler);
 
     selectHandler(new CursorInteractionSelectEvent(blockMother.last.id, new Selection(0, 1)), commandBus);
 
-    expect(selectCommandHandler.execute).toBeCalledWith(expect.any(SelectCommand));
+    expect(SelectInBlockCommandHandler.execute).toBeCalledWith(expect.any(SelectInBlockCommand));
   });
 });

@@ -1,4 +1,4 @@
-import { Selection } from '../commands/select/SelectCommand';
+import { Selection } from '../commands/selectInBlock/SelectInBlockCommand';
 import { SelectHandler, SelectionManager, UnselectHandler } from '../sagas/SelectionSaga';
 import { MultiChannelPubSub } from '../utils/pubSub/PubSub';
 

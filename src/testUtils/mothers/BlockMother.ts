@@ -1,4 +1,4 @@
-import { Selection } from '../../commands/select/SelectCommand';
+import { Selection } from '../../commands/selectInBlock/SelectInBlockCommand';
 import { Block, BlockType } from '../../stores/BlockStore';
 import { createIdGenerator } from '../../utils/idGenerator';
 import { Builder } from './Builder';

@@ -1,4 +1,4 @@
-import { Selection } from '../../commands/select/SelectCommand';
+import { Selection } from '../../commands/selectInBlock/SelectInBlockCommand';
 import { BlockRectStore } from '../../stores/BlockRectStore';
 import { BlockStore } from '../../stores/BlockStore';
 import { Vector } from '../../utils/math/Vector';

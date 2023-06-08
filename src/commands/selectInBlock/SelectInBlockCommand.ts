@@ -38,7 +38,7 @@ export class Selection {
   }
 }
 
-export class SelectCommand extends Command {
+export class SelectInBlockCommand extends Command {
   constructor(public readonly blockId: number, public readonly selection: Selection) {
     super();
   }

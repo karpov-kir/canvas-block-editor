@@ -2,12 +2,13 @@ import { BlockTypeChangedEvent } from '../commands/changeBlockType/ChangeBlockTy
 import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockCommandHandler';
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
-import { Selection } from '../commands/select/SelectCommand';
 import { BlockType } from '../stores/BlockStore';
+import { Dimensions } from '../utils/math/Dimensions';
+import { Vector } from '../utils/math/Vector';
 import { Event } from '../utils/pubSub/Event';
 import { EventBus } from '../utils/pubSub/EventBus';
 
-export type SelectHandler = (data: { blockId: number; selection: Selection }) => void;
+export type SelectHandler = (data: { position: Vector; dimensions: Dimensions }) => void;
 export type UnselectHandler = () => void;
 
 export interface SelectionManager {
@@ -15,7 +16,6 @@ export interface SelectionManager {
   readonly isEnabled: boolean;
   readonly isSelecting: boolean;
   disable(): void;
-  update(): void;
   onSelect(handler: SelectHandler): void;
   onUnselect(handler: UnselectHandler): void;
 }
@@ -44,8 +44,6 @@ export class SelectionSaga {
       }
 
       this.selectionManager.disable();
-    } else if (event instanceof RenderedEvent) {
-      this.selectionManager.update();
     }
   };
 }
