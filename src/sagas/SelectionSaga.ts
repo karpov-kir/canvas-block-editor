@@ -7,18 +7,17 @@ import { BlockType } from '../stores/BlockStore';
 import { Event } from '../utils/pubSub/Event';
 import { EventBus } from '../utils/pubSub/EventBus';
 
-export type SelectCommandHandler = (data: { blockId: number; selection: Selection }) => void;
-export type UnselectCommandHandler = () => void;
+export type SelectHandler = (data: { blockId: number; selection: Selection }) => void;
+export type UnselectHandler = () => void;
 
 export interface SelectionManager {
   enable(blockId: number): void;
   readonly isEnabled: boolean;
   readonly isSelecting: boolean;
   disable(): void;
-  resetPosition(): void;
   update(): void;
-  onSelect(handler: SelectCommandHandler): void;
-  onUnselect(handler: UnselectCommandHandler): void;
+  onSelect(handler: SelectHandler): void;
+  onUnselect(handler: UnselectHandler): void;
 }
 
 export class SelectionSaga {
@@ -45,7 +44,6 @@ export class SelectionSaga {
       }
 
       this.selectionManager.disable();
-      this.selectionManager.resetPosition();
     } else if (event instanceof RenderedEvent) {
       this.selectionManager.update();
     }

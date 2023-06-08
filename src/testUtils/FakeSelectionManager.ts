@@ -1,5 +1,5 @@
 import { Selection } from '../commands/select/SelectCommand';
-import { SelectCommandHandler, SelectionManager, UnselectCommandHandler } from '../sagas/SelectionSaga';
+import { SelectHandler, SelectionManager, UnselectHandler } from '../sagas/SelectionSaga';
 import { MultiChannelPubSub } from '../utils/pubSub/PubSub';
 
 export class FakeSelectionManager implements SelectionManager {
@@ -16,8 +16,8 @@ export class FakeSelectionManager implements SelectionManager {
 
   constructor(
     private readonly pubSub = new MultiChannelPubSub<{
-      select: SelectCommandHandler;
-      unselect: UnselectCommandHandler;
+      select: SelectHandler;
+      unselect: UnselectHandler;
     }>(),
   ) {}
 
@@ -37,11 +37,11 @@ export class FakeSelectionManager implements SelectionManager {
     return undefined;
   });
 
-  public onSelect = jest.fn((handler: SelectCommandHandler) => {
+  public onSelect = jest.fn((handler: SelectHandler) => {
     this.pubSub.subscribe('select', handler);
   });
 
-  public onUnselect = jest.fn((handler: UnselectCommandHandler) => {
+  public onUnselect = jest.fn((handler: UnselectHandler) => {
     this.pubSub.subscribe('unselect', handler);
   });
 
