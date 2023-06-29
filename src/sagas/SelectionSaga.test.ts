@@ -44,10 +44,10 @@ describe(SelectionSaga.name, () => {
     eventBus.publish(new HighlightRemovedFromBlockEvent(blockMother.create()));
 
     expect(fakeSelectionManager.isEnabled).toBe(false);
-    expect(fakeSelectionManager.resetPosition).toBeCalled();
   });
 
   it(`updates the selection manager on ${RenderedEvent.name}`, () => {
+    eventBus.publish(new BlockHighlightedEvent(blockMother.create()));
     eventBus.publish(new RenderedEvent());
 
     expect(fakeSelectionManager.update).toBeCalled();

@@ -29,10 +29,6 @@ export class FakeSelectionManager implements SelectionManager {
     this.#isEnabled = false;
   });
 
-  public resetPosition = jest.fn(() => {
-    return undefined;
-  });
-
   public update = jest.fn(() => {
     return undefined;
   });

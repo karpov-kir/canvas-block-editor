@@ -83,9 +83,10 @@ export class TextareaCursorSelectionManager implements SelectionManager {
     this.blockId = undefined;
     this.#isEnabled = false;
     this.textareaElement.style.display = 'none';
+    this.resetPosition();
   }
 
-  public resetPosition() {
+  private resetPosition() {
     this.textareaElement.style.width = '0px';
     this.textareaElement.style.height = '0px';
     this.textareaElement.style.left = '0px';

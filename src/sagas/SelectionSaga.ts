@@ -17,6 +17,7 @@ export interface SelectionManager {
   disable(): void;
   onSelect(handler: SelectHandler): void;
   onUnselect(handler: UnselectHandler): void;
+  update(): void;
 }
 
 export class SelectionSaga {
@@ -43,6 +44,12 @@ export class SelectionSaga {
       }
 
       this.selectionManager.disable();
+    } else if (event instanceof RenderedEvent) {
+      if (!this.selectionManager.isEnabled) {
+        return;
+      }
+
+      this.selectionManager.update();
     }
   };
 }
