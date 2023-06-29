@@ -1,11 +1,5 @@
-import {
-  BlockRect,
-  BlockRectStore,
-  ContentRect,
-  DEFAULT_FONT_STYLES,
-  Margin,
-  Padding,
-} from '../../stores/BlockRectStore';
+import { DEFAULT_TEXT_STYLES, TextStyles } from '../../shared/TextStyles';
+import { BlockRect, BlockRectStore, ContentRect, Margin, Padding } from '../../stores/BlockRectStore';
 import { Block, BlockStore, BlockType } from '../../stores/BlockStore';
 import { DocumentStore } from '../../stores/DocumentStore';
 import { constrain } from '../../utils/math/constrain';
@@ -13,11 +7,8 @@ import { Dimensions } from '../../utils/math/Dimensions';
 import { Vector } from '../../utils/math/Vector';
 import { Selection } from '../selectInBlock/SelectInBlockCommand';
 
-export interface RenderTextOptions {
+export interface RenderTextOptions extends TextStyles {
   position: Vector;
-  fontFamily: string;
-  fontSize: number;
-  lineHeight: number;
   text: string;
 }
 
@@ -140,7 +131,7 @@ export class RenderService {
     margin: Margin,
   ): ContentRect {
     const contentRect = this.drawer.textContentRect({
-      ...DEFAULT_FONT_STYLES,
+      ...DEFAULT_TEXT_STYLES,
       width: blockRectWidth,
       position,
       text: block.type === BlockType.CreateBlock ? 'New +' : block.content,

@@ -1,14 +1,12 @@
+import { TextStyles } from '../../shared/TextStyles';
 import { ContentRect, Margin, Padding } from '../../stores/BlockRectStore';
 import { Vector } from '../../utils/math/Vector';
 import { fitTextIntoWidth } from './fitTextIntoWidth';
 
-interface CreateContentOptions {
+interface CreateContentOptions extends TextStyles {
   position: Vector;
-  fontFamily: string;
-  fontSize: number;
   padding: Padding;
   margin: Margin;
-  lineHeight: number;
   width: number;
   text: string;
 }

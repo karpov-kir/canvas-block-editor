@@ -1,13 +1,8 @@
+import { DEFAULT_TEXT_STYLES, TextStyles } from '../shared/TextStyles';
 import { Dimensions } from '../utils/math/Dimensions';
 import { isPointInside } from '../utils/math/isPointInside';
 import { Rectangle } from '../utils/math/Rectangle';
 import { Vector } from '../utils/math/Vector';
-
-export const DEFAULT_FONT_STYLES = {
-  fontSize: 16,
-  fontFamily: 'Arial',
-  lineHeight: 20,
-};
 
 // Padding is included into width and height
 export class Padding {
@@ -24,7 +19,7 @@ export interface LineMetrics {
   topOffset: number;
 }
 
-export class ContentRect extends Rectangle {
+export class ContentRect extends Rectangle implements TextStyles {
   fontSize: number;
   fontFamily: string;
   lineHeight: number;
@@ -39,9 +34,9 @@ export class ContentRect extends Rectangle {
   constructor(position = new Vector(), dimensions = new Dimensions()) {
     super(position, dimensions);
 
-    this.fontSize = DEFAULT_FONT_STYLES.fontSize;
-    this.fontFamily = DEFAULT_FONT_STYLES.fontFamily;
-    this.lineHeight = DEFAULT_FONT_STYLES.lineHeight;
+    this.fontSize = DEFAULT_TEXT_STYLES.fontSize;
+    this.fontFamily = DEFAULT_TEXT_STYLES.fontFamily;
+    this.lineHeight = DEFAULT_TEXT_STYLES.lineHeight;
 
     this.lineMetrics = [];
     this.lines = [];
