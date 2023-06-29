@@ -14,23 +14,22 @@ import { RemoveFocusFromBlockCommand } from './commands/removeFocusFromBlock/Rem
 import { RemoveFocusFromBlockCommandHandler } from './commands/removeFocusFromBlock/RemoveFocusFromBlockCommandHandler';
 import { RemoveHighlightFromBlockCommand } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommand';
 import { RemoveHighlightFromBlockCommandHandler } from './commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
-import { CanvasDrawer } from './commands/render/CanvasDrawer/CanvasDrawer';
+import { RemoveSelectionFromBlockCommand } from './commands/removeSelectionFromBlock/RemoveSelectionFromBlockCommand';
 import { RenderCommand } from './commands/render/RenderCommand';
 import { RenderCommandHandler } from './commands/render/RenderCommandHandler';
 import { RenderService } from './commands/render/RenderService';
 import { ResizeDocumentCommand } from './commands/resizeDocument/ResizeDocumentCommand';
 import { ResizeDocumentCommandHandler } from './commands/resizeDocument/ResizeDocumentCommandHandler';
 import { ResizeDocumentService } from './commands/resizeDocument/ResizeDocumentService';
-import { SelectCommand } from './commands/select/SelectCommand';
-import { SelectCommandHandler } from './commands/select/SelectCommandHandler';
-import { UnselectCommand } from './commands/unselect/UnselectCommand';
-import { UnselectCommandHandler } from './commands/unselect/UnselectCommandHandler';
+import { SelectInBlockCommand } from './commands/selectInBlock/SelectInBlockCommand';
+import { SelectInBlockCommandHandler } from './commands/selectInBlock/SelectInBlockCommandHandler';
+import { CanvasDrawer } from './infra/CanvasDrawer/CanvasDrawer';
+import { subscribeToTextareaCursorInteraction } from './infra/subscribeToTextareaCursorInteraction';
+import { subscribeToWindowKeyboardInteraction } from './infra/subscribeToWindowKeyboardInteraction';
+import { subscribeToWindowViewportInteraction } from './infra/subscribeToWindowViewportInteraction';
+import { TextareaCursorSelectionManager } from './infra/TextareaCursorSelectionManager';
 import { CursorInteractionMediator } from './mediators/cursorInteractionMediator/CursorInteractionMediator';
-import { subscribeToCursorInteraction } from './mediators/cursorInteractionMediator/subscribeToCursorInteraction';
-import { TextareaSelectionManager } from './mediators/cursorInteractionMediator/TextareaSelectionManager';
 import { KeyboardInteractionMediator } from './mediators/keyboardInteractionMediator/KeyboardInteractionMediator';
-import { subscribeToKeyboardInteraction } from './mediators/keyboardInteractionMediator/subscribeToKeyboardnteraction';
-import { subscribeToViewportInteraction } from './mediators/viewportInteractionMediator/subscribeToViewportInteraction';
 import { ViewportInteractionMediator } from './mediators/viewportInteractionMediator/ViewportInteractionMediator';
 import { RenderSaga } from './sagas/RenderSaga';
 import { SelectionSaga } from './sagas/SelectionSaga';
@@ -82,7 +81,7 @@ const documentStore = new DocumentStore();
 const canvasDrawer = new CanvasDrawer(canvasContext);
 const renderService = new RenderService(canvasDrawer, blockStore, blockRectStore, documentStore);
 const resizeDocumentService = new ResizeDocumentService(canvasDrawer, documentStore);
-const textareaSelectionManager = new TextareaSelectionManager(blockStore, blockRectStore, containerElement);
+const textareaSelectionManager = new TextareaCursorSelectionManager(blockStore, blockRectStore, containerElement);
 
 documentStore.maxContentWidth = 1000;
 documentStore.minContentWidth = 200;
@@ -111,17 +110,17 @@ commandBus.subscribe(InputCommand, new InputCommandHandler(blockStore, eventBus)
 commandBus.subscribe(MoveCarriageCommand, new MoveCarriageCommandHandler(blockStore, eventBus));
 commandBus.subscribe(RemoveHighlightFromBlockCommand, new RemoveHighlightFromBlockCommandHandler(blockStore, eventBus));
 commandBus.subscribe(ResizeDocumentCommand, new ResizeDocumentCommandHandler(resizeDocumentService, eventBus));
-commandBus.subscribe(SelectCommand, new SelectCommandHandler(blockStore, eventBus));
-commandBus.subscribe(UnselectCommand, new UnselectCommandHandler(blockStore, eventBus));
+commandBus.subscribe(SelectInBlockCommand, new SelectInBlockCommandHandler(blockStore, eventBus));
+commandBus.subscribe(RemoveSelectionFromBlockCommand, new RemoveFocusFromBlockCommandHandler(blockStore, eventBus));
 commandBus.subscribe(RenderCommand, new RenderCommandHandler(renderService, eventBus));
 
 const cursorInteractionMediator = new CursorInteractionMediator(commandBus, blockStore, blockRectStore);
 const keyboardInteractionMediator = new KeyboardInteractionMediator(commandBus, blockStore);
 const viewportInteractionMediator = new ViewportInteractionMediator(commandBus, documentStore);
 
-subscribeToCursorInteraction(cursorInteractionMediator, containerElement, textareaSelectionManager);
-subscribeToKeyboardInteraction(keyboardInteractionMediator);
-subscribeToViewportInteraction(viewportInteractionMediator);
+subscribeToTextareaCursorInteraction(cursorInteractionMediator, containerElement, textareaSelectionManager);
+subscribeToWindowKeyboardInteraction(keyboardInteractionMediator);
+subscribeToWindowViewportInteraction(viewportInteractionMediator);
 
 new SelectionSaga(eventBus, textareaSelectionManager);
 new RenderSaga(eventBus, commandBus);

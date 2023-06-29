@@ -1,5 +1,5 @@
-import { ContentRect, Margin, Padding } from '../../../stores/BlockRectStore';
-import { Vector } from '../../../utils/math/Vector';
+import { ContentRect, Margin, Padding } from '../../stores/BlockRectStore';
+import { Vector } from '../../utils/math/Vector';
 import { fitTextIntoWidth } from './fitTextIntoWidth';
 
 interface CreateContentOptions {

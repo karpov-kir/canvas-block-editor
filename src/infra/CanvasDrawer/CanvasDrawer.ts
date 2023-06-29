@@ -1,6 +1,3 @@
-import { ContentRect } from '../../../stores/BlockRectStore';
-import { Dimensions } from '../../../utils/math/Dimensions';
-import { Vector } from '../../../utils/math/Vector';
 import {
   ClearRectOptions,
   Drawer,
@@ -10,7 +7,10 @@ import {
   RenderSelectionOptions,
   RenderTextContentRectOptions,
   RenderTextOptions,
-} from '../RenderService';
+} from '../../commands/render/RenderService';
+import { ContentRect } from '../../stores/BlockRectStore';
+import { Dimensions } from '../../utils/math/Dimensions';
+import { Vector } from '../../utils/math/Vector';
 import { createContentRect } from './createContentRect';
 
 class BlinkingCarriageDrawer implements RenderCarriageResult {

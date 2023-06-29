@@ -2,13 +2,12 @@ import { BlockTypeChangedEvent } from '../commands/changeBlockType/ChangeBlockTy
 import { BlockHighlightedEvent } from '../commands/highlightBlock/HighlightBlockCommandHandler';
 import { HighlightRemovedFromBlockEvent } from '../commands/removeHighlightFromBlock/RemoveHighlightFromBlockCommandHandler';
 import { RenderedEvent } from '../commands/render/RenderCommandHandler';
+import { Selection } from '../commands/selectInBlock/SelectInBlockCommand';
 import { BlockType } from '../stores/BlockStore';
-import { Dimensions } from '../utils/math/Dimensions';
-import { Vector } from '../utils/math/Vector';
 import { Event } from '../utils/pubSub/Event';
 import { EventBus } from '../utils/pubSub/EventBus';
 
-export type SelectHandler = (data: { position: Vector; dimensions: Dimensions }) => void;
+export type SelectHandler = (data: { selection: Selection; blockId: number }) => void;
 export type UnselectHandler = () => void;
 
 export interface SelectionManager {

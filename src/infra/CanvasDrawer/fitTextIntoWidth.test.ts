@@ -1,5 +1,6 @@
-import { DEFAULT_FONT_STYLES, Margin, Padding } from '../../../stores/BlockRectStore';
-import { createCanvas } from '../../../testUtils/createCanvas';
+import { DEFAULT_TEXT_STYLES } from '../../shared/TextStyles';
+import { Margin, Padding } from '../../stores/BlockRectStore';
+import { createCanvas } from '../../testUtils/createCanvas';
 import { fitTextIntoWidth } from './fitTextIntoWidth';
 
 let canvasContext: CanvasRenderingContext2D;
@@ -11,7 +12,7 @@ beforeEach(() => {
 describe(fitTextIntoWidth, () => {
   it('fits text into width', () => {
     const result = fitTextIntoWidth(canvasContext, {
-      ...DEFAULT_FONT_STYLES,
+      ...DEFAULT_TEXT_STYLES,
       text: '12!-45asdfZXCVB@',
       width: 100,
       padding: new Padding(5, 5),

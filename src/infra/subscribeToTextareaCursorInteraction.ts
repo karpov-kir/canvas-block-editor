@@ -1,14 +1,14 @@
-import { SelectionManager } from '../../sagas/SelectionSaga';
-import { Vector } from '../../utils/math/Vector';
 import {
   CursorInteractionClickEvent,
   CursorInteractionMediator,
   CursorInteractionMoveEvent,
   CursorInteractionSelectEvent,
   CursorInteractionUnselectEvent,
-} from './CursorInteractionMediator';
+} from '../mediators/cursorInteractionMediator/CursorInteractionMediator';
+import { SelectionManager } from '../sagas/SelectionSaga';
+import { Vector } from '../utils/math/Vector';
 
-export function subscribeToCursorInteraction(
+export function subscribeToTextareaCursorInteraction(
   cursorInteractionMediator: CursorInteractionMediator,
   containerElement: HTMLElement,
   selectionManager: SelectionManager,
@@ -21,7 +21,7 @@ export function subscribeToCursorInteraction(
     cursorInteractionMediator.notify(new CursorInteractionClickEvent(new Vector(event.clientX, event.clientY)));
   });
 
-  selectionManager.onSelect(({ blockId, selection }) => {
+  selectionManager.onSelect(({ selection, blockId }) => {
     cursorInteractionMediator.notify(new CursorInteractionSelectEvent(blockId, selection));
   });
 

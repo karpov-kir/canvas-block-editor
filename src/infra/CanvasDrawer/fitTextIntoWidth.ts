@@ -1,13 +1,11 @@
-import { LineMetrics, Margin, Padding } from '../../../stores/BlockRectStore';
-import { Dimensions } from '../../../utils/math/Dimensions';
+import { TextStyles } from '../../shared/TextStyles';
+import { LineMetrics, Margin, Padding } from '../../stores/BlockRectStore';
+import { Dimensions } from '../../utils/math/Dimensions';
 
-interface FitTextIntoWidthOptions {
+interface FitTextIntoWidthOptions extends TextStyles {
   text: string;
   width: number;
 
-  fontFamily: string;
-  lineHeight: number;
-  fontSize: number;
   padding: Padding;
   margin: Margin;
 }

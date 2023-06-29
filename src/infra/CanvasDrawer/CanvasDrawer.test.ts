@@ -1,11 +1,12 @@
 import { Canvas } from 'canvas';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
-import { DEFAULT_FONT_STYLES, Margin, Padding } from '../../../stores/BlockRectStore';
-import { createCanvas } from '../../../testUtils/createCanvas';
-import { Dimensions } from '../../../utils/math/Dimensions';
-import { Vector } from '../../../utils/math/Vector';
-import { Drawer } from '../RenderService';
+import { Drawer } from '../../commands/render/RenderService';
+import { DEFAULT_TEXT_STYLES } from '../../shared/TextStyles';
+import { Margin, Padding } from '../../stores/BlockRectStore';
+import { createCanvas } from '../../testUtils/createCanvas';
+import { Dimensions } from '../../utils/math/Dimensions';
+import { Vector } from '../../utils/math/Vector';
 import { CanvasDrawer } from './CanvasDrawer';
 
 expect.extend({ toMatchImageSnapshot });
@@ -22,7 +23,7 @@ beforeEach(() => {
 describe(CanvasDrawer.name, () => {
   it('fits a text into a max width', () => {
     drawer.textContentRect({
-      ...DEFAULT_FONT_STYLES,
+      ...DEFAULT_TEXT_STYLES,
       position: new Vector(100, 100),
       width: 100,
       text: 'A'.repeat(15),
@@ -79,7 +80,7 @@ describe(CanvasDrawer.name, () => {
   it('rect stroke does not affect the following up text color', () => {
     drawer.rect({ position: new Vector(100, 100), dimensions: new Dimensions(10, 10), strokeStyle: 'red' });
     drawer.text({
-      ...DEFAULT_FONT_STYLES,
+      ...DEFAULT_TEXT_STYLES,
       position: new Vector(100, 110),
       text: 'Test',
     });

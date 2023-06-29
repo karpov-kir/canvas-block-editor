@@ -1,10 +1,10 @@
-import { Selection } from '../../commands/select/SelectCommand';
-import { SelectHandler, SelectionManager, UnselectHandler } from '../../sagas/SelectionSaga';
-import { BlockRectStore } from '../../stores/BlockRectStore';
-import { BlockStore } from '../../stores/BlockStore';
-import { MultiChannelPubSub } from '../../utils/pubSub/PubSub';
+import { Selection } from '../commands/selectInBlock/SelectInBlockCommand';
+import { SelectHandler, SelectionManager, UnselectHandler } from '../sagas/SelectionSaga';
+import { BlockRectStore } from '../stores/BlockRectStore';
+import { BlockStore } from '../stores/BlockStore';
+import { MultiChannelPubSub } from '../utils/pubSub/PubSub';
 
-export class TextareaSelectionManager implements SelectionManager {
+export class TextareaCursorSelectionManager implements SelectionManager {
   #isEnabled = false;
   #isSelecting = false;
 
